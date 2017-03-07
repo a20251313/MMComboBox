@@ -24,8 +24,18 @@ typedef NS_ENUM(NSUInteger, MMPopupViewDisplayType) {  //分辨弹出来的view�
     MMPopupViewDisplayTypeFilters = 2,               //混合
 };
 
+
+typedef NS_ENUM(NSInteger, MMPopupViewIconType) {  //筛选层附加icon定义
+    MMPopupViewNoneIcon = 0,                //没有图标
+    MMPopupViewLocationIcon = 1,                //位置图标  //kLocationIcon
+    MMPopupViewSortIcon = 2,            //排序图标  //kSortedIcon
+    MMPopupViewTypeIcon = 3,               //类型图标 //kTypeIcon
+    MMPopupViewFilterIcon = 4,               //筛选图标 //kFilterIcon
+};
+
 @interface MMBaseItem : NSObject
 @property (nonatomic, assign) MMPopupViewMarkType markType;
 @property (nonatomic, assign) MMPopupViewDisplayType displayType;
 @property (nonatomic, assign) MMPopupViewSelectedType selectedType;
+@property (nonatomic, assign) MMPopupViewIconType iconType;
 @end

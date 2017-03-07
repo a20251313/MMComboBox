@@ -24,7 +24,7 @@
     self.view.backgroundColor = [UIColor whiteColor];
 //===============================================Package Data===============================================
     //first root
-    MMItem *rootItem1 = [MMItem itemWithItemType:MMPopupViewDisplayTypeUnselected titleName:@"全部"];
+    MMItem *rootItem1 = [MMItem itemWithItemType:MMPopupViewDisplayTypeUnselected titleName:@"全部" iconType:MMPopupViewTypeIcon];
     rootItem1.selectedType = MMPopupViewMultilSeMultiSelection;
     //first floor
     for (int i = 0; i < 20; i ++) {
@@ -32,7 +32,7 @@
     }
     
    //second root
-   MMItem *rootItem2 = [MMItem itemWithItemType:MMPopupViewDisplayTypeUnselected titleName:@"排序"];
+    MMItem *rootItem2 = [MMItem itemWithItemType:MMPopupViewDisplayTypeUnselected titleName:@"排序" iconType:MMPopupViewSortIcon];
    //first floor
    [rootItem2 addNode:[MMItem itemWithItemType:MMPopupViewDisplayTypeSelected titleName:[NSString stringWithFormat:@"智能排序"]]];
    [rootItem2 addNode:[MMItem itemWithItemType:MMPopupViewDisplayTypeSelected titleName:[NSString stringWithFormat:@"离我最近"]]];
@@ -41,7 +41,7 @@
    
     
     //third root
-    MMItem *rootItem3 = [MMItem itemWithItemType:MMPopupViewDisplayTypeUnselected titleName:@"附近"];
+    MMItem *rootItem3 = [MMItem itemWithItemType:MMPopupViewDisplayTypeUnselected titleName:@"附近" iconType:MMPopupViewLocationIcon];
     for (int i = 0; i < 30; i++){
         MMItem *item3_A = [MMItem itemWithItemType:MMPopupViewDisplayTypeUnselected titleName:[NSString stringWithFormat:@"市区%d",i]];
         [rootItem3 addNode:item3_A];
@@ -55,7 +55,7 @@
     }
     
     //fourth root
-    MMItem *rootItem4 = [MMItem itemWithItemType:MMPopupViewDisplayTypeUnselected titleName:@"筛选"];
+    MMItem *rootItem4 = [MMItem itemWithItemType:MMPopupViewDisplayTypeUnselected titleName:@"筛选" iconType:MMPopupViewFilterIcon];
     MMAlternativeItem *alternativeItem1 = [MMAlternativeItem itemWithTitle:@"只看免预约" isSelected:NO];
     MMAlternativeItem *alternativeItem2 = [MMAlternativeItem itemWithTitle:@"节假日可用" isSelected:YES];
     [rootItem4.alternativeArray addObject:alternativeItem1];
@@ -74,9 +74,9 @@
     }
     
     self.mutableArray = [NSMutableArray array];
-    [self.mutableArray addObject:rootItem1];
-    [self.mutableArray addObject:rootItem2];
     [self.mutableArray addObject:rootItem3];
+    [self.mutableArray addObject:rootItem2];
+    [self.mutableArray addObject:rootItem1];
     [self.mutableArray addObject:rootItem4];
 
 //===============================================Init===============================================

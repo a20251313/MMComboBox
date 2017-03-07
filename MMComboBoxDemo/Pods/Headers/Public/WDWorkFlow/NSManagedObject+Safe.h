@@ -1,0 +1,1 @@
+../../../WDWorkFlow/CategoryKit/CategoryKit/SafeCategory/NSManagerObject/NSManagedObject+Safe.h

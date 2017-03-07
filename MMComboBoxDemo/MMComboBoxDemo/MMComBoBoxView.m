@@ -22,6 +22,8 @@
 @property (nonatomic, strong) MMBasePopupView *popupView;
 @property (nonatomic, assign) NSInteger lastTapIndex;       //默认 -1
 @property (nonatomic, assign) BOOL isAnimation;
+@property (nonatomic, strong) UIView    *topBgView;
+
 @end
 
 @implementation MMComBoBoxView
@@ -32,6 +34,23 @@
         self.dropDownBoxArray = [NSMutableArray array];
         self.itemArray = [NSMutableArray array];
         self.symbolArray = [NSMutableArray arrayWithCapacity:1];
+        
+        UIView *bgView = [[UIView alloc] initWithFrame:CGRectZero];
+        bgView.layer.masksToBounds = YES;
+        bgView.layer.borderWidth = 1;
+        bgView.layer.cornerRadius = 18;
+        bgView.layer.borderColor = [UIColor clearColor].CGColor;
+        //bgView.layer.borderColor = [UIColor colorWithRed:0x2a/255.0 green:0xbf/255.0 blue:1 alpha:1.0].CGColor;
+        
+        self.backgroundColor = [UIColor colorWithRed:0xe6/255.0 green:0xe6/255.0 blue:0xe6/255.0 alpha:1];
+        self.topBgView = bgView;
+        self.topBgView.backgroundColor = [UIColor whiteColor];
+        [self addSubview:bgView];
+        [self.topBgView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(15);
+            make.right.mas_offset(-15);
+            make.top.bottom.mas_equalTo(0);
+        }];
        
     }
     return self;
@@ -44,17 +63,21 @@
       count = [self.dataSource numberOfColumnsIncomBoBoxView:self];
     }
     
-    CGFloat width = self.width/count;
+    CGFloat width = (self.width-30)/count;
     if ([self.dataSource respondsToSelector:@selector(comBoBoxView:infomationForColumn:)]) {
         for (NSUInteger i = 0; i < count; i ++) {
             MMItem *item = [self.dataSource comBoBoxView:self infomationForColumn:i];
             [item findTheTypeOfPopUpView];
-            MMDropDownBox *dropBox = [[MMDropDownBox alloc] initWithFrame:CGRectMake(i*width, 0, width, self.height) titleName:item.title];
+            MMDropDownBox *dropBox = [[MMDropDownBox alloc] initWithFrame:CGRectMake(i*width, 0, width, self.height) titleName:item.title withIcon:item.iconType];
             dropBox.tag = i;
             dropBox.delegate = self;
-            [self addSubview:dropBox];
+            [dropBox setLineHide:YES];
+            [self.topBgView addSubview:dropBox];
             [self.dropDownBoxArray addObject:dropBox];
             [self.itemArray addObject:item];
+            if (i == count-1) {
+                [dropBox setDotHide:YES];
+            }
         }
     }
     [self _addLine];
@@ -84,6 +107,7 @@
     for (int i = 0; i <self.dropDownBoxArray.count; i++) {
         MMDropDownBox *currentBox  = self.dropDownBoxArray[i];
         [currentBox updateTitleState:(i == index)];
+        [currentBox setLineHide:(i != index)];
     }
     //点击后先判断symbolArray有没有标示
     if (self.symbolArray.count) {

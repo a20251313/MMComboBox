@@ -1,0 +1,1 @@
+../../../WDWorkFlow/FDMKit/FDMKit/Classes/UIGestureRecognizer+VSDependencyManager.h

@@ -1,0 +1,7 @@
+#ifdef __OBJC__
+#import <UIKit/UIKit.h>
+#endif
+
+#if __has_include("FFSurveillance.h")
+#import <FFSurveillance/FFSurveillance.h>
+#endif

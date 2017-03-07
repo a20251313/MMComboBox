@@ -1,0 +1,11 @@
+source 'https://github.com/CocoaPods/Specs.git'
+source 'https://git.oschina.net/jingfu/JFSpec.git'
+platform :ios, '8.0'
+target:'MMComboBoxDemo' do
+pod 'Masonry', '~> 1.0.2'
+pod 'FFIconFont'
+pod 'WDWorkFlow'
+pod 'FFIconFont'
+#pod "NerdyUI"
+end
+

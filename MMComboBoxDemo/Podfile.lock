@@ -1,0 +1,26 @@
+PODS:
+  - FFIconFont (1.5)
+  - Masonry (1.0.2)
+  - WDWorkFlow (2.0):
+    - WDWorkFlow/CategoryKit (= 2.0)
+    - WDWorkFlow/FDMKit (= 2.0)
+    - WDWorkFlow/MonitorKit (= 2.0)
+    - WDWorkFlow/Workflow (= 2.0)
+  - WDWorkFlow/CategoryKit (2.0)
+  - WDWorkFlow/FDMKit (2.0)
+  - WDWorkFlow/MonitorKit (2.0)
+  - WDWorkFlow/Workflow (2.0)
+
+DEPENDENCIES:
+  - FFIconFont
+  - Masonry (~> 1.0.2)
+  - WDWorkFlow
+
+SPEC CHECKSUMS:
+  FFIconFont: e21f3a559a85221bf74507b351694e4123b5c4d1
+  Masonry: 7c429b56da9d4ee0bbb3ed77a5ea710d6a5df39e
+  WDWorkFlow: 867b1f5248e38478a5963ee5c482618fc55f56f0
+
+PODFILE CHECKSUM: 071dffc9ea71fc7496586f9d62a10c886f5ba39a
+
+COCOAPODS: 1.1.1

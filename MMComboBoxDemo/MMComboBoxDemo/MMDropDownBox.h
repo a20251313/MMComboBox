@@ -7,15 +7,22 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MMBaseItem.h"
 
 @protocol MMDropDownBoxDelegate;
 @interface MMDropDownBox : UIView
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, assign) BOOL isSelected;                 
 @property (nonatomic, weak) id<MMDropDownBoxDelegate> delegate;
-- (id)initWithFrame:(CGRect)frame titleName:(NSString *)title;
+@property (nonatomic, assign) BOOL dotHide;
+@property (nonatomic, assign) BOOL lineHide;
+@property (nonatomic, strong) UIView *lineView;
+
+
+- (id)initWithFrame:(CGRect)frame titleName:(NSString *)title withIcon:(MMPopupViewIconType)iconType;
 - (void)updateTitleState:(BOOL)isSelected;
 - (void)updateTitleContent:(NSString *)title;
+
 @end
 
 @protocol MMDropDownBoxDelegate <NSObject>

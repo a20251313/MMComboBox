@@ -8,7 +8,6 @@
 
 #import "MMItem.h"
 #import "MMLayout.h"
-
 #import "MMSelectedPath.h"
 @implementation MMItem
 #pragma mark - init method
@@ -35,6 +34,14 @@
     item.markType = type;
     item.title = title;
     
+    return item;
+}
+
+
++ (instancetype)itemWithItemType:(MMPopupViewMarkType)type titleName:(NSString *)title iconType:(MMPopupViewIconType)iconType
+{
+    MMItem *item = [self itemWithItemType:type titleName:title];
+    item.iconType = iconType;
     return item;
 }
 
