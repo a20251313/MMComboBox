@@ -9,7 +9,6 @@
 #import "MMNormalCell.h"
 #import "MMHeader.h"
 #import "UIImage+CommonImage.h"
-#import "MMWaveView.h"
 
 static const CGFloat horizontalMargin = 10.0f;
 
@@ -17,7 +16,7 @@ static const CGFloat horizontalMargin = 10.0f;
 @property (nonatomic, strong) UILabel *title;
 @property (nonatomic, strong) UILabel *subTitle;
 @property (nonatomic, strong) UIImageView *selectedImageview;
-@property (nonatomic, strong) MMWaveView  *waveLineView;
+@property (nonatomic, strong) UIImageView  *screenLineView;
 
 @end
 
@@ -25,15 +24,17 @@ static const CGFloat horizontalMargin = 10.0f;
 
 
 
-- (MMWaveView*)waveLineView
+- (UIImageView*)screenLineView
 {
-    if (_waveLineView == nil) {
-        _waveLineView = [[MMWaveView alloc] initWithFrame:CGRectZero];
-        _waveLineView.lineColor = [UIColor redColor];
-        [self addSubview:_waveLineView];
+    if (_screenLineView == nil) {
+        _screenLineView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        UIImage *image =  [UIImage imageNamed:@"screen_line"];
+        image = [image resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0) resizingMode:UIImageResizingModeTile];
+        self.screenLineView.image = image;
+        [self addSubview:_screenLineView];
     }
     
-    return _waveLineView;
+    return _screenLineView;
 }
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -54,7 +55,9 @@ static const CGFloat horizontalMargin = 10.0f;
     if (_item.subTitle != nil) {
         self.subTitle.frame = CGRectMake(self.ff_width - horizontalMargin - 80 , 0, 80, self.ff_height);
     }
-    self.waveLineView.frame = CGRectMake(10, self.ff_height-2, self.ff_width, 1);
+    self.screenLineView.frame = CGRectMake(10, self.ff_height-2, self.ff_width, 1);
+    
+   
     
 }
 
@@ -65,14 +68,14 @@ static const CGFloat horizontalMargin = 10.0f;
     if (self.item.displayType == MMPopupViewDisplayTypeNormalCheck) {
         self.title.textColor = item.isSelected?[UIColor ff_colorWithHexString:@"2bbfff"]:[UIColor ff_colorWithHexString:@"333333"];
         self.backgroundColor = item.isSelected?[UIColor ff_colorWithHexString:@"ffffff"]:[UIColor whiteColor];
-        self.waveLineView.lineColor = item.isSelected?[UIColor ff_colorWithHexString:@"2bbfff"]:[UIColor ff_colorWithHexString:@"333333"];
+//        self.screenLineView.lineColor = item.isSelected?[UIColor ff_colorWithHexString:@"2bbfff"]:[UIColor ff_colorWithHexString:@"333333"];
         self.selectedImageview.hidden = !item.isSelected;
     }else if (self.item.displayType == MMPopupViewDisplayTypeNormal)
     {
         self.title.textColor = item.isSelected?[UIColor whiteColor]:[UIColor ff_colorWithHexString:@"333333"];
         self.backgroundColor = item.isSelected?[UIColor ff_colorWithHexString:@"2bbfff"]:[UIColor whiteColor];
         self.selectedImageview.hidden = YES;
-        self.waveLineView.lineColor = item.isSelected?[UIColor ff_colorWithHexString:@"2bbfff"]:[UIColor ff_colorWithHexString:@"333333"];
+//        self.waveLineView.lineColor = item.isSelected?[UIColor ff_colorWithHexString:@"2bbfff"]:[UIColor ff_colorWithHexString:@"333333"];
     }
  
     if (item.subTitle != nil) {

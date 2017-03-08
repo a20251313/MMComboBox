@@ -85,9 +85,18 @@
         completion();
         self.ff_height += PopupViewTabBarHeight;
         self.bottomView = [[UIView alloc] init];
-        self.bottomView.backgroundColor = [UIColor ff_colorWithHexString:@"FCFAFD"];
+        
+      
+        self.bottomView.backgroundColor = [UIColor ff_colorWithHexString:@"ffffff"];
         self.bottomView.frame = CGRectMake(0, self.mainTableView.ff_bottom, self.ff_width, PopupViewTabBarHeight);
         [self addSubview:self.bottomView];
+        
+        
+        UIImage *image =  [UIImage imageNamed:@"screen_line"];
+        image = [image resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0) resizingMode:UIImageResizingModeTile];
+        UIImageView  *lineView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 0, self.mainTableView.ff_width-30, 1)];
+        lineView.image = image;
+        [self.bottomView addSubview:lineView];
         
         NSArray *titleArray = @[@"重置",@"确定"];
         CGFloat  fbuttonWidth = (self.ff_width-ButtonHorizontalMargin*2-ButtonHorizontalMargin*3)/2;

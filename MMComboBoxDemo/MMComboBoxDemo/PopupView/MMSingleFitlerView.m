@@ -51,6 +51,7 @@
     self.mainTableView.rowHeight = [MMNormalCell normalCellHeight:nil];
     self.mainTableView.delegate = self;
     self.mainTableView.dataSource = self;
+    self.mainTableView.separatorColor = [UIColor clearColor];
     [self.mainTableView registerClass:[MMNormalCell class] forCellReuseIdentifier:MainCellID];
     [self addSubview:self.mainTableView];
     
