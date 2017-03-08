@@ -8,6 +8,8 @@
 
 #import "MMNormalCell.h"
 #import "MMHeader.h"
+#import "UIImage+CommonImage.h"
+
 static const CGFloat horizontalMargin = 10.0f;
 
 @interface MMNormalCell ()
@@ -29,26 +31,38 @@ static const CGFloat horizontalMargin = 10.0f;
 
 }
 
-
-
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.selectedImageview.frame = CGRectMake(horizontalMargin, (self.height -16)/2, 16, 16);
-    self.title.frame = CGRectMake(self.selectedImageview.right + 20, 0, 100, self.height);
+    
+    
+    self.selectedImageview.frame = CGRectMake(self.width-horizontalMargin-16, (self.height -16)/2, 16, 16);
+    self.title.frame = CGRectMake(20, 0, 120, self.height);
     if (_item.subTitle != nil) {
-        self.subTitle.frame = CGRectMake(self.width - horizontalMargin - 100 , 0, 100, self.height);
+        self.subTitle.frame = CGRectMake(self.width - horizontalMargin - 80 , 0, 80, self.height);
     }
-    self.bottomLine.frame = CGRectMake(0, self.height - 1.0/scale , self.width, 1.0/scale);
+    self.bottomLine.frame = CGRectMake(20, self.height - 1.0 , self.width-20, 1.0);
 }
 
 - (void)setItem:(MMItem *)item{
     _item = item;
     self.title.text = item.title;
-    self.title.textColor = item.isSelected?[UIColor colorWithHexString:titleSelectedColor]:[UIColor blackColor];
+    
+    if (self.item.displayType == MMPopupViewDisplayTypeNormalCheck) {
+        self.title.textColor = item.isSelected?[UIColor colorWithHexString:@"2bbfff"]:[UIColor colorWithHexString:@"333333"];
+        self.backgroundColor = item.isSelected?[UIColor colorWithHexString:@"ffffff"]:[UIColor whiteColor];
+        self.bottomLine.backgroundColor = item.isSelected?[UIColor colorWithHexString:@"2bbfff"].CGColor:[UIColor colorWithHexString:@"333333"].CGColor;
+        self.selectedImageview.hidden = !item.isSelected;
+    }else if (self.item.displayType == MMPopupViewDisplayTypeNormal)
+    {
+        self.title.textColor = item.isSelected?[UIColor whiteColor]:[UIColor colorWithHexString:@"333333"];
+        self.backgroundColor = item.isSelected?[UIColor colorWithHexString:@"2bbfff"]:[UIColor whiteColor];
+        self.selectedImageview.hidden = YES;
+    }
+ 
     if (item.subTitle != nil) {
     self.subTitle.text  = item.subTitle;
     }
-    self.selectedImageview.hidden = !item.isSelected;
+  
 }
 #pragma mark - get
 - (UILabel *)title {
@@ -73,8 +87,9 @@ static const CGFloat horizontalMargin = 10.0f;
 }
 
 - (UIImageView *)selectedImageview {
+    
     if (!_selectedImageview) {
-        _selectedImageview = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_selected"]];
+        _selectedImageview = [[UIImageView alloc] initWithImage:[UIImage rightImageWithColor:[UIColor colorWithHexString:@"#2bbfff"] size:16]];
         [self addSubview:_selectedImageview];
     }
     return _selectedImageview;
@@ -83,7 +98,7 @@ static const CGFloat horizontalMargin = 10.0f;
 - (CALayer *)bottomLine {
     if (!_bottomLine) {
         _bottomLine = [CALayer layer];
-        _bottomLine.backgroundColor = [UIColor colorWithWhite:0.000 alpha:0.3].CGColor;
+        _bottomLine.backgroundColor = [UIColor colorWithHexString:@"333333"].CGColor;
         [self.layer addSublayer:_bottomLine];
     }
     return _bottomLine;

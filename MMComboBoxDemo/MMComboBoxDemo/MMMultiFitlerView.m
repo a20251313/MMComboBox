@@ -59,15 +59,17 @@
     self.mainTableView.dataSource = self;
     self.mainTableView.showsVerticalScrollIndicator = YES;
     self.mainTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.mainTableView.separatorColor = [UIColor clearColor];
     [self.mainTableView registerClass:[MMLeftCell class] forCellReuseIdentifier:MainCellID];
     [self addSubview:self.mainTableView];
+    self.mainTableView.backgroundColor = [UIColor whiteColor];
     
     self.subTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     self.subTableView.rowHeight = PopupViewRowHeight;
     self.subTableView.tag = 1;
     self.subTableView.delegate = self;
     self.subTableView.dataSource = self;
-    self.subTableView.backgroundColor = [UIColor colorWithHexString:@"F5F3F6"];
+    self.subTableView.backgroundColor = [UIColor whiteColor];
     self.subTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.subTableView registerClass:[MMNormalCell class] forCellReuseIdentifier:SubCellID];
     [self addSubview:self.subTableView];
@@ -84,10 +86,12 @@
     
     //出现的动画
     [UIView animateWithDuration:AnimationDuration animations:^{
+        
         self.frame = CGRectMake(0, top, kScreenWidth, resultHeight);
+        self.mainTableView.frame = CGRectMake(0, 0, kLeftCellWidth, self.height);
+        self.subTableView.frame = CGRectMake(kLeftCellWidth-1, 0,  self.width - kLeftCellWidth, self.height);
         self.shadowView.alpha = ShadowAlpha;
-        self.mainTableView.frame = CGRectMake(0, 0, LeftCellWidth, self.height);
-        self.subTableView.frame = CGRectMake(LeftCellWidth, 0,  self.width - LeftCellWidth, self.height);
+       
     } completion:^(BOOL finished) {
         completion();
     }];
@@ -167,7 +171,7 @@
     }
     MMNormalCell *cell = [tableView dequeueReusableCellWithIdentifier:SubCellID forIndexPath:indexPath];
     cell.item = self.item.childrenNodes[self.selectedIndex].childrenNodes[indexPath.row];
-    cell.backgroundColor = [UIColor colorWithHexString:@"F5F3F6"];
+   // cell.backgroundColor = [UIColor colorWithHexString:@"F5F3F6"];
     return cell;
 
 }

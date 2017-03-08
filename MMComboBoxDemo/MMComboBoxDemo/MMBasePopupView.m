@@ -38,6 +38,7 @@
     MMBasePopupView *view;
     switch (item.displayType) {
         case MMPopupViewDisplayTypeNormal:
+        case MMPopupViewDisplayTypeNormalCheck:
             view =  [[MMSingleFitlerView alloc] initWithItem:item];
             break;
         case MMPopupViewDisplayTypeMultilayer:

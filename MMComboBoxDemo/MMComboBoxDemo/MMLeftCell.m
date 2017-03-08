@@ -28,8 +28,8 @@
 - (void)setItem:(MMItem *)item {
     _item = item;
     self.infoLabel.text = item.title;
-    self.backgroundColor = item.isSelected?[UIColor colorWithHexString:SelectedBGColor]:[UIColor colorWithHexString:UnselectedBGColor];
-    self.infoLabel.textColor = item.isSelected?[UIColor colorWithHexString:titleSelectedColor]:[UIColor blackColor];
+    self.backgroundColor = item.isSelected?[UIColor colorWithHexString:@"ffffff"]:[UIColor colorWithHexString:@"e6e6e6"];
+    self.infoLabel.textColor = item.isSelected?[UIColor colorWithHexString:@"000000"]:[UIColor colorWithHexString:@"333333"];
 }
 - (void)layoutSubviews {
     [super layoutSubviews];

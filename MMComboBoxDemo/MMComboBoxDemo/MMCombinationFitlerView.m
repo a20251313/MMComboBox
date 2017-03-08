@@ -25,7 +25,6 @@
     if (self) {
         self.item = item;
         self.selectedArray = [NSMutableArray array];
-        
         //单选
         for (int i = 0; i < self.item.alternativeArray.count; i++) {
             MMAlternativeItem *alternativeItem = self.item.alternativeArray[i];
@@ -87,13 +86,22 @@
         self.bottomView.backgroundColor = [UIColor colorWithHexString:@"FCFAFD"];
         self.bottomView.frame = CGRectMake(0, self.mainTableView.bottom, self.width, PopupViewTabBarHeight);
         [self addSubview:self.bottomView];
+        
         NSArray *titleArray = @[@"重置",@"确定"];
+        CGFloat  fbuttonWidth = (self.width-ButtonHorizontalMargin*2-ButtonHorizontalMargin*3)/2;
         for (int i = 0; i < 2 ; i++) {
-            CGFloat left = ((i == 0)?ButtonHorizontalMargin:self.width - ButtonHorizontalMargin - 100);
-            UIColor *titleColor = ((i == 0)?[UIColor blackColor]:[UIColor colorWithHexString:titleSelectedColor]);
+            CGFloat left = ((i == 0)?ButtonHorizontalMargin:self.width - ButtonHorizontalMargin - fbuttonWidth);
+            UIColor *titleColor = ((i == 0)?[UIColor colorWithHexString:@"2bbfff"]:[UIColor colorWithHexString:@"2bbfff"]);
+            UIColor *bgColor = ((i == 0)?[UIColor colorWithHexString:@"ffffff"]:[UIColor colorWithHexString:@"ffffff"]);
+            
             UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-            button.frame = CGRectMake(left, 0, 100, PopupViewTabBarHeight);
+            button.frame = CGRectMake(left, 10, fbuttonWidth, PopupViewTabBarHeight-20);
             button.tag = i;
+            button.layer.masksToBounds = YES;
+            button.layer.borderWidth = 1;
+            button.layer.cornerRadius = 15;
+            button.backgroundColor = bgColor;
+            button.layer.borderColor = [UIColor colorWithHexString:@"2bffff"].CGColor;
             [button setTitle:titleArray[i] forState:UIControlStateNormal];
             [button setTitleColor:titleColor forState:UIControlStateNormal];
             button.titleLabel.font = [UIFont systemFontOfSize:ButtonFontSize];

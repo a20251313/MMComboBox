@@ -25,10 +25,13 @@
 //===============================================Package Data===============================================
     //first root
     MMItem *rootItem1 = [MMItem itemWithItemType:MMPopupViewDisplayTypeUnselected titleName:@"全部" iconType:MMPopupViewTypeIcon];
-    rootItem1.selectedType = MMPopupViewMultilSeMultiSelection;
+    rootItem1.selectedType = MMPopupViewSingleSelection;
+    //rootItem1.displayType = MMPopupViewDisplayTypeNormalCheck;
     //first floor
     for (int i = 0; i < 20; i ++) {
-        [rootItem1 addNode:[MMItem itemWithItemType:MMPopupViewDisplayTypeSelected titleName:[NSString stringWithFormat:@"蛋糕系列%d",i] subTileName:[NSString stringWithFormat:@"%ld",random()%10000]]];
+        MMItem *subItem = [MMItem itemWithItemType:MMPopupViewDisplayTypeSelected titleName:[NSString stringWithFormat:@"蛋糕系列%d",i]];
+        subItem.displayType = MMPopupViewDisplayTypeNormalCheck;
+        [rootItem1 addNode:subItem];
     }
     
    //second root
@@ -56,12 +59,13 @@
     
     //fourth root
     MMItem *rootItem4 = [MMItem itemWithItemType:MMPopupViewDisplayTypeUnselected titleName:@"筛选" iconType:MMPopupViewFilterIcon];
-    MMAlternativeItem *alternativeItem1 = [MMAlternativeItem itemWithTitle:@"只看免预约" isSelected:NO];
-    MMAlternativeItem *alternativeItem2 = [MMAlternativeItem itemWithTitle:@"节假日可用" isSelected:YES];
-    [rootItem4.alternativeArray addObject:alternativeItem1];
-    [rootItem4.alternativeArray addObject:alternativeItem2];
+    rootItem4.displayType = MMPopupViewDisplayTypeFilters;
+//    MMAlternativeItem *alternativeItem1 = [MMAlternativeItem itemWithTitle:@"只看免预约" isSelected:NO];
+//    MMAlternativeItem *alternativeItem2 = [MMAlternativeItem itemWithTitle:@"节假日可用" isSelected:YES];
+//    [rootItem4.alternativeArray addObject:alternativeItem1];
+//    [rootItem4.alternativeArray addObject:alternativeItem2];
     
-    NSArray *arr = @[@{@"用餐时段":@[@"不限",@"早餐",@"午餐",@"下午茶",@"晚餐",@"夜宵"]},
+    NSArray *arr = @[@{@"用餐时段":@[@"早餐",@"午餐",@"下午茶",@"晚餐",@"夜宵"]},
                      @{@"用餐人数":@[@"不限",@"单人餐",@"双人餐",@"3~4人餐",@"5~10人餐",@"10人以上",@"代金券",@"其他"]},
                      @{@"餐厅服务":@[@"不限",@"优惠买单",@"在线点餐",@"外卖送餐",@"预定",@"食客推荐",@"在线排队"]} ];
     
@@ -108,6 +112,7 @@
     return self.mutableArray.count;
 }
 - (MMItem *)comBoBoxView:(MMComBoBoxView *)comBoBoxView infomationForColumn:(NSUInteger)column {
+    
     return self.mutableArray[column];
 }
 

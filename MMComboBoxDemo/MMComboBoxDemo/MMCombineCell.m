@@ -40,12 +40,14 @@
         CGFloat orginy = [item.layout.cellLayoutTotalInfo[i][1] floatValue];
         button.frame = CGRectMake(orginX, orginy, ItemWidth, ItemHeight);
         button.titleLabel.font = [UIFont systemFontOfSize:ButtonFontSize];
-        button.layer.borderWidth = 1.0/scale;
+        button.layer.borderWidth = 1;
+        button.layer.masksToBounds = YES;
+        button.layer.cornerRadius = 15;
         button.tag = i;
-        button.layer.borderColor = [UIColor colorWithHexString:@"e8e8e8"].CGColor;
+        button.layer.borderColor = [UIColor colorWithHexString:@"2bbfff"].CGColor;
         [button setTitle:subItem.title forState:UIControlStateNormal];
-        [button setTitleColor:subItem.isSelected?[UIColor whiteColor]:[UIColor blackColor] forState:UIControlStateNormal];
-        button.backgroundColor = subItem.isSelected?[UIColor colorWithHexString:titleSelectedColor]:[UIColor whiteColor];
+        [button setTitleColor:subItem.isSelected?[UIColor whiteColor]:[UIColor colorWithHexString:@"2bbfff"] forState:UIControlStateNormal];
+        button.backgroundColor = subItem.isSelected?[UIColor colorWithHexString:@"2bbfff"]:[UIColor whiteColor];
         [button addTarget:self action:@selector(respondsToButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:button];
     }

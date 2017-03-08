@@ -61,7 +61,7 @@
 
 
 - (void)findTheTypeOfPopUpView {
-    if (self.alternativeArray.count) {
+    if (self.alternativeArray.count || self.displayType == MMPopupViewDisplayTypeFilters) {
         self.displayType = MMPopupViewDisplayTypeFilters;
         self.layout = [MMLayout layoutWithItem:self];
         for (int i = 0; i < self.childrenNodes.count; i++) {

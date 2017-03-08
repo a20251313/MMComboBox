@@ -22,6 +22,7 @@ typedef NS_ENUM(NSUInteger, MMPopupViewDisplayType) {  //分辨弹出来的view�
     MMPopupViewDisplayTypeNormal = 0,                //一层
     MMPopupViewDisplayTypeMultilayer = 1,            //两层
     MMPopupViewDisplayTypeFilters = 2,               //混合
+    MMPopupViewDisplayTypeNormalCheck = 3,                //一层的check类型
 };
 
 
