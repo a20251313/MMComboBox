@@ -21,8 +21,6 @@
 		7507085B1DF810F800D21D49 /* MMAlternativeItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 7507085A1DF810F800D21D49 /* MMAlternativeItem.m */; };
 		7507085E1DF8EA0500D21D49 /* MMDropDownBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 7507085D1DF8EA0500D21D49 /* MMDropDownBox.m */; };
 		750708611DF8EA2600D21D49 /* MMComBoBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = 750708601DF8EA2600D21D49 /* MMComBoBoxView.m */; };
-		750708751DF8EAFD00D21D49 /* UIColor+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 7507086F1DF8EAFD00D21D49 /* UIColor+Extension.m */; };
-		750708761DF8EAFD00D21D49 /* UIView+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 750708711DF8EAFD00D21D49 /* UIView+Extension.m */; };
 		750708B91DF94A9400D21D49 /* MMSingleFitlerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 750708B81DF94A9400D21D49 /* MMSingleFitlerView.m */; };
 		750708BC1DF94AD100D21D49 /* MMMultiFitlerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 750708BB1DF94AD100D21D49 /* MMMultiFitlerView.m */; };
 		750708BF1DF94B1900D21D49 /* MMCombinationFitlerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 750708BE1DF94B1900D21D49 /* MMCombinationFitlerView.m */; };
@@ -37,6 +35,7 @@
 		75F9B3411E08BA9B00E12FF3 /* MMCombineCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 75F9B3401E08BA9B00E12FF3 /* MMCombineCell.m */; };
 		75F9B3441E08C01700E12FF3 /* MMHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 75F9B3431E08C01700E12FF3 /* MMHeaderView.m */; };
 		7E73482E8E03DE845A90D13C /* libPods-MMComboBoxDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0291B0FB423F222F8A92AECD /* libPods-MMComboBoxDemo.a */; };
+		86B77C0E1E6F8EC100A02034 /* MMWaveView.m in Sources */ = {isa = PBXBuildFile; fileRef = 86B77C0D1E6F8EC100A02034 /* MMWaveView.m */; };
 		86D6BC2A1E6E438F0010DD7E /* iconfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 86D6BC291E6E438F0010DD7E /* iconfont.ttf */; };
 /* End PBXBuildFile section */
 
@@ -88,10 +87,6 @@
 		7507085D1DF8EA0500D21D49 /* MMDropDownBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDropDownBox.m; sourceTree = "<group>"; };
 		7507085F1DF8EA2600D21D49 /* MMComBoBoxView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMComBoBoxView.h; sourceTree = "<group>"; };
 		750708601DF8EA2600D21D49 /* MMComBoBoxView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMComBoBoxView.m; sourceTree = "<group>"; };
-		7507086E1DF8EAFD00D21D49 /* UIColor+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Extension.h"; sourceTree = "<group>"; };
-		7507086F1DF8EAFD00D21D49 /* UIColor+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Extension.m"; sourceTree = "<group>"; };
-		750708701DF8EAFD00D21D49 /* UIView+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Extension.h"; sourceTree = "<group>"; };
-		750708711DF8EAFD00D21D49 /* UIView+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Extension.m"; sourceTree = "<group>"; };
 		750708731DF8EAFD00D21D49 /* MMHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMHeader.h; sourceTree = "<group>"; };
 		750708B71DF94A9400D21D49 /* MMSingleFitlerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMSingleFitlerView.h; sourceTree = "<group>"; };
 		750708B81DF94A9400D21D49 /* MMSingleFitlerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMSingleFitlerView.m; sourceTree = "<group>"; };
@@ -115,6 +110,8 @@
 		75F9B3401E08BA9B00E12FF3 /* MMCombineCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCombineCell.m; sourceTree = "<group>"; };
 		75F9B3421E08C01700E12FF3 /* MMHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMHeaderView.h; sourceTree = "<group>"; };
 		75F9B3431E08C01700E12FF3 /* MMHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMHeaderView.m; sourceTree = "<group>"; };
+		86B77C0C1E6F8EC100A02034 /* MMWaveView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMWaveView.h; sourceTree = "<group>"; };
+		86B77C0D1E6F8EC100A02034 /* MMWaveView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMWaveView.m; sourceTree = "<group>"; };
 		86D6BC291E6E438F0010DD7E /* iconfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = iconfont.ttf; sourceTree = "<group>"; };
 		E613F96C907FE6EF2768D7B7 /* Pods-MMComboBoxDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MMComboBoxDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MMComboBoxDemo/Pods-MMComboBoxDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -180,7 +177,6 @@
 			isa = PBXGroup;
 			children = (
 				750708C31DFA858E00D21D49 /* Image */,
-				7507086B1DF8EAFD00D21D49 /* MMCategory */,
 				750708721DF8EAFD00D21D49 /* MMHeader */,
 				7507084F1DF80B6C00D21D49 /* Model */,
 				7507084B1DF80AE000D21D49 /* View */,
@@ -253,17 +249,6 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
-		7507086B1DF8EAFD00D21D49 /* MMCategory */ = {
-			isa = PBXGroup;
-			children = (
-				7507086E1DF8EAFD00D21D49 /* UIColor+Extension.h */,
-				7507086F1DF8EAFD00D21D49 /* UIColor+Extension.m */,
-				750708701DF8EAFD00D21D49 /* UIView+Extension.h */,
-				750708711DF8EAFD00D21D49 /* UIView+Extension.m */,
-			);
-			path = MMCategory;
-			sourceTree = "<group>";
-		};
 		750708721DF8EAFD00D21D49 /* MMHeader */ = {
 			isa = PBXGroup;
 			children = (
@@ -275,6 +260,8 @@
 		750708B61DF93B2E00D21D49 /* PopupView */ = {
 			isa = PBXGroup;
 			children = (
+				86B77C0C1E6F8EC100A02034 /* MMWaveView.h */,
+				86B77C0D1E6F8EC100A02034 /* MMWaveView.m */,
 				7507084C1DF80B1F00D21D49 /* MMBasePopupView.h */,
 				7507084D1DF80B1F00D21D49 /* MMBasePopupView.m */,
 				750708B71DF94A9400D21D49 /* MMSingleFitlerView.h */,
@@ -512,9 +499,7 @@
 				750708611DF8EA2600D21D49 /* MMComBoBoxView.m in Sources */,
 				7507084E1DF80B1F00D21D49 /* MMBasePopupView.m in Sources */,
 				7507085E1DF8EA0500D21D49 /* MMDropDownBox.m in Sources */,
-				750708751DF8EAFD00D21D49 /* UIColor+Extension.m in Sources */,
 				7547C68A1E00D6BC00DD0398 /* MMSelectedPath.m in Sources */,
-				750708761DF8EAFD00D21D49 /* UIView+Extension.m in Sources */,
 				750708201DF80A7700D21D49 /* ViewController.m in Sources */,
 				750708BF1DF94B1900D21D49 /* MMCombinationFitlerView.m in Sources */,
 				750708BC1DF94AD100D21D49 /* MMMultiFitlerView.m in Sources */,
@@ -523,6 +508,7 @@
 				7507081D1DF80A7700D21D49 /* AppDelegate.m in Sources */,
 				750708B91DF94A9400D21D49 /* MMSingleFitlerView.m in Sources */,
 				750708C21DFA816500D21D49 /* MMNormalCell.m in Sources */,
+				86B77C0E1E6F8EC100A02034 /* MMWaveView.m in Sources */,
 				750708581DF80D5C00D21D49 /* MMBaseItem.m in Sources */,
 				7507081A1DF80A7700D21D49 /* main.m in Sources */,
 				750708551DF80BBF00D21D49 /* MMItem.m in Sources */,

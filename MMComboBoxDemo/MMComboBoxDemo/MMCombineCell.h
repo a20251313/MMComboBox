@@ -16,5 +16,10 @@
 @end
 
 @protocol MMCombineCellDelegate <NSObject>
+
 - (void)combineCell:(MMCombineCell *)combineCell didSelectedAtIndex:(NSInteger)index;
+
+- (void)combineCellDidClickOpen:(MMCombineCell *)combineCell;
+
+
 @end

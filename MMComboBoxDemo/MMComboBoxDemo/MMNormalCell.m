@@ -9,6 +9,7 @@
 #import "MMNormalCell.h"
 #import "MMHeader.h"
 #import "UIImage+CommonImage.h"
+#import "MMWaveView.h"
 
 static const CGFloat horizontalMargin = 10.0f;
 
@@ -16,11 +17,24 @@ static const CGFloat horizontalMargin = 10.0f;
 @property (nonatomic, strong) UILabel *title;
 @property (nonatomic, strong) UILabel *subTitle;
 @property (nonatomic, strong) UIImageView *selectedImageview;
-@property (nonatomic, strong) CALayer *bottomLine;
+@property (nonatomic, strong) MMWaveView  *waveLineView;
+
 @end
 
 @implementation MMNormalCell
 
+
+
+- (MMWaveView*)waveLineView
+{
+    if (_waveLineView == nil) {
+        _waveLineView = [[MMWaveView alloc] initWithFrame:CGRectZero];
+        _waveLineView.lineColor = [UIColor redColor];
+        [self addSubview:_waveLineView];
+    }
+    
+    return _waveLineView;
+}
 - (void)awakeFromNib {
     [super awakeFromNib];
     
@@ -35,12 +49,13 @@ static const CGFloat horizontalMargin = 10.0f;
     [super layoutSubviews];
     
     
-    self.selectedImageview.frame = CGRectMake(self.width-horizontalMargin-16, (self.height -16)/2, 16, 16);
-    self.title.frame = CGRectMake(20, 0, 120, self.height);
+    self.selectedImageview.frame = CGRectMake(self.ff_width-horizontalMargin-16, (self.ff_height -16)/2, 16, 16);
+    self.title.frame = CGRectMake(10, 0, 140, self.ff_height);
     if (_item.subTitle != nil) {
-        self.subTitle.frame = CGRectMake(self.width - horizontalMargin - 80 , 0, 80, self.height);
+        self.subTitle.frame = CGRectMake(self.ff_width - horizontalMargin - 80 , 0, 80, self.ff_height);
     }
-    self.bottomLine.frame = CGRectMake(20, self.height - 1.0 , self.width-20, 1.0);
+    self.waveLineView.frame = CGRectMake(10, self.ff_height-2, self.ff_width, 1);
+    
 }
 
 - (void)setItem:(MMItem *)item{
@@ -48,15 +63,16 @@ static const CGFloat horizontalMargin = 10.0f;
     self.title.text = item.title;
     
     if (self.item.displayType == MMPopupViewDisplayTypeNormalCheck) {
-        self.title.textColor = item.isSelected?[UIColor colorWithHexString:@"2bbfff"]:[UIColor colorWithHexString:@"333333"];
-        self.backgroundColor = item.isSelected?[UIColor colorWithHexString:@"ffffff"]:[UIColor whiteColor];
-        self.bottomLine.backgroundColor = item.isSelected?[UIColor colorWithHexString:@"2bbfff"].CGColor:[UIColor colorWithHexString:@"333333"].CGColor;
+        self.title.textColor = item.isSelected?[UIColor ff_colorWithHexString:@"2bbfff"]:[UIColor ff_colorWithHexString:@"333333"];
+        self.backgroundColor = item.isSelected?[UIColor ff_colorWithHexString:@"ffffff"]:[UIColor whiteColor];
+        self.waveLineView.lineColor = item.isSelected?[UIColor ff_colorWithHexString:@"2bbfff"]:[UIColor ff_colorWithHexString:@"333333"];
         self.selectedImageview.hidden = !item.isSelected;
     }else if (self.item.displayType == MMPopupViewDisplayTypeNormal)
     {
-        self.title.textColor = item.isSelected?[UIColor whiteColor]:[UIColor colorWithHexString:@"333333"];
-        self.backgroundColor = item.isSelected?[UIColor colorWithHexString:@"2bbfff"]:[UIColor whiteColor];
+        self.title.textColor = item.isSelected?[UIColor whiteColor]:[UIColor ff_colorWithHexString:@"333333"];
+        self.backgroundColor = item.isSelected?[UIColor ff_colorWithHexString:@"2bbfff"]:[UIColor whiteColor];
         self.selectedImageview.hidden = YES;
+        self.waveLineView.lineColor = item.isSelected?[UIColor ff_colorWithHexString:@"2bbfff"]:[UIColor ff_colorWithHexString:@"333333"];
     }
  
     if (item.subTitle != nil) {
@@ -89,18 +105,16 @@ static const CGFloat horizontalMargin = 10.0f;
 - (UIImageView *)selectedImageview {
     
     if (!_selectedImageview) {
-        _selectedImageview = [[UIImageView alloc] initWithImage:[UIImage rightImageWithColor:[UIColor colorWithHexString:@"#2bbfff"] size:16]];
+        _selectedImageview = [[UIImageView alloc] initWithImage:[UIImage rightImageWithColor:[UIColor ff_colorWithHexString:@"#2bbfff"] size:16]];
         [self addSubview:_selectedImageview];
     }
     return _selectedImageview;
 }
 
-- (CALayer *)bottomLine {
-    if (!_bottomLine) {
-        _bottomLine = [CALayer layer];
-        _bottomLine.backgroundColor = [UIColor colorWithHexString:@"333333"].CGColor;
-        [self.layer addSublayer:_bottomLine];
-    }
-    return _bottomLine;
+
+
++ (CGFloat)normalCellHeight:(MMItem*)item
+{
+    return 45;
 }
 @end

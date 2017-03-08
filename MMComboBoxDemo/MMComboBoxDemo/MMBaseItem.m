@@ -13,6 +13,8 @@
     self = [super init];
     if (self) {
         self.displayType = MMPopupViewDisplayTypeNormal;
+        self.hasAllFuntion = YES;
+        self.isOpen = YES;
     }
     return self;
 }

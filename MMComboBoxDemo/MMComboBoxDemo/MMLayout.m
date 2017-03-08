@@ -20,11 +20,12 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
+        
         self.cellLayoutTotalHeight = [NSMutableArray array];
         self.cellLayoutTotalInfo = [NSMutableArray array];
-        
-        self.layItemWidth = (kScreenWidth-4*ItemHorizontalMargin)/4;
-        self.rowNumber = 4;//(kScreenWidth - 2*ItemHorizontalMargin)/(ItemWidth + ItemHorizontalDistance);
+        self.cellCloseStateHeight = [NSMutableArray array];
+        self.layItemWidth = [MMLayout layoutItemWidth];
+        self.rowNumber = 4;//(kMMScreenWidth - 2*ItemHorizontalMargin)/(ItemWidth + ItemHorizontalDistance);
         
         [self _initUI];
     }
@@ -44,8 +45,15 @@
         NSMutableArray *array = [NSMutableArray arrayWithCapacity:subItem.childrenNodes.count];
         CGFloat totalCellHeight = 2*TitleVerticalMargin + ItemHeight;
         NSInteger columnNumber = MAX(1,subItem.childrenNodes.count /layout.rowNumber + ((subItem.childrenNodes.count %layout.rowNumber)?1:0));
+        
+        CGFloat closeStateHeight = 2*TitleVerticalMargin + ItemHeight;
+        closeStateHeight += MIN(1, columnNumber)*(ItemHeight + TitleVerticalMargin); //(默认显示一行的代码)
+        
         totalCellHeight += columnNumber*(ItemHeight + TitleVerticalMargin);
+        
         [layout.cellLayoutTotalHeight addObject:@(totalCellHeight)];
+        [layout.cellCloseStateHeight addObject:@(closeStateHeight)];
+        
         layout.totalHeight += totalCellHeight;
         //布局
         for (int j = 0; j < columnNumber; j ++){
@@ -63,5 +71,11 @@
     }
     return  layout;
 }
+
++ (CGFloat)layoutItemWidth
+{
+    return (kMMScreenWidth-5*ItemHorizontalMargin)/4;
+}
+
 
 @end

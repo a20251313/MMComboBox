@@ -27,6 +27,7 @@
 @end
 
 @implementation MMComBoBoxView
+
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
@@ -34,18 +35,8 @@
         self.dropDownBoxArray = [NSMutableArray array];
         self.itemArray = [NSMutableArray array];
         self.symbolArray = [NSMutableArray arrayWithCapacity:1];
-        
-        UIView *bgView = [[UIView alloc] initWithFrame:CGRectZero];
-        bgView.layer.masksToBounds = YES;
-        bgView.layer.borderWidth = 1;
-        bgView.layer.cornerRadius = 18;
-        bgView.layer.borderColor = [UIColor clearColor].CGColor;
-        //bgView.layer.borderColor = [UIColor colorWithRed:0x2a/255.0 green:0xbf/255.0 blue:1 alpha:1.0].CGColor;
-        
         self.backgroundColor = [UIColor colorWithRed:0xe6/255.0 green:0xe6/255.0 blue:0xe6/255.0 alpha:1];
-        self.topBgView = bgView;
-        self.topBgView.backgroundColor = [UIColor whiteColor];
-        [self addSubview:bgView];
+        [self addSubview:self.topBgView];
         [self.topBgView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(15);
             make.right.mas_offset(-15);
@@ -57,18 +48,33 @@
 }
 
 
+- (UIView*)topBgView
+{
+    if (_topBgView == nil) {
+        UIView *bgView = [[UIView alloc] initWithFrame:CGRectZero];
+        bgView.layer.masksToBounds = YES;
+        bgView.layer.borderWidth = 1;
+        bgView.layer.cornerRadius = 18;
+        bgView.layer.borderColor = [UIColor clearColor].CGColor;
+        bgView.backgroundColor = [UIColor whiteColor];
+        _topBgView = bgView;
+    }
+    
+    return _topBgView;
+}
+
 - (void)reload {
     NSUInteger count = 0;
     if ([self.dataSource respondsToSelector:@selector(numberOfColumnsIncomBoBoxView:)]) {
       count = [self.dataSource numberOfColumnsIncomBoBoxView:self];
     }
     
-    CGFloat width = (self.width-30)/count;
+    CGFloat width = (self.ff_width-30)/count;
     if ([self.dataSource respondsToSelector:@selector(comBoBoxView:infomationForColumn:)]) {
         for (NSUInteger i = 0; i < count; i ++) {
             MMItem *item = [self.dataSource comBoBoxView:self infomationForColumn:i];
             [item findTheTypeOfPopUpView];
-            MMDropDownBox *dropBox = [[MMDropDownBox alloc] initWithFrame:CGRectMake(i*width, 0, width, self.height) titleName:item.title withIcon:item.iconType];
+            MMDropDownBox *dropBox = [[MMDropDownBox alloc] initWithFrame:CGRectMake(i*width, 0, width, self.ff_height) titleName:item.title withIcon:item.iconType];
             dropBox.tag = i;
             dropBox.delegate = self;
             [dropBox setLineHide:YES];
@@ -92,13 +98,13 @@
 #pragma mark - Private Method
 - (void)_addLine {
     self.topLine = [CALayer layer];
-    self.topLine.frame = CGRectMake(0, 0 , self.width, 1.0/scale);
+    self.topLine.frame = CGRectMake(0, 0 , self.ff_width, 1.0/scale);
     self.topLine.backgroundColor = [UIColor colorWithWhite:0.000 alpha:0.3].CGColor;
     [self.layer addSublayer:self.topLine];
     
     self.bottomLine = [CALayer layer];
-    self.bottomLine.frame = CGRectMake(0, self.height - 1.0/scale , self.width, 1.0/scale);
-    self.bottomLine.backgroundColor = [UIColor colorWithHexString:@"e8e8e8"].CGColor;
+    self.bottomLine.frame = CGRectMake(0, self.ff_height - 1.0/scale , self.ff_width, 1.0/scale);
+    self.bottomLine.backgroundColor = [UIColor ff_colorWithHexString:@"e8e8e8"].CGColor;
     [self.layer addSublayer:self.bottomLine];
 }
 #pragma mark - MMDropDownBoxDelegate

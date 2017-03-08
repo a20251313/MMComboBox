@@ -63,8 +63,8 @@
 #define         kAttentionIcon              @"\U0000e614"  // 封闭圆里面有个字母i
 #define         kHeartIcon                  @"\U0000e613" //桃心（喜欢，关注神马的）
 #define         kNotificationIcon           @"\U0000e612"   //消息按钮，一个没有打开的信封
-#define         kSecrchLackIcon             @"\U0000e603" //搜索按钮（有一点儿不封闭）
-#define         kRefreshIcon                @"\U0000e605"   //刷新按钮
+#define         kSecrchLackIcon             @"\U0000e60e" //搜索按钮（有一点儿不封闭）
+#define         kRefreshIcon                @"\U0000e60d"   //刷新按钮
 #define         kSuccessIon                 @"\U0000e604" //勾的外面有个圆
 #define         kHelpIcon                   @"\U0000e603"  // 封闭圆里面有个?
 #define         kLogoFullIconIcon           @"\U0000e602"   //飞凡的 有鲸鱼，文字，网址
@@ -74,11 +74,12 @@
 #define         kFilterIcon                 @"\U0000e6b1"     //筛选icon（一个漏斗）
 #define         kStarFiveIcon               @"\U0000e641"     //实心的⭐️
 #define         kSearchIcon                 @"\U0000e625"    //搜索icon
-#define         kTypeIcon                   @"\U0000e67f"     //一个P字icon（有圆形外框）
+#define         kTypeIcon                   @"\U0000e67f"     //类型icon
 #define         kPatrkRoundIcon             @"\U0000e67d"     //一个P字icon（有圆形外框）
 #define         kMinusChineseIcon           @"\U0000e67c"   //一个减字icon
 #define         kSacnOnceIcon               @"\U0000e67b"   //扫一扫icon
-#define         kMineIcon                   @"\U0000e679"   //我的icon
+#define         kMineIcon                   @"\U0000e67a"   //我的icon
+#define         kDiscountIcon               @"\U0000e679"   //折扣icon（有字在矩形里面）
 #define         kAiGuangJieIcon             @"\U0000e678"   //爱逛街icon
 #define         kFeifanTongIcon             @"\U0000e677"   //飞凡通icon
 #define         kBackTopIcon                @"\U0000e674"   //列表返回顶部的icon

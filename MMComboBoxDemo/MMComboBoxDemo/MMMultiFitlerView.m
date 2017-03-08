@@ -15,6 +15,7 @@
 @interface MMMultiFitlerView () <UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, assign) NSUInteger selectedIndex;
 @property (nonatomic, assign) NSUInteger minRowNumber;
+@property (nonatomic, strong) UIView  *bgView;
 @end
 @implementation MMMultiFitlerView
 - (id)initWithItem:(MMItem *)item{
@@ -40,18 +41,18 @@
     UIView *rootView = [[UIApplication sharedApplication] keyWindow];
     self.sourceFrame = frame;
     CGFloat top =  CGRectGetMaxY(self.sourceFrame);
-    CGFloat maxHeight = kScreenHeigth - DistanceBeteewnPopupViewAndBottom - top - PopupViewTabBarHeight;
-    CGFloat resultHeight = MIN(maxHeight, MAX(self.item.childrenNodes.count, self.minRowNumber)  * PopupViewRowHeight);
-    self.frame = CGRectMake(0, top, kScreenWidth, 0);
+    CGFloat maxHeight = kMMScreenHeigth - DistanceBeteewnPopupViewAndBottom - top - PopupViewTabBarHeight;
+    CGFloat resultHeight = MIN(maxHeight, MAX(self.item.childrenNodes.count, self.minRowNumber)  * [MMLeftCell leftCellHeight:nil]);
+    self.frame = CGRectMake(0, top, kMMScreenWidth, 0);
     [rootView addSubview:self];
     
   
     //add tableView
     self.mainTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     if (self.minRowNumber > self.item.childrenNodes.count) {
-        self.mainTableView.rowHeight = PopupViewRowHeight*self.minRowNumber/self.item.childrenNodes.count;
+        self.mainTableView.rowHeight = [MMLeftCell leftCellHeight:nil]*self.minRowNumber/self.item.childrenNodes.count;
     }else{
-        self.mainTableView.rowHeight = PopupViewRowHeight;
+        self.mainTableView.rowHeight =  [MMLeftCell leftCellHeight:nil];
     }
     
     self.mainTableView.tag = 0;
@@ -65,7 +66,7 @@
     self.mainTableView.backgroundColor = [UIColor whiteColor];
     
     self.subTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-    self.subTableView.rowHeight = PopupViewRowHeight;
+    self.subTableView.rowHeight = [MMNormalCell normalCellHeight:nil];
     self.subTableView.tag = 1;
     self.subTableView.delegate = self;
     self.subTableView.dataSource = self;
@@ -75,7 +76,7 @@
     [self addSubview:self.subTableView];
     
     //add ShadowView
-    self.shadowView.frame = CGRectMake(0, top, kScreenWidth, kScreenHeigth - top);
+    self.shadowView.frame = CGRectMake(0, top, kMMScreenWidth, kMMScreenHeigth - top);
     self.shadowView.alpha = 0;
     self.shadowView.userInteractionEnabled = YES;
     [rootView insertSubview:self.shadowView belowSubview:self];
@@ -84,12 +85,30 @@
     tap.numberOfTapsRequired = 1; //tap次数
     [self.shadowView addGestureRecognizer:tap];
     
+    self.bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kMMScreenWidth, resultHeight)];
+    [self.bgView setBackgroundColor:[UIColor whiteColor]];
+    [self insertSubview:self.bgView atIndex:0];
+    
+    
+//    [UIView animateWithDuration:0 animations:^{
+//        self.frame = CGRectMake(0, top, kMMScreenWidth, resultHeight);
+//        self.mainTableView.frame = CGRectMake(0, 0, kMMLeftCellWidth, self.ff_height);
+//        self.subTableView.frame = CGRectMake(kMMLeftCellWidth+10, 0,  self.ff_width - kMMLeftCellWidth-20, self.ff_height);
+//        self.shadowView.alpha = ShadowAlpha;
+//    } completion:^(BOOL finished) {
+//        self.frame = CGRectMake(0, top, kMMScreenWidth, resultHeight);
+//        self.mainTableView.frame = CGRectMake(0, 0, kMMLeftCellWidth, self.ff_height);
+//        self.subTableView.frame = CGRectMake(kMMLeftCellWidth+10, 0,  self.ff_width - kMMLeftCellWidth-20, self.ff_height);
+//        self.shadowView.alpha = ShadowAlpha;
+//         completion();
+//    }];
+    
     //出现的动画
     [UIView animateWithDuration:AnimationDuration animations:^{
         
-        self.frame = CGRectMake(0, top, kScreenWidth, resultHeight);
-        self.mainTableView.frame = CGRectMake(0, 0, kLeftCellWidth, self.height);
-        self.subTableView.frame = CGRectMake(kLeftCellWidth-1, 0,  self.width - kLeftCellWidth, self.height);
+        self.frame = CGRectMake(0, top, kMMScreenWidth, resultHeight);
+        self.mainTableView.frame = CGRectMake(0, 0, kMMLeftCellWidth, self.ff_height);
+        self.subTableView.frame = CGRectMake(kMMLeftCellWidth+10, 0,  self.ff_width - kMMLeftCellWidth-20, self.ff_height);
         self.shadowView.alpha = ShadowAlpha;
        
     } completion:^(BOOL finished) {
@@ -98,6 +117,11 @@
     
 }
 
+-(void)layoutSubviews
+{
+    [super layoutSubviews];
+    self.bgView.frame = self.bounds;
+}
 - (void)dismiss{
     [super dismiss];
     //设置最后选中的赋给left cell
@@ -115,9 +139,10 @@
     //消失的动画
     [UIView animateWithDuration:AnimationDuration animations:^{
         //        self.imageView.hidden = YES;
-        self.frame = CGRectMake(0, top, kScreenWidth, 0);
-        self.mainTableView.height = self.height;
-        self.subTableView.height = self.height;
+        self.frame = CGRectMake(0, top, kMMScreenWidth, 0);
+        self.mainTableView.ff_height = self.ff_height;
+        self.subTableView.ff_height = self.ff_height;
+        self.bgView.ff_height = self.ff_height;
         self.shadowView.alpha = 0.0;
     } completion:^(BOOL finished) {
         if (self.superview) {
@@ -171,9 +196,18 @@
     }
     MMNormalCell *cell = [tableView dequeueReusableCellWithIdentifier:SubCellID forIndexPath:indexPath];
     cell.item = self.item.childrenNodes[self.selectedIndex].childrenNodes[indexPath.row];
-   // cell.backgroundColor = [UIColor colorWithHexString:@"F5F3F6"];
+   // cell.backgroundColor = [UIColor ff_colorWithHexString:@"F5F3F6"];
     return cell;
 
+}
+
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (tableView.tag == 0) {
+        return [MMLeftCell leftCellHeight:self.item.childrenNodes[indexPath.row]];
+    }
+    return [MMNormalCell normalCellHeight:self.item.childrenNodes[self.selectedIndex].childrenNodes[indexPath.row]];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

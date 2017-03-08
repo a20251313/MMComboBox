@@ -52,21 +52,23 @@
     UIView *rootView = [[UIApplication sharedApplication] keyWindow];
     self.sourceFrame = frame;
     CGFloat top =  CGRectGetMaxY(self.sourceFrame);
-    CGFloat maxHeight = kScreenHeigth - DistanceBeteewnPopupViewAndBottom - top - PopupViewTabBarHeight;
+    CGFloat maxHeight = kMMScreenHeigth - DistanceBeteewnPopupViewAndBottom - top - PopupViewTabBarHeight;
     CGFloat resultHeight = MIN(maxHeight, self.item.layout.totalHeight);
-    self.frame = CGRectMake(0, top, kScreenWidth, 0);
+    self.frame = CGRectMake(0, top, kMMScreenWidth, 0);
     [rootView addSubview:self];
     
     //addTableView
     self.mainTableView = [[UITableView alloc] initWithFrame:self.bounds style:UITableViewStylePlain];
     self.mainTableView.delegate = self;
     self.mainTableView.dataSource = self;
+    self.mainTableView.tableHeaderView = [[UIView alloc] init];
     [self.mainTableView registerClass:[MMCombineCell class] forCellReuseIdentifier:MainCellID];
+    [self.mainTableView setSeparatorColor:[UIColor clearColor]];
     [self addSubview:self.mainTableView];
     
     
     //add shadowView
-    self.shadowView.frame = CGRectMake(0, top, kScreenWidth, kScreenHeigth - top);
+    self.shadowView.frame = CGRectMake(0, top, kMMScreenWidth, kMMScreenHeigth - top);
     self.shadowView.alpha = 0;
     self.shadowView.userInteractionEnabled = YES;
     [rootView insertSubview:self.shadowView belowSubview:self];
@@ -76,23 +78,23 @@
     [self.shadowView addGestureRecognizer:tap];
     
     [UIView animateWithDuration:AnimationDuration animations:^{
-        self.frame = CGRectMake(0, top, kScreenWidth, resultHeight);
+        self.frame = CGRectMake(0, top, kMMScreenWidth, resultHeight);
         self.mainTableView.frame = self.bounds;
         self.shadowView.alpha = ShadowAlpha;
     } completion:^(BOOL finished) {
         completion();
-        self.height += PopupViewTabBarHeight;
+        self.ff_height += PopupViewTabBarHeight;
         self.bottomView = [[UIView alloc] init];
-        self.bottomView.backgroundColor = [UIColor colorWithHexString:@"FCFAFD"];
-        self.bottomView.frame = CGRectMake(0, self.mainTableView.bottom, self.width, PopupViewTabBarHeight);
+        self.bottomView.backgroundColor = [UIColor ff_colorWithHexString:@"FCFAFD"];
+        self.bottomView.frame = CGRectMake(0, self.mainTableView.ff_bottom, self.ff_width, PopupViewTabBarHeight);
         [self addSubview:self.bottomView];
         
         NSArray *titleArray = @[@"重置",@"确定"];
-        CGFloat  fbuttonWidth = (self.width-ButtonHorizontalMargin*2-ButtonHorizontalMargin*3)/2;
+        CGFloat  fbuttonWidth = (self.ff_width-ButtonHorizontalMargin*2-ButtonHorizontalMargin*3)/2;
         for (int i = 0; i < 2 ; i++) {
-            CGFloat left = ((i == 0)?ButtonHorizontalMargin:self.width - ButtonHorizontalMargin - fbuttonWidth);
-            UIColor *titleColor = ((i == 0)?[UIColor colorWithHexString:@"2bbfff"]:[UIColor colorWithHexString:@"2bbfff"]);
-            UIColor *bgColor = ((i == 0)?[UIColor colorWithHexString:@"ffffff"]:[UIColor colorWithHexString:@"ffffff"]);
+            CGFloat left = ((i == 0)?ButtonHorizontalMargin:self.ff_width - ButtonHorizontalMargin - fbuttonWidth);
+            UIColor *titleColor = ((i == 0)?[UIColor ff_colorWithHexString:@"2bbfff"]:[UIColor ff_colorWithHexString:@"2bbfff"]);
+            UIColor *bgColor = ((i == 0)?[UIColor ff_colorWithHexString:@"ffffff"]:[UIColor ff_colorWithHexString:@"ffffff"]);
             
             UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
             button.frame = CGRectMake(left, 10, fbuttonWidth, PopupViewTabBarHeight-20);
@@ -101,7 +103,7 @@
             button.layer.borderWidth = 1;
             button.layer.cornerRadius = 15;
             button.backgroundColor = bgColor;
-            button.layer.borderColor = [UIColor colorWithHexString:@"2bffff"].CGColor;
+            button.layer.borderColor = [UIColor ff_colorWithHexString:@"2bbfff"].CGColor;
             [button setTitle:titleArray[i] forState:UIControlStateNormal];
             [button setTitleColor:titleColor forState:UIControlStateNormal];
             button.titleLabel.font = [UIFont systemFontOfSize:ButtonFontSize];
@@ -144,7 +146,7 @@
     CGFloat top =  CGRectGetMaxY(self.sourceFrame);
     //消失的动画
     [UIView animateWithDuration:AnimationDuration animations:^{
-        self.frame = CGRectMake(0, top, kScreenWidth, 0);
+        self.frame = CGRectMake(0, top, kMMScreenWidth, 0);
         self.mainTableView.frame = self.bounds;
         self.shadowView.alpha = 0.0;
     } completion:^(BOOL finished) {
@@ -236,7 +238,7 @@
 #pragma mark - UITableViewDelegate
 - (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     if (self.headView == nil) {
-     self.headView = [[MMHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.width,self.item.layout.headerViewHeight)];
+     self.headView = [[MMHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.ff_width,self.item.layout.headerViewHeight)];
      self.headView.delegate = self;
      self.headView.backgroundColor = [UIColor whiteColor];
     }
@@ -245,7 +247,13 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return [self.item.layout.cellLayoutTotalHeight[indexPath.row] floatValue];
+    
+    
+    MMItem *subitem = self.item.childrenNodes[indexPath.row];
+    if (subitem.isOpen) {
+         return [self.item.layout.cellLayoutTotalHeight[indexPath.row] floatValue];
+    }
+    return [self.item.layout.cellCloseStateHeight[indexPath.row] floatValue];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
@@ -272,6 +280,12 @@
         self.item.childrenNodes[indexPath.row].childrenNodes[index].isSelected = YES;
     }
     [self.mainTableView reloadData];
+}
+
+- (void)combineCellDidClickOpen:(MMCombineCell *)combineCell
+{
+    NSIndexPath *indexPath = [self.mainTableView indexPathForCell:combineCell];
+    [self.mainTableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
 }
 
 

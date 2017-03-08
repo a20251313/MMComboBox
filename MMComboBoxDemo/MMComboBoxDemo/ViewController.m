@@ -12,6 +12,7 @@
 #import "MMHeader.h"
 #import "MMAlternativeItem.h"
 #import "MMSelectedPath.h"
+
 @interface ViewController () <MMComBoBoxViewDataSource, MMComBoBoxViewDelegate>
 @property (nonatomic, strong) NSMutableArray *mutableArray;
 @property (nonatomic, strong) MMComBoBoxView *comBoBoxView;
@@ -67,11 +68,17 @@
     
     NSArray *arr = @[@{@"用餐时段":@[@"早餐",@"午餐",@"下午茶",@"晚餐",@"夜宵"]},
                      @{@"用餐人数":@[@"不限",@"单人餐",@"双人餐",@"3~4人餐",@"5~10人餐",@"10人以上",@"代金券",@"其他"]},
-                     @{@"餐厅服务":@[@"不限",@"优惠买单",@"在线点餐",@"外卖送餐",@"预定",@"食客推荐",@"在线排队"]} ];
+                     @{@"餐厅服务":@[@"不限",@"优惠买单",@"在线点餐",@"外卖送餐",@"预定",@"食客推荐",@"在线排队",@"在线排队",@"在线排队",@"在线排队",@"在线排队",@"在线排队",@"在线排队",@"在线排队"]} ];
     
     for (NSDictionary *itemDic in arr) {
         MMItem *item4_A = [MMItem itemWithItemType:MMPopupViewDisplayTypeUnselected titleName:[itemDic.allKeys lastObject]];
         [rootItem4 addNode:item4_A];
+        item4_A.hasAllFuntion = YES;
+//        item4_A.isOpen = NO;
+//        if ([item4_A.title isEqualToString:@"餐厅服务"]) {
+//           item4_A.isOpen = NO;
+//        }
+        
         for (NSString *title in [itemDic.allValues lastObject]) {
             [item4_A addNode:[MMItem itemWithItemType:MMPopupViewDisplayTypeUnselected titleName:title]];
         }
@@ -85,13 +92,13 @@
 
 //===============================================Init===============================================
     
-    self.comBoBoxView = [[MMComBoBoxView alloc] initWithFrame:CGRectMake(0, 64, kScreenWidth, 40)];
+    self.comBoBoxView = [[MMComBoBoxView alloc] initWithFrame:CGRectMake(0, 180, kMMScreenWidth, 40)];
     self.comBoBoxView.dataSource = self;
     self.comBoBoxView.delegate = self;
     [self.view addSubview:self.comBoBoxView];
     [self.comBoBoxView reload];
     
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, self.comBoBoxView.bottom, self.view.width, self.view.height - 64)];
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, self.comBoBoxView.ff_bottom, self.view.ff_width, self.view.ff_height - 64)];
     imageView.image = [UIImage imageNamed:@"1.jpg"];
     [self.view addSubview:imageView];
     

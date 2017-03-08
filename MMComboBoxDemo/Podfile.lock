@@ -1,5 +1,5 @@
 PODS:
-  - FFIconFont (1.5)
+  - FFIconFont (1.6)
   - Masonry (1.0.2)
   - WDWorkFlow (2.0):
     - WDWorkFlow/CategoryKit (= 2.0)
@@ -17,7 +17,7 @@ DEPENDENCIES:
   - WDWorkFlow
 
 SPEC CHECKSUMS:
-  FFIconFont: e21f3a559a85221bf74507b351694e4123b5c4d1
+  FFIconFont: 46819cb401d36629b23032f875c0573c37cdd10e
   Masonry: 7c429b56da9d4ee0bbb3ed77a5ea710d6a5df39e
   WDWorkFlow: 867b1f5248e38478a5963ee5c482618fc55f56f0
 

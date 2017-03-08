@@ -31,7 +31,7 @@
         MMAlternativeItem *alternativeItem = _item.alternativeArray[i];
         CGFloat orginY =  (2*AlternativeTitleVerticalMargin +AlternativeTitleHeight);
         UISwitch *switchControl = [[UISwitch alloc] init];
-        switchControl.frame = CGRectMake(self.width - 51 - ItemHorizontalMargin ,  AlternativeTitleVerticalMargin + orginY*i, 51, AlternativeTitleHeight);
+        switchControl.frame = CGRectMake(self.ff_width - 51 - ItemHorizontalMargin ,  AlternativeTitleVerticalMargin + orginY*i, 51, AlternativeTitleHeight);
         switchControl.tag= i;
         [switchControl setOn:alternativeItem.isSelected animated:NO];
         [switchControl addTarget:self action:@selector(respondsToSwitchAction:) forControlEvents:UIControlEventValueChanged];
@@ -39,13 +39,13 @@
         
         UILabel *titleLabel = [[UILabel alloc] init];
         titleLabel.text = alternativeItem.title;
-        titleLabel.frame = CGRectMake(ItemHorizontalMargin, switchControl.top, 100, AlternativeTitleHeight);
+        titleLabel.frame = CGRectMake(ItemHorizontalMargin, switchControl.ff_top, 100, AlternativeTitleHeight);
         titleLabel.font = [UIFont systemFontOfSize:ButtonFontSize];
         [self addSubview:titleLabel];
         
         CALayer *bottomLine = [CALayer layer];
-        bottomLine.frame = CGRectMake(0, orginY*(i+1) - 1.0/scale, self.width, 1.0/scale);
-        bottomLine.backgroundColor = [UIColor colorWithHexString:@"e8e8e8"].CGColor;
+        bottomLine.frame = CGRectMake(0, orginY*(i+1) - 1.0/scale, self.ff_width, 1.0/scale);
+        bottomLine.backgroundColor = [UIColor ff_colorWithHexString:@"e8e8e8"].CGColor;
         [self.layer addSublayer:bottomLine];
     }
 }

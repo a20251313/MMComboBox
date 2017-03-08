@@ -10,7 +10,7 @@
 #import "MMHeader.h"
 @interface MMLeftCell ()
 @property (nonatomic, strong) UILabel *infoLabel;
-@property (nonatomic, strong) CALayer *bottomLine;
+//@property (nonatomic, strong) CALayer *bottomLine;
 @end
 
 @implementation MMLeftCell
@@ -20,7 +20,7 @@
     if (self) {
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         [self addSubview:self.infoLabel];
-        [self.layer addSublayer:self.bottomLine];
+       // [self.layer addSublayer:self.bottomLine];
     }
     return self;
 }
@@ -28,13 +28,13 @@
 - (void)setItem:(MMItem *)item {
     _item = item;
     self.infoLabel.text = item.title;
-    self.backgroundColor = item.isSelected?[UIColor colorWithHexString:@"ffffff"]:[UIColor colorWithHexString:@"e6e6e6"];
-    self.infoLabel.textColor = item.isSelected?[UIColor colorWithHexString:@"000000"]:[UIColor colorWithHexString:@"333333"];
+    self.backgroundColor = item.isSelected?[UIColor ff_colorWithHexString:@"ffffff"]:[UIColor ff_colorWithHexString:@"e6e6e6"];
+    self.infoLabel.textColor = item.isSelected?[UIColor ff_colorWithHexString:@"000000"]:[UIColor ff_colorWithHexString:@"333333"];
 }
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.infoLabel.frame = CGRectMake(LeftCellHorizontalMargin, 0, self.width - 2 *LeftCellHorizontalMargin, self.height);
-    self.bottomLine.frame = CGRectMake(0, self.height - 1.0/scale , self.width, 1.0/scale);
+    self.infoLabel.frame = CGRectMake(LeftCellHorizontalMargin, 0, self.ff_width - 2 *LeftCellHorizontalMargin, self.ff_height);
+    //self.bottomLine.frame = CGRectMake(0, self.ff_height - 1.0 , self.ff_width, 1.0);
 }
 
 - (UILabel *)infoLabel {
@@ -46,11 +46,17 @@
     return _infoLabel;
 }
 
-- (CALayer *)bottomLine {
-    if (!_bottomLine) {
-        _bottomLine = [CALayer layer];
-        _bottomLine.backgroundColor = [UIColor colorWithWhite:0.000 alpha:0.3].CGColor;
-    }
-    return _bottomLine;
+//- (CALayer *)bottomLine {
+//    if (!_bottomLine) {
+//        _bottomLine = [CALayer layer];
+//        _bottomLine.backgroundColor = [UIColor colorWithWhite:0.000 alpha:0.3].CGColor;
+//    }
+//    return _bottomLine;
+//}
+
+
++ (CGFloat)leftCellHeight:(MMItem*)item
+{
+    return 45;
 }
 @end

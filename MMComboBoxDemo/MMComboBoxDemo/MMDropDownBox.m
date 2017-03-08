@@ -132,10 +132,10 @@
 
 - (void)updateTitleState:(BOOL)isSelected {
     if (isSelected) {
-        self.titleLabel.textColor = [UIColor colorWithHexString:titleSelectedColor];
+       // self.titleLabel.textColor = [UIColor ff_colorWithHexString:titleSelectedColor];
         //self.arrow.image = [UIImage imageNamed:@"pullup"];
     } else{
-        self.titleLabel.textColor = [UIColor blackColor];
+     //   self.titleLabel.textColor = [UIColor blackColor];
        // self.arrow.image = [UIImage imageNamed:@"pulldown"];
     }
 }
