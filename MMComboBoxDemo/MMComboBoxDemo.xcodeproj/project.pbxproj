@@ -221,7 +221,6 @@
 		7507084B1DF80AE000D21D49 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				750708B61DF93B2E00D21D49 /* PopupView */,
 				7507085C1DF8EA0500D21D49 /* MMDropDownBox.h */,
 				7507085D1DF8EA0500D21D49 /* MMDropDownBox.m */,
 				7507085F1DF8EA2600D21D49 /* MMComBoBoxView.h */,
@@ -236,13 +235,6 @@
 				750708731DF8EAFD00D21D49 /* MMHeader.h */,
 			);
 			path = MMHeader;
-			sourceTree = "<group>";
-		};
-		750708B61DF93B2E00D21D49 /* PopupView */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = PopupView;
 			sourceTree = "<group>";
 		};
 		750708C31DFA858E00D21D49 /* Image */ = {

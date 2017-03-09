@@ -92,7 +92,7 @@
 
 //===============================================Init===============================================
     
-    self.comBoBoxView = [[MMComBoBoxView alloc] initWithFrame:CGRectMake(0, 180, kMMScreenWidth, 40)];
+    self.comBoBoxView = [[MMComBoBoxView alloc] initWithFrame:CGRectMake(0, 64, kMMScreenWidth, 40)];
     self.comBoBoxView.dataSource = self;
     self.comBoBoxView.delegate = self;
     [self.view addSubview:self.comBoBoxView];
