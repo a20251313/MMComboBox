@@ -98,9 +98,9 @@
     [self.view addSubview:self.comBoBoxView];
     [self.comBoBoxView reload];
     
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, self.comBoBoxView.ff_bottom, self.view.ff_width, self.view.ff_height - 64)];
-    imageView.image = [UIImage imageNamed:@"1.jpg"];
-    [self.view addSubview:imageView];
+//    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, self.comBoBoxView.ff_bottom, self.view.ff_width, self.view.ff_height - 64)];
+//    imageView.image = [UIImage imageNamed:@"1.jpg"];
+//    [self.view addSubview:imageView];
     
 }
 
