@@ -11,7 +11,7 @@
 @class MMSelectedPath;
 @class MMLayout;
 
-
+#import "MMLayout.h"
 @interface MMItem : MMBaseItem
 @property (nonatomic, copy) NSString *code;                             //支持有的需要上传code而不是title
 @property (nonatomic, copy) NSString *title;
