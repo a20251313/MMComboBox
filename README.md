@@ -3,10 +3,10 @@
 ##前言
 数据大致是模范美团外卖数据。由于每个公司的业务场景不同所以这只是一个demo
 ##Demo效果：
-![效果图.gif](http://upload-images.jianshu.io/upload_images/307963-588c68a0a4db185a.gif?imageMogr2/auto-orient/strip)
+#![效果图.gif](http://upload-images.jianshu.io/upload_images/307963-588c68a0a4db185a.gif?imageMogr2/auto-orient/strip)
 ###工程结构图：
 ![结构图.png](http://upload-images.jianshu.io/upload_images/307963-97fa9a27aa16c8e2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-1.模拟组装数据，因为可能是多层的，所以我们这里通过组合模式来组装数据。在`MMBaseItem`里面我们定义了三个枚举：
+1.模拟组装数据，因为可能是多层的，所以我们这里通过组合模式来组装数据。在`MMBaseItem`里面我们定义了四个枚举：
 ```
 //这个字段我们暂时留着以后扩展，覆盖可能要有些选项不能选择，显示灰色的情况
 typedef NS_ENUM(NSUInteger, MMPopupViewMarkType) {  //选中的状态
@@ -23,6 +23,14 @@ typedef NS_ENUM(NSUInteger, MMPopupViewDisplayType) {  //分辨弹出来的view
     MMPopupViewDisplayTypeNormal = 0,                //一层
     MMPopupViewDisplayTypeMultilayer = 1,            //两层
     MMPopupViewDisplayTypeFilters = 2,               //混合
+};
+
+typedef NS_ENUM(NSInteger, MMPopupViewIconType) {  //筛选层附加icon定义
+MMPopupViewNoneIcon = 0,                //没有图标
+MMPopupViewLocationIcon = 1,                //位置图标  //kLocationIcon
+MMPopupViewSortIcon = 2,            //排序图标  //kSortedIcon
+MMPopupViewTypeIcon = 3,               //类型图标 //kTypeIcon
+MMPopupViewFilterIcon = 4,               //筛选图标 //kFilterIcon
 };
 ```
 每个`MMItem`都持有一个`layout`对象提前计算好弹出视图的布局信息并储存。由于`MMPopupViewDisplayTypeNormal`和`MMPopupViewDisplayTypeMultilayer`两种类型布局比较单一简单，所以`layout`对象暂时只是在`MMPopupViewDisplayTypeFilters`时有用。
