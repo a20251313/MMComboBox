@@ -366,7 +366,7 @@
 				TargetAttributes = {
 					750708141DF80A7700D21D49 = {
 						CreatedOnToolsVersion = 8.1;
-						DevelopmentTeam = 65Y8F76Y6Z;
+						DevelopmentTeam = 5TR28FWHKP;
 						ProvisioningStyle = Automatic;
 					};
 					7507082D1DF80A7700D21D49 = {
@@ -655,7 +655,7 @@
 			baseConfigurationReference = E613F96C907FE6EF2768D7B7 /* Pods-MMComboBoxDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 65Y8F76Y6Z;
+				DEVELOPMENT_TEAM = 5TR28FWHKP;
 				INFOPLIST_FILE = MMComboBoxDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = xw.MMComboBoxDemo;
@@ -668,7 +668,7 @@
 			baseConfigurationReference = 49ED9D5B99EAD0942F52B4AE /* Pods-MMComboBoxDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 65Y8F76Y6Z;
+				DEVELOPMENT_TEAM = 5TR28FWHKP;
 				INFOPLIST_FILE = MMComboBoxDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = xw.MMComboBoxDemo;
