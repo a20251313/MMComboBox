@@ -42,9 +42,6 @@
             make.right.mas_offset(-15);
             make.top.bottom.mas_equalTo(0);
         }];
-        
-        self.clipsToBounds = YES;
-        
     }
     return self;
 }
@@ -119,35 +116,34 @@
     popupView.delegate = self;
     popupView.tag = index;
     self.popupView = popupView;
-    
-    [popupView popupViewFromSourceFrame:self.frame completion:^ {
-        self.isAnimation = NO;
-    } fromView:self];
     [self.symbolArray addObject:popupView];
+    dispatch_async(dispatch_get_main_queue(), ^{
+       
+        [popupView popupViewFromSourceFrame:self.frame completion:^ {
+            self.isAnimation = NO;
+        } fromView:self];
+    });
+ 
+ 
 }
 
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
-    UIView *view = [super hitTest:point withEvent:event];
-    if (view == nil) {
-        CGPoint tp = [self convertPoint:point fromView:self];
-        for (UIView  *subView in self.subviews) {
-            if (CGRectContainsPoint(subView.frame, tp)) {
-                view = self;
-                break;
-            }
-        }
-    }
-    return view;
-}
-- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
-    CGPoint tp = [self convertPoint:point fromView:self];
-    for (UIView  *subView in self.subviews) {
-        if (CGRectContainsPoint(subView.frame, tp)) {
-            return YES;
-        }
-    }
-    return [super pointInside:point withEvent:event];
-}
+//- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+//    UIView *view = [super hitTest:point withEvent:event];
+//    if (view == nil) {
+//        CGPoint tp = [self convertPoint:point fromView:self];
+//        if (CGRectContainsPoint(self.popupView.frame, tp)) {
+//            view = self;
+//        }
+//    }
+//    return view;
+//}
+//- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
+//    CGPoint tp = [self convertPoint:point fromView:self];
+//    if (CGRectContainsPoint(self.popupView.frame, tp)) {
+//        return YES;
+//    }
+//    return [super pointInside:point withEvent:event];
+//}
 
 
 #pragma mark - MMDropDownBoxDelegate

@@ -49,12 +49,12 @@
 
 #pragma mark - Private Method
 - (void)popupViewFromSourceFrame:(CGRect)frame completion:(void (^ __nullable)(void))completion  fromView:(UIView*)superView{
-
+    //UIView *rootView = [[UIApplication sharedApplication] keyWindow];
     self.sourceFrame = frame;
     CGFloat top =  CGRectGetHeight(self.sourceFrame);
     CGFloat maxHeight = kMMScreenHeigth - DistanceBeteewnPopupViewAndBottom - top - PopupViewTabBarHeight-DistanceBeteewnTopMargin;
-    CGFloat resultHeight = MIN(maxHeight, self.item.layout.totalHeight)+PopupViewTabBarHeight;
-    self.frame = CGRectMake(0, top, kMMScreenWidth, resultHeight);
+    CGFloat resultHeight = MIN(maxHeight, self.item.layout.totalHeight);
+    self.frame = CGRectMake(0, top, kMMScreenWidth, 0);
     [superView addSubview:self];
     
     //addTableView
