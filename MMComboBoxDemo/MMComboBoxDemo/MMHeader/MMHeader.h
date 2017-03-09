@@ -21,6 +21,8 @@
 static  NSString *titleSelectedColor = @"4EBC72";
 static const CGFloat  ButtonFontSize = 14.0f;
 //MMPopupView
+
+static const CGFloat DistanceBeteewnTopMargin =  64+20;
 static const CGFloat DistanceBeteewnPopupViewAndBottom =80.0f;
 static const CGFloat PopupViewTabBarHeight = 50.0f;
 static const CGFloat LeftCellHorizontalMargin = 15.0f;

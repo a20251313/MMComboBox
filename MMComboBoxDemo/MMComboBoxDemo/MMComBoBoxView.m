@@ -117,11 +117,42 @@
     popupView.delegate = self;
     popupView.tag = index;
     self.popupView = popupView;
-    [popupView popupViewFromSourceFrame:self.frame completion:^{
+    
+    UIView *superView = self.superview;
+    UIView *tempView = superView;
+    while (superView != nil) {
+        tempView = superView;
+        superView = superView.superview;
+    }
+    [popupView popupViewFromSourceFrame:self.frame completion:^ {
         self.isAnimation = NO;
-    }];
+    } fromView:self];
     [self.symbolArray addObject:popupView];
 }
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    UIView *view = [super hitTest:point withEvent:event];
+    if (view == nil) {
+        CGPoint tp = [self convertPoint:point fromView:self];
+        for (UIView  *subView in self.subviews) {
+            if (CGRectContainsPoint(subView.frame, tp)) {
+                view = self;
+                break;
+            }
+        }
+    }
+    return view;
+}
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
+    CGPoint tp = [self convertPoint:point fromView:self];
+    for (UIView  *subView in self.subviews) {
+        if (CGRectContainsPoint(subView.frame, tp)) {
+            return YES;
+        }
+    }
+    return [super pointInside:point withEvent:event];
+}
+
 
 #pragma mark - MMDropDownBoxDelegate
 - (void)didTapDropDownBox:(MMDropDownBox *)dropDownBox atIndex:(NSUInteger)index {

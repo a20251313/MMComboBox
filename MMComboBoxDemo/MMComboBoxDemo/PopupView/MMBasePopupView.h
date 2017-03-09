@@ -25,6 +25,7 @@
 + (MMBasePopupView *)getSubPopupView:(MMItem *)item;
 - (id)initWithItem:(MMItem *)item;
 - (void)popupViewFromSourceFrame:(CGRect)frame completion:(void (^)(void))completion;
+- (void)popupViewFromSourceFrame:(CGRect)frame completion:(void (^ __nullable)(void))completion  fromView:(UIView*)superView;
 - (void)dismiss;
 - (void)dismissWithOutAnimation;
 

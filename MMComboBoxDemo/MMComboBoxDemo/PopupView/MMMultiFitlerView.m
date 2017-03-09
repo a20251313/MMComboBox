@@ -37,14 +37,14 @@
 
 
 #pragma mark - public method
-- (void)popupViewFromSourceFrame:(CGRect)frame completion:(void (^ __nullable)(void))completion {
-    UIView *rootView = [[UIApplication sharedApplication] keyWindow];
+- (void)popupViewFromSourceFrame:(CGRect)frame completion:(void (^ __nullable)(void))completion fromView:(UIView *)superView {
+
     self.sourceFrame = frame;
-    CGFloat top =  CGRectGetMaxY(self.sourceFrame);
-    CGFloat maxHeight = kMMScreenHeigth - DistanceBeteewnPopupViewAndBottom - top - PopupViewTabBarHeight;
+    CGFloat top =  CGRectGetHeight(self.sourceFrame);
+    CGFloat maxHeight = kMMScreenHeigth - DistanceBeteewnPopupViewAndBottom - top - PopupViewTabBarHeight-DistanceBeteewnTopMargin;
     CGFloat resultHeight = MIN(maxHeight, MAX(self.item.childrenNodes.count, self.minRowNumber)  * [MMLeftCell leftCellHeight:nil]);
     self.frame = CGRectMake(0, top, kMMScreenWidth, 0);
-    [rootView addSubview:self];
+    [superView addSubview:self];
     
   
     //add tableView
@@ -79,7 +79,7 @@
     self.shadowView.frame = CGRectMake(0, top, kMMScreenWidth, kMMScreenHeigth - top);
     self.shadowView.alpha = 0;
     self.shadowView.userInteractionEnabled = YES;
-    [rootView insertSubview:self.shadowView belowSubview:self];
+    [superView insertSubview:self.shadowView belowSubview:self];
     UITapGestureRecognizer  *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(respondsToTapGestureRecognizer:)];
     tap.numberOfTouchesRequired = 1; //手指数
     tap.numberOfTapsRequired = 1; //tap次数

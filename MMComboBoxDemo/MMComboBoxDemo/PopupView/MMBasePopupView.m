@@ -71,5 +71,9 @@
   //写这些方法是为了消除警告；
 }
 
+- (void)popupViewFromSourceFrame:(CGRect)frame completion:(void (^ __nullable)(void))completion  fromView:(UIView*)superView
+{
+}
+
 
 @end

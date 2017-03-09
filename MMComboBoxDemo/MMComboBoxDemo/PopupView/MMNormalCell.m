@@ -24,7 +24,6 @@ static const CGFloat horizontalMargin = 10.0f;
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -34,7 +33,6 @@ static const CGFloat horizontalMargin = 10.0f;
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
     
     self.selectedImageview.frame = CGRectMake(self.ff_width-horizontalMargin-16, (self.ff_height -16)/2, 16, 16);
     self.title.frame = CGRectMake(10, 0, 140, self.ff_height);
@@ -54,14 +52,12 @@ static const CGFloat horizontalMargin = 10.0f;
     if (self.item.displayType == MMPopupViewDisplayTypeNormalCheck) {
         self.title.textColor = item.isSelected?[UIColor ff_colorWithHexString:@"2bbfff"]:[UIColor ff_colorWithHexString:@"333333"];
         self.backgroundColor = item.isSelected?[UIColor ff_colorWithHexString:@"ffffff"]:[UIColor whiteColor];
-//        self.screenLineView.lineColor = item.isSelected?[UIColor ff_colorWithHexString:@"2bbfff"]:[UIColor ff_colorWithHexString:@"333333"];
         self.selectedImageview.hidden = !item.isSelected;
     }else if (self.item.displayType == MMPopupViewDisplayTypeNormal)
     {
         self.title.textColor = item.isSelected?[UIColor whiteColor]:[UIColor ff_colorWithHexString:@"333333"];
         self.backgroundColor = item.isSelected?[UIColor ff_colorWithHexString:@"2bbfff"]:[UIColor whiteColor];
         self.selectedImageview.hidden = YES;
-//        self.waveLineView.lineColor = item.isSelected?[UIColor ff_colorWithHexString:@"2bbfff"]:[UIColor ff_colorWithHexString:@"333333"];
     }
  
     if (item.subTitle != nil) {
