@@ -138,7 +138,17 @@
                 firstPath = path.firstPath;
               }
             }];
-            NSLog(@"当title为%@时，所选字段为 %@",rootItem.title ,title);
+            MMSelectedPath *path = [array lastObject];
+            if (path.secondPath == -1) {
+                MMItem *item = rootItem.childrenNodes[path.firstPath];
+                 NSLog(@"当title为%@时，所选字段为 %@",rootItem.title ,item.title);
+            }else{
+                
+                MMItem *item = rootItem.childrenNodes[path.firstPath];
+                MMItem *secondItem = rootItem.childrenNodes[path.firstPath].childrenNodes[path.secondPath];
+                NSLog(@"当title为%@时，secondItem:%@",item.title,secondItem.title);
+            }
+           // NSLog(@"当title为%@时，所选字段为 %@",rootItem.title ,title);
             break;}
         case MMPopupViewDisplayTypeFilters:{
             [array enumerateObjectsUsingBlock:^(MMSelectedPath * path, NSUInteger idx, BOOL * _Nonnull stop) {
