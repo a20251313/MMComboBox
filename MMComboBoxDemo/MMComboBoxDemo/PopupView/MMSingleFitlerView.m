@@ -43,7 +43,7 @@
     CGFloat top =   CGRectGetHeight(frame);
     CGFloat maxHeight = kMMScreenHeigth - DistanceBeteewnPopupViewAndBottom - top - PopupViewTabBarHeight-DistanceBeteewnTopMargin;
     CGFloat resultHeight = MIN(maxHeight, self.item.childrenNodes.count * [MMNormalCell normalCellHeight:nil]);
-    self.frame = CGRectMake(0, top, kMMScreenWidth, 0);
+    self.frame = CGRectMake(0, top, kMMScreenWidth, resultHeight);
     [superView addSubview:self];
    
     self.mainTableView = [[UITableView alloc] initWithFrame:self.bounds style:UITableViewStylePlain];

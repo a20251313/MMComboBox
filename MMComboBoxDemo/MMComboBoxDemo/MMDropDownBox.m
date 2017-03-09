@@ -34,7 +34,7 @@
         }];
         [self addSubview:self.dotView];
         [self.dotView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.width.height.mas_equalTo(5);
+            make.width.height.mas_equalTo(2);
             make.right.mas_offset(-1);
             make.centerY.mas_equalTo(0);
         }];
@@ -69,7 +69,7 @@
 -(UIView*)dotView
 {
     if (_dotView == nil) {
-        UIColor *dotColor = [UIColor colorWithRed:242.0/255.0 green:242.0/255.0 blue:242.0/255.0 alpha:1];
+        UIColor *dotColor = [UIColor colorWithRed:202.0/255.0 green:202.0/255.0 blue:202.0/255.0 alpha:1];
         _dotView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 5, 5)];
         _dotView.layer.borderWidth = 1;
         _dotView.layer.masksToBounds = YES;

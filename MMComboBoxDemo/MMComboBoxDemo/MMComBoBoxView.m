@@ -43,6 +43,8 @@
             make.top.bottom.mas_equalTo(0);
         }];
         
+        self.clipsToBounds = YES;
+        
     }
     return self;
 }
@@ -118,12 +120,6 @@
     popupView.tag = index;
     self.popupView = popupView;
     
-    UIView *superView = self.superview;
-    UIView *tempView = superView;
-    while (superView != nil) {
-        tempView = superView;
-        superView = superView.superview;
-    }
     [popupView popupViewFromSourceFrame:self.frame completion:^ {
         self.isAnimation = NO;
     } fromView:self];
@@ -163,7 +159,7 @@
         [currentBox setLineHide:(i != index)];
     }
     //点击后先判断symbolArray有没有标示
-    if (self.symbolArray.count) {
+    if (self.symbolArray.count > 0) {
         //移除
         MMBasePopupView * lastView = self.symbolArray[0];
         MMItem *rootItem = lastView.item;
