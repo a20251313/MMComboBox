@@ -139,11 +139,12 @@
               }
             }];
             MMSelectedPath *path = [array lastObject];
+            //只有一层的时候，secondPath都是为-1的
             if (path.secondPath == -1) {
                 MMItem *item = rootItem.childrenNodes[path.firstPath];
                  NSLog(@"当title为%@时，所选字段为 %@",rootItem.title ,item.title);
             }else{
-                
+                ///有两层层的时候，secondPath，firstPath都有值
                 MMItem *item = rootItem.childrenNodes[path.firstPath];
                 MMItem *secondItem = rootItem.childrenNodes[path.firstPath].childrenNodes[path.secondPath];
                 NSLog(@"当title为%@时，secondItem:%@",item.title,secondItem.title);
