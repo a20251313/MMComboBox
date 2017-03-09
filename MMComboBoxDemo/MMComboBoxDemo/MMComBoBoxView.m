@@ -42,7 +42,7 @@
             make.right.mas_offset(-15);
             make.top.bottom.mas_equalTo(0);
         }];
-       
+        
     }
     return self;
 }
@@ -66,7 +66,7 @@
 - (void)reload {
     NSUInteger count = 0;
     if ([self.dataSource respondsToSelector:@selector(numberOfColumnsIncomBoBoxView:)]) {
-      count = [self.dataSource numberOfColumnsIncomBoBoxView:self];
+        count = [self.dataSource numberOfColumnsIncomBoBoxView:self];
     }
     
     CGFloat width = (self.ff_width-30)/count;
@@ -107,6 +107,22 @@
     self.bottomLine.backgroundColor = [UIColor ff_colorWithHexString:@"e8e8e8"].CGColor;
     [self.layer addSublayer:self.bottomLine];
 }
+
+
+- (void)showNewPopupView:(NSUInteger)index
+{
+    self.isAnimation = YES;
+    MMItem *item = self.itemArray[index];
+    MMBasePopupView *popupView = [MMBasePopupView getSubPopupView:item];
+    popupView.delegate = self;
+    popupView.tag = index;
+    self.popupView = popupView;
+    [popupView popupViewFromSourceFrame:self.frame completion:^{
+        self.isAnimation = NO;
+    }];
+    [self.symbolArray addObject:popupView];
+}
+
 #pragma mark - MMDropDownBoxDelegate
 - (void)didTapDropDownBox:(MMDropDownBox *)dropDownBox atIndex:(NSUInteger)index {
     if (self.isAnimation == YES) return;
@@ -119,21 +135,16 @@
     if (self.symbolArray.count) {
         //移除
         MMBasePopupView * lastView = self.symbolArray[0];
+        MMItem *rootItem = lastView.item;
         [lastView dismiss];
         [self.symbolArray removeAllObjects];
+        //如果是点击当前的，那么就不需要再显示
+        if ([rootItem isEqual:self.itemArray[index]]) {
+            return;
+        }
         
-    }else{
-        self.isAnimation = YES;
-        MMItem *item = self.itemArray[index];
-        MMBasePopupView *popupView = [MMBasePopupView getSubPopupView:item];
-        popupView.delegate = self;
-        popupView.tag = index;
-        self.popupView = popupView;
-        [popupView popupViewFromSourceFrame:self.frame completion:^{
-           self.isAnimation = NO;
-        }];
-        [self.symbolArray addObject:popupView];
     }
+    [self showNewPopupView:index];
 }
 
 #pragma mark - MMPopupViewDelegate
@@ -149,15 +160,15 @@
         MMDropDownBox *box = self.dropDownBoxArray[index];
         [box updateTitleContent:title];
     }; //筛选不做UI赋值操作 直接将item的路径回调回去就好了
-  
+    
     if ([self.delegate respondsToSelector:@selector(comBoBoxView:didSelectedItemsPackagingInArray:atIndex:)]) {
         [self.delegate comBoBoxView:self didSelectedItemsPackagingInArray:array atIndex:index];
     }
 }
 
 - (void)popupViewWillDismiss:(MMBasePopupView *)popupView {
-  [self.symbolArray removeAllObjects];
-   for (MMDropDownBox *currentBox in self.dropDownBoxArray) {
+    [self.symbolArray removeAllObjects];
+    for (MMDropDownBox *currentBox in self.dropDownBoxArray) {
         [currentBox updateTitleState:NO];
     }
 }
