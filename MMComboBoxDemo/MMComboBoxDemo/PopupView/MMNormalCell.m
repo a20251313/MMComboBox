@@ -22,20 +22,6 @@ static const CGFloat horizontalMargin = 10.0f;
 
 @implementation MMNormalCell
 
-
-
-- (UIImageView*)screenLineView
-{
-    if (_screenLineView == nil) {
-        _screenLineView = [[UIImageView alloc] initWithFrame:CGRectZero];
-        UIImage *image =  [UIImage imageNamed:@"screen_line"];
-        image = [image resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0) resizingMode:UIImageResizingModeTile];
-        self.screenLineView.image = image;
-        [self addSubview:_screenLineView];
-    }
-    
-    return _screenLineView;
-}
 - (void)awakeFromNib {
     [super awakeFromNib];
     
@@ -57,14 +43,14 @@ static const CGFloat horizontalMargin = 10.0f;
     }
     self.screenLineView.frame = CGRectMake(10, self.ff_height-2, self.ff_width, 1);
     
-   
-    
 }
 
 - (void)setItem:(MMItem *)item{
     _item = item;
     self.title.text = item.title;
     
+    
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
     if (self.item.displayType == MMPopupViewDisplayTypeNormalCheck) {
         self.title.textColor = item.isSelected?[UIColor ff_colorWithHexString:@"2bbfff"]:[UIColor ff_colorWithHexString:@"333333"];
         self.backgroundColor = item.isSelected?[UIColor ff_colorWithHexString:@"ffffff"]:[UIColor whiteColor];
@@ -92,6 +78,20 @@ static const CGFloat horizontalMargin = 10.0f;
         [self addSubview:_title];
     }
     return _title;
+}
+
+
+- (UIImageView*)screenLineView
+{
+    if (_screenLineView == nil) {
+        _screenLineView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        UIImage *image =  [UIImage imageNamed:@"screen_line"];
+        image = [image resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0) resizingMode:UIImageResizingModeTile];
+        self.screenLineView.image = image;
+        [self addSubview:_screenLineView];
+    }
+    
+    return _screenLineView;
 }
 
 - (UILabel *)subTitle {
