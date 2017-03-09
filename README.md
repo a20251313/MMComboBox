@@ -2,8 +2,6 @@
 
 ##前言
 数据大致是模范美团外卖数据。由于每个公司的业务场景不同所以这只是一个demo
-##Demo效果：
-#![效果图.gif](http://upload-images.jianshu.io/upload_images/307963-588c68a0a4db185a.gif?imageMogr2/auto-orient/strip)
 ###工程结构图：
 ![结构图.png](http://upload-images.jianshu.io/upload_images/307963-97fa9a27aa16c8e2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 1.模拟组装数据，因为可能是多层的，所以我们这里通过组合模式来组装数据。在`MMBaseItem`里面我们定义了四个枚举：
