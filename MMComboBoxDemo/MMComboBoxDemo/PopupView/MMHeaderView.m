@@ -45,7 +45,7 @@
         
         CALayer *bottomLine = [CALayer layer];
         bottomLine.frame = CGRectMake(0, orginY*(i+1) - 1.0/scale, self.ff_width, 1.0/scale);
-        bottomLine.backgroundColor = [UIColor ff_colorWithHexString:@"e8e8e8"].CGColor;
+        bottomLine.backgroundColor = [UIColor ff_colorWithHex:0xe8e8e8].CGColor;
         [self.layer addSublayer:bottomLine];
     }
 }

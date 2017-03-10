@@ -103,7 +103,7 @@
     
     self.bottomLine = [CALayer layer];
     self.bottomLine.frame = CGRectMake(0, self.ff_height - 1.0/scale , self.ff_width, 1.0/scale);
-    self.bottomLine.backgroundColor = [UIColor ff_colorWithHexString:@"e8e8e8"].CGColor;
+    self.bottomLine.backgroundColor = [UIColor ff_colorWithHex:0xe8e8e8].CGColor;
     [self.layer addSublayer:self.bottomLine];
 }
 
@@ -118,7 +118,6 @@
     self.popupView = popupView;
     [self.symbolArray addObject:popupView];
     dispatch_async(dispatch_get_main_queue(), ^{
-       
         [popupView popupViewFromSourceFrame:self.frame completion:^ {
             self.isAnimation = NO;
         } fromView:self];
@@ -126,25 +125,23 @@
  
  
 }
-
-//- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
-//    UIView *view = [super hitTest:point withEvent:event];
-//    if (view == nil) {
-//        CGPoint tp = [self convertPoint:point fromView:self];
-//        if (CGRectContainsPoint(self.popupView.frame, tp)) {
-//            view = self;
-//        }
-//    }
-//    return view;
-//}
-//- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
-//    CGPoint tp = [self convertPoint:point fromView:self];
-//    if (CGRectContainsPoint(self.popupView.frame, tp)) {
-//        return YES;
-//    }
-//    return [super pointInside:point withEvent:event];
-//}
-
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    UIView *view = [super hitTest:point withEvent:event];
+    if (view == nil) {
+        CGPoint tp = [self convertPoint:point fromView:self];
+        if (CGRectContainsPoint(self.popupView.frame, tp)) {
+            view = self;
+        }
+    }
+    return view;
+}
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
+    CGPoint tp = [self convertPoint:point fromView:self];
+    if (CGRectContainsPoint(self.popupView.frame, tp)) {
+        return YES;
+    }
+    return [super pointInside:point withEvent:event];
+}
 
 #pragma mark - MMDropDownBoxDelegate
 - (void)didTapDropDownBox:(MMDropDownBox *)dropDownBox atIndex:(NSUInteger)index {

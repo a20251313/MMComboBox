@@ -50,13 +50,13 @@ static const CGFloat horizontalMargin = 10.0f;
     
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     if (self.item.displayType == MMPopupViewDisplayTypeNormalCheck) {
-        self.title.textColor = item.isSelected?[UIColor ff_colorWithHexString:@"2bbfff"]:[UIColor ff_colorWithHexString:@"333333"];
-        self.backgroundColor = item.isSelected?[UIColor ff_colorWithHexString:@"ffffff"]:[UIColor whiteColor];
+        self.title.textColor = item.isSelected?[UIColor ff_colorWithHex:0x2bbfff]:[UIColor ff_colorWithHex:0x333333];
+        self.backgroundColor = item.isSelected?[UIColor ff_colorWithHex:0xffffff]:[UIColor whiteColor];
         self.selectedImageview.hidden = !item.isSelected;
     }else if (self.item.displayType == MMPopupViewDisplayTypeNormal)
     {
-        self.title.textColor = item.isSelected?[UIColor whiteColor]:[UIColor ff_colorWithHexString:@"333333"];
-        self.backgroundColor = item.isSelected?[UIColor ff_colorWithHexString:@"2bbfff"]:[UIColor whiteColor];
+        self.title.textColor = item.isSelected?[UIColor whiteColor]:[UIColor ff_colorWithHex:0x333333];
+        self.backgroundColor = item.isSelected?[UIColor ff_colorWithHex:0x2bbfff]:[UIColor whiteColor];
         self.selectedImageview.hidden = YES;
     }
  
@@ -104,7 +104,7 @@ static const CGFloat horizontalMargin = 10.0f;
 - (UIImageView *)selectedImageview {
     
     if (!_selectedImageview) {
-        _selectedImageview = [[UIImageView alloc] initWithImage:[UIImage rightImageWithColor:[UIColor ff_colorWithHexString:@"#2bbfff"] size:16]];
+        _selectedImageview = [[UIImageView alloc] initWithImage:[UIImage rightImageWithColor:[UIColor ff_colorWithHex:0x2bbfff] size:16]];
         [self addSubview:_selectedImageview];
     }
     return _selectedImageview;

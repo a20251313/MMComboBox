@@ -79,7 +79,7 @@
         if (self.item.selectedType == MMPopupViewSingleSelection) return ;
         self.ff_height += PopupViewTabBarHeight;
         self.bottomView = [[UIView alloc] init];
-        self.bottomView.backgroundColor = [UIColor ff_colorWithHexString:@"FCFAFD"];
+        self.bottomView.backgroundColor = [UIColor ff_colorWithHex:0xFCFAFD];
         self.bottomView.frame = CGRectMake(0, self.mainTableView.ff_bottom, self.ff_width, PopupViewTabBarHeight);
         [self addSubview:self.bottomView];
         

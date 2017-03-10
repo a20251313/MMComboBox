@@ -53,10 +53,10 @@
         button.layer.masksToBounds = YES;
         button.layer.cornerRadius = 15;
         button.tag = i;
-        button.layer.borderColor = [UIColor ff_colorWithHexString:@"2bbfff"].CGColor;
+        button.layer.borderColor = [UIColor ff_colorWithHex:0x2bbfff].CGColor;
         [button setTitle:subItem.title forState:UIControlStateNormal];
-        [button setTitleColor:subItem.isSelected?[UIColor whiteColor]:[UIColor ff_colorWithHexString:@"2bbfff"] forState:UIControlStateNormal];
-        button.backgroundColor = subItem.isSelected?[UIColor ff_colorWithHexString:@"2bbfff"]:[UIColor whiteColor];
+        [button setTitleColor:subItem.isSelected?[UIColor whiteColor]:[UIColor ff_colorWithHex:0x2bbfff] forState:UIControlStateNormal];
+        button.backgroundColor = subItem.isSelected?[UIColor ff_colorWithHex:0x2bbfff]:[UIColor whiteColor];
         [button addTarget:self action:@selector(respondsToButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:button];
     }
@@ -93,7 +93,7 @@
 - (UILabel *)titleLabel {
     if (_titleLabel == nil) {
         _titleLabel = [[UILabel alloc] init];
-        self.titleLabel.textColor = [UIColor ff_colorWithHexString:@"#333333"];
+        self.titleLabel.textColor = [UIColor ff_colorWithHex:0x333333];
         _titleLabel.font = [UIFont systemFontOfSize:ButtonFontSize];
         [self addSubview:_titleLabel];
     }
@@ -106,7 +106,7 @@
         _openLabel = [[UILabel alloc] init];
         _openLabel.backgroundColor = [UIColor clearColor];
         _openLabel.font = kICONFONT(ButtonFontSize);
-        _openLabel.textColor = [UIColor ff_colorWithHexString:@"#333333"];
+        _openLabel.textColor = [UIColor ff_colorWithHex:0x333333];
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickOpen:)];
         tap.numberOfTapsRequired = 1;
         tap.numberOfTouchesRequired = 1;

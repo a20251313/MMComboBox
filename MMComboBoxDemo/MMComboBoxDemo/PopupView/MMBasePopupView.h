@@ -11,29 +11,34 @@
 @class MMItem;
 @protocol MMPopupViewDelegate;
 @interface MMBasePopupView : UIView 
-@property (nonatomic, strong) MMItem *item;
+@property (nullable, nonatomic, strong) MMItem *item;
 @property (nonatomic, assign) CGRect sourceFrame;
-@property (nonatomic, strong) UIView *shadowView;
-@property (nonatomic, strong) UITableView *mainTableView;
-@property (nonatomic, strong) UITableView *subTableView;
-@property (nonatomic, strong) NSMutableArray *selectedArray;
-@property (nonatomic, strong) NSArray *temporaryArray;
+@property (nullable, nonatomic, strong) UIView *shadowView;
+@property (nullable, nonatomic, strong) UITableView *mainTableView;
+@property (nullable, nonatomic, strong) UITableView *subTableView;
+@property (nullable, nonatomic, strong) NSMutableArray *selectedArray;
+@property (nullable, nonatomic, strong) NSArray *temporaryArray;
 
 
-@property (nonatomic, weak) id<MMPopupViewDelegate> delegate;
+@property (nullable,nonatomic, weak) id<MMPopupViewDelegate> delegate;
 
-+ (MMBasePopupView *)getSubPopupView:(MMItem *)item;
-- (id)initWithItem:(MMItem *)item;
-- (void)popupViewFromSourceFrame:(CGRect)frame completion:(void (^)(void))completion;
-- (void)popupViewFromSourceFrame:(CGRect)frame completion:(void (^ __nullable)(void))completion  fromView:(UIView*)superView;
++ (nullable MMBasePopupView *)getSubPopupView:(nullable MMItem *)item;
+- (nullable id)initWithItem:(nullable MMItem *)item;
+- (void)popupViewFromSourceFrame:(CGRect)frame completion:(void (^ __nullable)(void))completion;
+- (void)popupViewFromSourceFrame:(CGRect)frame completion:(void (^ __nullable)(void))completion  fromView:(nullable UIView*)superView;
 - (void)dismiss;
 - (void)dismissWithOutAnimation;
 
 @end
 
 @protocol MMPopupViewDelegate <NSObject>
+
 @optional
-- (void)popupView:(MMBasePopupView *)popupView didSelectedItemsPackagingInArray:(NSArray *)array atIndex:(NSUInteger)index;
+
+- (void)popupView:(nullable MMBasePopupView *)popupView didSelectedItemsPackagingInArray:(nullable NSArray *)array atIndex:(NSUInteger)index;
+
 @required
-- (void)popupViewWillDismiss:(MMBasePopupView *)popupView;
+
+- (void)popupViewWillDismiss:(nullable MMBasePopupView *)popupView;
+
 @end

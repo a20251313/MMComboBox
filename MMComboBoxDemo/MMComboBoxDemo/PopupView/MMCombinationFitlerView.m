@@ -13,14 +13,16 @@
 #import "MMSelectedPath.h"
 #import "MMAlternativeItem.h"
 @interface MMCombinationFitlerView () <MMHeaderViewDelegate,MMCombineCellDelegate,UITableViewDelegate, UITableViewDataSource>
-@property (nonatomic, strong) UIView *bottomView;
-@property (nonatomic, strong) MMHeaderView *headView;
+
+@property (nullable, nonatomic, strong) UIView *bottomView;
+@property (nullable ,nonatomic, strong) MMHeaderView *headView;
 @property (nonatomic, assign) BOOL isSuccessfulToCallBack;
+
 @end
 
 @implementation MMCombinationFitlerView
 
-- (id)initWithItem:(MMItem *)item{
+- (nullable id)initWithItem:(nullable MMItem *)item{
     self = [super init];
     if (self) {
         self.item = item;
@@ -48,7 +50,7 @@
 }
 
 #pragma mark - Private Method
-- (void)popupViewFromSourceFrame:(CGRect)frame completion:(void (^ __nullable)(void))completion  fromView:(UIView*)superView{
+- (void)popupViewFromSourceFrame:(CGRect)frame completion:(void (^ __nullable)(void))completion  fromView:(nullable UIView*)superView{
     //UIView *rootView = [[UIApplication sharedApplication] keyWindow];
     self.sourceFrame = frame;
     CGFloat top =  CGRectGetHeight(self.sourceFrame);
@@ -86,7 +88,7 @@
         completion();
         self.ff_height += PopupViewTabBarHeight;
         self.bottomView = [[UIView alloc] init];
-        self.bottomView.backgroundColor = [UIColor ff_colorWithHexString:@"ffffff"];
+        self.bottomView.backgroundColor = [UIColor ff_colorWithHex:0xffffff];
         self.bottomView.frame = CGRectMake(0, self.mainTableView.ff_bottom, self.ff_width, PopupViewTabBarHeight);
         [self addSubview:self.bottomView];
         
@@ -101,8 +103,8 @@
         CGFloat  fbuttonWidth = (self.ff_width-ButtonHorizontalMargin*2-ButtonHorizontalMargin*3)/2;
         for (int i = 0; i < 2 ; i++) {
             CGFloat left = ((i == 0)?ButtonHorizontalMargin:self.ff_width - ButtonHorizontalMargin - fbuttonWidth);
-            UIColor *titleColor = ((i == 0)?[UIColor ff_colorWithHexString:@"2bbfff"]:[UIColor ff_colorWithHexString:@"2bbfff"]);
-            UIColor *bgColor = ((i == 0)?[UIColor ff_colorWithHexString:@"ffffff"]:[UIColor ff_colorWithHexString:@"ffffff"]);
+            UIColor *titleColor = ((i == 0)?[UIColor ff_colorWithHex:0x2bbfff]:[UIColor ff_colorWithHex:0x2bbfff]);
+            UIColor *bgColor = ((i == 0)?[UIColor ff_colorWithHex:0xffffff]:[UIColor ff_colorWithHex:0xffffff]);
             
             UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
             button.frame = CGRectMake(left, 10, fbuttonWidth, PopupViewTabBarHeight-20);
@@ -111,7 +113,7 @@
             button.layer.borderWidth = 1;
             button.layer.cornerRadius = 15;
             button.backgroundColor = bgColor;
-            button.layer.borderColor = [UIColor ff_colorWithHexString:@"2bbfff"].CGColor;
+            button.layer.borderColor = [UIColor ff_colorWithHex:0x2bbfff].CGColor;
             [button setTitle:titleArray[i] forState:UIControlStateNormal];
             [button setTitleColor:titleColor forState:UIControlStateNormal];
             button.titleLabel.font = [UIFont systemFontOfSize:ButtonFontSize];
@@ -165,14 +167,14 @@
 }
 
 #pragma mark - Private Method
-- (BOOL)_iscontainsSelectedPath:(MMSelectedPath *)path sourceArray:(NSMutableArray *)array {
+- (BOOL)_iscontainsSelectedPath:(nullable MMSelectedPath *)path sourceArray:(nullable NSMutableArray *)array {
     for (MMSelectedPath *selectedpath in array) {
         if (selectedpath.firstPath == path.firstPath && selectedpath.secondPath == path.secondPath) return YES;
     }
     return NO;
 }
 
-- (MMSelectedPath *)_removePath:(MMSelectedPath *)path sourceArray:(NSMutableArray *)array {
+- (nullable MMSelectedPath *)_removePath:(nullable MMSelectedPath *)path sourceArray:(nullable NSMutableArray *)array {
     for (MMSelectedPath *selectedpath in array) {
         if (selectedpath.firstPath == path.firstPath && selectedpath.isKindOfAlternative == NO) {
             MMSelectedPath *returnPath = selectedpath;
@@ -183,7 +185,7 @@
     return nil;
 }
 
-- (MMSelectedPath *)_findAlternativeItemAtIndex:(NSInteger)index sourceArray:(NSMutableArray *)array {
+- (nullable MMSelectedPath *)_findAlternativeItemAtIndex:(NSInteger)index sourceArray:(nullable NSMutableArray *)array {
     for (MMSelectedPath *selectedpath in array) {
         if (selectedpath.firstPath == index && selectedpath.isKindOfAlternative == YES) {
             return selectedpath;

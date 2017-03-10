@@ -196,7 +196,6 @@
     }
     MMNormalCell *cell = [tableView dequeueReusableCellWithIdentifier:SubCellID forIndexPath:indexPath];
     cell.item = self.item.childrenNodes[self.selectedIndex].childrenNodes[indexPath.row];
-   // cell.backgroundColor = [UIColor ff_colorWithHexString:@"F5F3F6"];
     return cell;
 
 }

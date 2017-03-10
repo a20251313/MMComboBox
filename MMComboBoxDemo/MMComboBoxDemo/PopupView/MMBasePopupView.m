@@ -16,7 +16,7 @@
 
 @end
 @implementation MMBasePopupView
-- (id)initWithItem:(MMItem *)item {
+- (nullable id)initWithItem:(nullable MMItem *)item {
     self = [super init];
     if (self) {
         self.item = item;
@@ -27,14 +27,14 @@
     self = [super init];
     if (self) {
         self.shadowView = [[UIView alloc] init];
-        self.shadowView.backgroundColor = [UIColor ff_colorWithHexString:@"484848"];
+        self.shadowView.backgroundColor = [UIColor ff_colorWithHex:0x484848];
         self.selectedArray = [NSMutableArray array];
         self.temporaryArray = [NSMutableArray array];
     }
     return self;
 }
 
-+ (MMBasePopupView *)getSubPopupView:(MMItem *)item {
++ (nullable MMBasePopupView *)getSubPopupView:(nullable MMItem *)item {
     MMBasePopupView *view;
     switch (item.displayType) {
         case MMPopupViewDisplayTypeNormal:
@@ -67,11 +67,11 @@
     }
 }
 
-- (void)popupViewFromSourceFrame:(CGRect)frame completion:(void (^)(void))completion {
+- (void)popupViewFromSourceFrame:(CGRect)frame completion:(void (^ __nullable)(void))completion {
   //写这些方法是为了消除警告；
 }
 
-- (void)popupViewFromSourceFrame:(CGRect)frame completion:(void (^ __nullable)(void))completion  fromView:(UIView*)superView
+- (void)popupViewFromSourceFrame:(CGRect)frame completion:(void (^ __nullable)(void))completion  fromView:(nullable UIView*)superView
 {
 }
 
