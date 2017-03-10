@@ -42,6 +42,8 @@
             make.right.mas_offset(-15);
             make.top.bottom.mas_equalTo(0);
         }];
+        
+      
     }
     return self;
 }
@@ -53,7 +55,7 @@
         UIView *bgView = [[UIView alloc] initWithFrame:CGRectZero];
         bgView.layer.masksToBounds = YES;
         bgView.layer.borderWidth = 1;
-        bgView.layer.cornerRadius = 18;
+        bgView.layer.cornerRadius = 25;
         bgView.layer.borderColor = [UIColor clearColor].CGColor;
         bgView.backgroundColor = [UIColor whiteColor];
         _topBgView = bgView;

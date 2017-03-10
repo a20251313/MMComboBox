@@ -86,4 +86,75 @@
     }
     return [self.childrenNodes[selectedPath.firstPath] title];
 }
+
+
+
+/**
+ 根据选择path返回当前选中item
+
+ @param selectedPath MMSelectedPath
+ @return MMItem
+ */
+- (MMItem *)findItemBySelectedPath:(MMSelectedPath *)selectedPath {
+    if (selectedPath.secondPath != -1) {
+        return self.childrenNodes[selectedPath.firstPath].childrenNodes[selectedPath.secondPath];
+    }
+    return self.childrenNodes[selectedPath.firstPath];
+}
+
+
+
+
+/**
+ 根据selectedPath获取code值，请确保code值唯一
+
+ @param selectedPath  MMSelectedPath
+ @return code值
+ */
+- (NSString *)findCodeBySelectedPath:(MMSelectedPath *)selectedPath {
+    if (selectedPath.secondPath != -1) {
+        return [self.childrenNodes[selectedPath.firstPath].childrenNodes[selectedPath.secondPath] code];
+    }
+    return [self.childrenNodes[selectedPath.firstPath] code];
+}
+
+
+
+/**
+ 根据code值设置某一选项为选中
+ 
+ @param code code值
+ */
+- (void)setSubItemSelectAccordCode:(NSString*)code
+{
+    for (MMItem *item in self.childrenNodes) {
+        if ([item.code isEqualToString:code]) {
+            [item setIsSelected:YES];
+        }
+        for (MMItem *subitem in item.childrenNodes) {
+            if ([subitem.code isEqualToString:code]) {
+                [subitem setIsSelected:YES];
+            }
+        }
+    }
+    
+}
+
+
+/**
+ 设置所有子选项的选中状态
+
+ @param selected 是否选中
+ */
+- (void)setAllSubItemSelected:(BOOL)selected
+{
+    for (MMItem *item in self.childrenNodes) {
+        item.isSelected = selected;
+        for (MMItem *subitem in subitem.childrenNodes) {
+            subitem.isSelected = selected;
+        }
+    }
+    
+}
+
 @end

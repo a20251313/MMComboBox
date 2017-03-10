@@ -139,6 +139,8 @@
               }
             }];
             MMSelectedPath *path = [array lastObject];
+            
+            
             //只有一层的时候，secondPath都是为-1的
             if (path.secondPath == -1) {
                 MMItem *item = rootItem.childrenNodes[path.firstPath];
