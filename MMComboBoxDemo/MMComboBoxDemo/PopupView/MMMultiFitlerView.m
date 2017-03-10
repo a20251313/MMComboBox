@@ -222,8 +222,12 @@
         
         MMSelectedPath *selectdPath = [self.selectedArray lastObject];
         if (selectdPath.firstPath == self.selectedIndex && selectdPath.secondPath == indexPath.row) return;
-        MMItem *lastItem = self.item.childrenNodes[selectdPath.firstPath].childrenNodes[selectdPath.secondPath];
-        lastItem.isSelected = NO;
+        if (selectdPath.secondPath != -1) {
+            
+            MMItem *lastItem = self.item.childrenNodes[selectdPath.firstPath].childrenNodes[selectdPath.secondPath];
+            lastItem.isSelected = NO;
+        }
+ 
         [self.selectedArray removeAllObjects];
         MMItem *currentIndex =self.item.childrenNodes[self.selectedIndex].childrenNodes[indexPath.row];
         currentIndex.isSelected = YES;

@@ -203,9 +203,9 @@
         }else {
             MMItem *lastItem = self.item.childrenNodes[path.firstPath].childrenNodes[path.secondPath];
             lastItem.isSelected = NO;
-            MMItem *currentItem = self.item.childrenNodes[path.firstPath].childrenNodes[0];
-            currentItem.isSelected = YES;
-            path.secondPath = 0;
+//            MMItem *currentItem = self.item.childrenNodes[path.firstPath].childrenNodes[0];
+//            currentItem.isSelected = YES;
+//            path.secondPath = 0;
         }
     }
     [self.mainTableView reloadData];
