@@ -153,12 +153,12 @@
     }
    
     self.bottomView.hidden = YES;
-    CGFloat top =  CGRectGetMaxY(self.sourceFrame);
+    //CGFloat top =  CGRectGetMaxY(self.sourceFrame);
     //消失的动画
     [UIView animateWithDuration:AnimationDuration animations:^{
-        self.frame = CGRectMake(0, top, kMMScreenWidth, 0);
-        self.mainTableView.frame = self.bounds;
-        self.shadowView.alpha = 0.0;
+        self.ff_height = 0;
+        self.mainTableView.ff_height = 0;
+       // self.shadowView.alpha = 0.0;
     } completion:^(BOOL finished) {
         if (self.superview) {
             [self removeFromSuperview];

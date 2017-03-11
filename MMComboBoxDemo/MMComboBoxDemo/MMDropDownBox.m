@@ -58,9 +58,9 @@
 {
     if (_titleLabel == nil) {
         _titleLabel = [[UILabel alloc] init];
-        _titleLabel.font = kICONFONT(DropDownBoxFontSize); // [UIFont systemFontOfSize:DropDownBoxFontSize];
+        _titleLabel.font = kICONFONT(DropDownBoxFontSize);
         _titleLabel.text = [self getTitleDesription];
-        _titleLabel.textAlignment = NSTextAlignmentRight;
+        _titleLabel.textAlignment = NSTextAlignmentCenter;
         _titleLabel.textColor = [UIColor blackColor];
         _titleLabel.backgroundColor = [UIColor whiteColor];
     }
@@ -115,7 +115,7 @@
             break;
     }
     if (iconString) {
-        return [NSString stringWithFormat:@"%@  %@",iconString,self.title];
+        return [NSString stringWithFormat:@"%@ %@",iconString,self.title];
     }
     return self.title;
 }

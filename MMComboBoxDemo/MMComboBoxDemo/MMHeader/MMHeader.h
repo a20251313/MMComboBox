@@ -17,6 +17,7 @@
 #define kMMScreenHeigth [UIScreen mainScreen].bounds.size.height
 #define kMMScreenWidth  [UIScreen mainScreen].bounds.size.width
 #define kMMLeftCellWidth  (kMMScreenWidth/2-40)
+#define kMMMinShowRowNumer 1
 
 static  NSString *titleSelectedColor = @"4EBC72";
 static const CGFloat  ButtonFontSize = 14.0f;
@@ -35,7 +36,6 @@ static const NSTimeInterval AnimationDuration= .25;
 static const CGFloat ButtonHorizontalMargin = 15;
 
 /* fontSize*/
-static const CGFloat MainTitleFontSize = 17;
 static const CGFloat SubTitleFontSize = 15.0f;
 
 

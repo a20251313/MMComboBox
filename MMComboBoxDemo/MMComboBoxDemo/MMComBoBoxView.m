@@ -23,6 +23,10 @@
 @property (nonatomic, assign) NSInteger lastTapIndex;       //默认 -1
 @property (nonatomic, assign) BOOL isAnimation;
 @property (nonatomic, strong) UIView    *topBgView;
+@property (nonatomic, strong) UIView    *topHalfView;
+@property (nonatomic, strong) UIView    *bottomHalfView;
+
+
 
 @end
 
@@ -35,8 +39,13 @@
         self.dropDownBoxArray = [NSMutableArray array];
         self.itemArray = [NSMutableArray array];
         self.symbolArray = [NSMutableArray arrayWithCapacity:1];
-        self.backgroundColor = [UIColor colorWithRed:0xe6/255.0 green:0xe6/255.0 blue:0xe6/255.0 alpha:1];
+           self.backgroundColor = [UIColor colorWithRed:247/255.0 green:247/255.0 blue:247/255.0 alpha:1];
+
+//        [self addSubview:self.bottomHalfView];
+//        [self addSubview:self.topHalfView];
         [self addSubview:self.topBgView];
+        
+        self.topBgView.backgroundColor = [UIColor whiteColor];
         [self.topBgView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(15);
             make.right.mas_offset(-15);
@@ -49,6 +58,25 @@
 }
 
 
+-(void)layoutSubviews
+{
+    [super layoutSubviews];
+    self.topBgView.layer.cornerRadius = self.topBgView.ff_height/2;
+    if (self.topHalfView.superview) {
+        
+        [self.topHalfView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.top.mas_equalTo(0);
+            make.height.mas_equalTo(self.ff_height/2);
+        }];
+        [self.bottomHalfView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.bottom.mas_equalTo(0);
+            make.height.mas_equalTo(self.ff_height/2);
+        }];
+    }
+ 
+}
+
+
 - (UIView*)topBgView
 {
     if (_topBgView == nil) {
@@ -57,11 +85,35 @@
         bgView.layer.borderWidth = 1;
         bgView.layer.cornerRadius = 25;
         bgView.layer.borderColor = [UIColor clearColor].CGColor;
-        bgView.backgroundColor = [UIColor whiteColor];
+        bgView.backgroundColor = [UIColor clearColor];
         _topBgView = bgView;
     }
     
     return _topBgView;
+}
+
+
+
+- (UIView*)topHalfView
+{
+    if (_topHalfView == nil) {
+        UIView *bgView = [[UIView alloc] initWithFrame:CGRectZero];
+        bgView.backgroundColor = [UIColor colorWithRed:247/255.0 green:247/255.0 blue:247/255.0 alpha:1];
+        _topHalfView = bgView;
+    }
+    
+    return _topHalfView;
+}
+
+- (UIView*)bottomHalfView
+{
+    if (_bottomHalfView == nil) {
+        UIView *bgView = [[UIView alloc] initWithFrame:CGRectZero];
+        bgView.backgroundColor = [UIColor colorWithRed:0xe6/255.0 green:0xe6/255.0 blue:0xe6/255.0 alpha:1];
+        _bottomHalfView = bgView;
+    }
+    
+    return _bottomHalfView;
 }
 
 - (void)reload {
@@ -88,7 +140,11 @@
         }
     }
     [self _addLine];
+    
+  
 }
+
+
 
 - (void)dimissPopView {
     if (self.popupView.superview) {

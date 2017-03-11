@@ -70,7 +70,7 @@ static const CGFloat horizontalMargin = 10.0f;
     if (!_title) {
         _title = [[UILabel alloc] init];
         _title.textColor = [UIColor blackColor];
-        _title.font = [UIFont systemFontOfSize:MainTitleFontSize];
+        _title.font = [UIFont systemFontOfSize:12];
         [self addSubview:_title];
     }
     return _title;
@@ -114,6 +114,6 @@ static const CGFloat horizontalMargin = 10.0f;
 
 + (CGFloat)normalCellHeight:(MMItem*)item
 {
-    return 45;
+    return 30;
 }
 @end

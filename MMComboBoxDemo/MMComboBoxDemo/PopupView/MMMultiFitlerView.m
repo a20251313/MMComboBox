@@ -28,7 +28,7 @@
             selectedPath.secondPath = [self _findRightSelectedIndex:self.selectedIndex];
         }
         [self.selectedArray addObject:selectedPath];
-        self.minRowNumber = 4;
+        self.minRowNumber = kMMMinShowRowNumer;
         self.backgroundColor = [UIColor clearColor];
     }
     return self;
@@ -48,7 +48,7 @@
     
   
     //add tableView
-    self.mainTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    self.mainTableView = [[UITableView alloc] initWithFrame: CGRectMake(0, 0, kMMLeftCellWidth, 0) style:UITableViewStylePlain];
     if (self.minRowNumber > self.item.childrenNodes.count) {
         self.mainTableView.rowHeight = [MMLeftCell leftCellHeight:nil]*self.minRowNumber/self.item.childrenNodes.count;
     }else{
@@ -65,7 +65,7 @@
     [self addSubview:self.mainTableView];
     self.mainTableView.backgroundColor = [UIColor whiteColor];
     
-    self.subTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    self.subTableView = [[UITableView alloc] initWithFrame:CGRectMake(kMMLeftCellWidth+10, 0,  self.ff_width - kMMLeftCellWidth-20, 0) style:UITableViewStylePlain];
     self.subTableView.rowHeight = [MMNormalCell normalCellHeight:nil];
     self.subTableView.tag = 1;
     self.subTableView.delegate = self;
@@ -89,20 +89,7 @@
     [self.bgView setBackgroundColor:[UIColor whiteColor]];
     [self insertSubview:self.bgView atIndex:0];
     
-    
-//    [UIView animateWithDuration:0 animations:^{
-//        self.frame = CGRectMake(0, top, kMMScreenWidth, resultHeight);
-//        self.mainTableView.frame = CGRectMake(0, 0, kMMLeftCellWidth, self.ff_height);
-//        self.subTableView.frame = CGRectMake(kMMLeftCellWidth+10, 0,  self.ff_width - kMMLeftCellWidth-20, self.ff_height);
-//        self.shadowView.alpha = ShadowAlpha;
-//    } completion:^(BOOL finished) {
-//        self.frame = CGRectMake(0, top, kMMScreenWidth, resultHeight);
-//        self.mainTableView.frame = CGRectMake(0, 0, kMMLeftCellWidth, self.ff_height);
-//        self.subTableView.frame = CGRectMake(kMMLeftCellWidth+10, 0,  self.ff_width - kMMLeftCellWidth-20, self.ff_height);
-//        self.shadowView.alpha = ShadowAlpha;
-//         completion();
-//    }];
-    
+
     //出现的动画
     [UIView animateWithDuration:AnimationDuration animations:^{
         
@@ -134,16 +121,13 @@
     if ([self.delegate respondsToSelector:@selector(popupViewWillDismiss:)]) {
         [self.delegate popupViewWillDismiss:self];
     }
-    
-    CGFloat top =  CGRectGetMaxY(self.sourceFrame);
+
     //消失的动画
     [UIView animateWithDuration:AnimationDuration animations:^{
-        //        self.imageView.hidden = YES;
-        self.frame = CGRectMake(0, top, kMMScreenWidth, 0);
-        self.mainTableView.ff_height = self.ff_height;
-        self.subTableView.ff_height = self.ff_height;
-        self.bgView.ff_height = self.ff_height;
-        self.shadowView.alpha = 0.0;
+        self.mainTableView.ff_height = 0;
+        self.subTableView.ff_height = 0;
+        self.bgView.ff_height = 0;
+        self.ff_height = 0;
     } completion:^(BOOL finished) {
         if (self.superview) {
             [self removeFromSuperview];
