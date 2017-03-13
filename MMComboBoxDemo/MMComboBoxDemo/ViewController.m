@@ -92,9 +92,13 @@
 
 //===============================================Init===============================================
     
-    self.comBoBoxView = [[MMComBoBoxView alloc] initWithFrame:CGRectMake(0, 64, kMMScreenWidth, 40)];
+    self.comBoBoxView = [[MMComBoBoxView alloc] initWithFrame:CGRectMake(0, 64, kMMScreenWidth, 50) spaceToTop:10];
     self.comBoBoxView.dataSource = self;
     self.comBoBoxView.delegate = self;
+    
+    
+   // UIView *superView = [[UIView alloc] initWithFrame:CGRectMake(0, 64, kMMScreenWidth, 60)];
+  //  [self.view addSubview:superView];
     [self.view addSubview:self.comBoBoxView];
     [self.comBoBoxView reload];
     

@@ -34,7 +34,7 @@
         }];
         [self addSubview:self.dotView];
         [self.dotView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.width.height.mas_equalTo(5);
+            make.width.height.mas_equalTo(3);
             make.right.mas_offset(-1);
             make.centerY.mas_equalTo(0);
         }];

@@ -19,6 +19,20 @@
 #define kMMLeftCellWidth  (kMMScreenWidth/2-40)
 #define kMMMinShowRowNumer 1
 
+
+
+#define kBusinessDisKey             @"businessDis"  //商圈参数名
+#define kDistanceKey             @"distance"     //距离参数名
+#define kSortKey                    @"sort"         //排序参数名
+#define kCategoryIdKey              @"categoryId"   //类目ID
+#define kBrandIdKey                 @"brandId"      //品牌参数名
+#define kStoreTypeKey               @"storeType"    //门店类型
+#define kFloorKey                   @"floor"      //楼层参数名
+#define kPriceKey                   @"price"      //价格参数名
+
+
+
+
 static  NSString *titleSelectedColor = @"4EBC72";
 static const CGFloat  ButtonFontSize = 14.0f;
 //MMPopupView

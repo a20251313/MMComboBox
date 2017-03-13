@@ -15,8 +15,28 @@
 @property (nonatomic, weak) id<MMComBoBoxViewDataSource> dataSource;
 @property (nonatomic, weak) id<MMComBoBoxViewDelegate> delegate;
 
+
+
+/**
+ 重载数据
+ */
 - (void)reload;
+
+
+/**
+ 收起下拉框
+ */
 - (void)dimissPopView;
+
+
+/**
+ 初始化MMComBoBoxView
+
+ @param frame frame
+ @param spaceMargin 上下留白的距离`
+ @return MMComBoBoxView
+ */
+- (id)initWithFrame:(CGRect)frame spaceToTop:(CGFloat)spaceMargin;
 
 @end
 
@@ -56,4 +76,7 @@
  @param index MMDropDownBox的index（当前选择的index）
  */
 - (void)comBoBoxView:(MMComBoBoxView *)comBoBoxViewd didSelectedItemsPackagingInArray:(NSArray *)array atIndex:(NSUInteger)index;
+
+
+
 @end

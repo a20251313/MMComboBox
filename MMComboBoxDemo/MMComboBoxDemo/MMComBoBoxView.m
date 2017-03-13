@@ -23,8 +23,9 @@
 @property (nonatomic, assign) NSInteger lastTapIndex;       //默认 -1
 @property (nonatomic, assign) BOOL isAnimation;
 @property (nonatomic, strong) UIView    *topBgView;
-@property (nonatomic, strong) UIView    *topHalfView;
-@property (nonatomic, strong) UIView    *bottomHalfView;
+//@property (nonatomic, strong) UIView    *topHalfView;
+//@property (nonatomic, strong) UIView    *bottomHalfView;
+@property (nonatomic, assign)CGFloat    spaceMargin;
 
 
 
@@ -32,27 +33,37 @@
 
 @implementation MMComBoBoxView
 
+- (id)initWithFrame:(CGRect)frame spaceToTop:(CGFloat)spaceMargin{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.spaceMargin = spaceMargin;
+        [self initize];
+    }
+    return self;
+}
+
+
+
+- (void)initize
+{
+    self.lastTapIndex = -1;
+    self.dropDownBoxArray = [NSMutableArray array];
+    self.itemArray = [NSMutableArray array];
+    self.symbolArray = [NSMutableArray arrayWithCapacity:1];
+    self.backgroundColor = [UIColor colorWithRed:247/255.0 green:247/255.0 blue:247/255.0 alpha:1];
+    [self addSubview:self.topBgView];
+    self.topBgView.backgroundColor = [UIColor whiteColor];
+    [self.topBgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(15);
+        make.right.mas_offset(-15);
+        make.top.mas_equalTo(self.spaceMargin);
+        make.bottom.mas_offset(-self.spaceMargin);
+    }];
+}
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.lastTapIndex = -1;
-        self.dropDownBoxArray = [NSMutableArray array];
-        self.itemArray = [NSMutableArray array];
-        self.symbolArray = [NSMutableArray arrayWithCapacity:1];
-           self.backgroundColor = [UIColor colorWithRed:247/255.0 green:247/255.0 blue:247/255.0 alpha:1];
-
-//        [self addSubview:self.bottomHalfView];
-//        [self addSubview:self.topHalfView];
-        [self addSubview:self.topBgView];
-        
-        self.topBgView.backgroundColor = [UIColor whiteColor];
-        [self.topBgView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(15);
-            make.right.mas_offset(-15);
-            make.top.bottom.mas_equalTo(0);
-        }];
-        
-      
+        [self initize];
     }
     return self;
 }
@@ -62,17 +73,17 @@
 {
     [super layoutSubviews];
     self.topBgView.layer.cornerRadius = self.topBgView.ff_height/2;
-    if (self.topHalfView.superview) {
-        
-        [self.topHalfView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.top.mas_equalTo(0);
-            make.height.mas_equalTo(self.ff_height/2);
-        }];
-        [self.bottomHalfView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.bottom.mas_equalTo(0);
-            make.height.mas_equalTo(self.ff_height/2);
-        }];
-    }
+//    if (self.topHalfView.superview) {
+//        
+//        [self.topHalfView mas_remakeConstraints:^(MASConstraintMaker *make) {
+//            make.left.right.top.mas_equalTo(0);
+//            make.height.mas_equalTo(self.ff_height/2);
+//        }];
+//        [self.bottomHalfView mas_remakeConstraints:^(MASConstraintMaker *make) {
+//            make.left.right.bottom.mas_equalTo(0);
+//            make.height.mas_equalTo(self.ff_height/2);
+//        }];
+//    }
  
 }
 
@@ -94,40 +105,50 @@
 
 
 
-- (UIView*)topHalfView
-{
-    if (_topHalfView == nil) {
-        UIView *bgView = [[UIView alloc] initWithFrame:CGRectZero];
-        bgView.backgroundColor = [UIColor colorWithRed:247/255.0 green:247/255.0 blue:247/255.0 alpha:1];
-        _topHalfView = bgView;
-    }
-    
-    return _topHalfView;
-}
+//- (UIView*)topHalfView
+//{
+//    if (_topHalfView == nil) {
+//        UIView *bgView = [[UIView alloc] initWithFrame:CGRectZero];
+//        bgView.backgroundColor = [UIColor colorWithRed:247/255.0 green:247/255.0 blue:247/255.0 alpha:1];
+//        _topHalfView = bgView;
+//    }
+//    
+//    return _topHalfView;
+//}
+//
+//- (UIView*)bottomHalfView
+//{
+//    if (_bottomHalfView == nil) {
+//        UIView *bgView = [[UIView alloc] initWithFrame:CGRectZero];
+//        bgView.backgroundColor = [UIColor colorWithRed:0xe6/255.0 green:0xe6/255.0 blue:0xe6/255.0 alpha:1];
+//        _bottomHalfView = bgView;
+//    }
+//    
+//    return _bottomHalfView;
+//}
 
-- (UIView*)bottomHalfView
-{
-    if (_bottomHalfView == nil) {
-        UIView *bgView = [[UIView alloc] initWithFrame:CGRectZero];
-        bgView.backgroundColor = [UIColor colorWithRed:0xe6/255.0 green:0xe6/255.0 blue:0xe6/255.0 alpha:1];
-        _bottomHalfView = bgView;
-    }
-    
-    return _bottomHalfView;
-}
 
 - (void)reload {
+    
+    for (UIView  *subView in self.topBgView.subviews) {
+        if (subView != self.topBgView) {
+            [subView removeFromSuperview];
+        }
+    }
+    [self.dropDownBoxArray removeAllObjects];
+    [self.itemArray removeAllObjects];
+    
+    
     NSUInteger count = 0;
     if ([self.dataSource respondsToSelector:@selector(numberOfColumnsIncomBoBoxView:)]) {
         count = [self.dataSource numberOfColumnsIncomBoBoxView:self];
     }
-    
     CGFloat width = (self.ff_width-30)/count;
     if ([self.dataSource respondsToSelector:@selector(comBoBoxView:infomationForColumn:)]) {
         for (NSUInteger i = 0; i < count; i ++) {
             MMItem *item = [self.dataSource comBoBoxView:self infomationForColumn:i];
             [item findTheTypeOfPopUpView];
-            MMDropDownBox *dropBox = [[MMDropDownBox alloc] initWithFrame:CGRectMake(i*width, 0, width, self.ff_height) titleName:item.title withIcon:item.iconType];
+            MMDropDownBox *dropBox = [[MMDropDownBox alloc] initWithFrame:CGRectMake(i*width,0, width, self.ff_height-2*self.spaceMargin) titleName:item.title withIcon:item.iconType];
             dropBox.tag = i;
             dropBox.delegate = self;
             [dropBox setLineHide:YES];
@@ -171,6 +192,7 @@
     self.isAnimation = YES;
     MMItem *item = self.itemArray[index];
     MMBasePopupView *popupView = [MMBasePopupView getSubPopupView:item];
+    [popupView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(emptyAction:)]];
     popupView.delegate = self;
     popupView.tag = index;
     self.popupView = popupView;
@@ -183,6 +205,13 @@
  
  
 }
+
+
+- (void)emptyAction:(id)sender
+{
+    
+}
+
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
     UIView *view = [super hitTest:point withEvent:event];
     if (view == nil) {

@@ -54,7 +54,7 @@
     //UIView *rootView = [[UIApplication sharedApplication] keyWindow];
     self.sourceFrame = frame;
     CGFloat top =  CGRectGetHeight(self.sourceFrame);
-    CGFloat maxHeight = kMMScreenHeigth - DistanceBeteewnPopupViewAndBottom - top - PopupViewTabBarHeight-DistanceBeteewnTopMargin;
+    CGFloat maxHeight = kMMScreenHeigth - DistanceBeteewnPopupViewAndBottom - top - PopupViewTabBarHeight-DistanceBeteewnTopMargin-150;
     CGFloat resultHeight = MIN(maxHeight, self.item.layout.totalHeight);
     self.frame = CGRectMake(0, top, kMMScreenWidth, 0);
     [superView addSubview:self];
@@ -203,11 +203,15 @@
         }else {
             MMItem *lastItem = self.item.childrenNodes[path.firstPath].childrenNodes[path.secondPath];
             lastItem.isSelected = NO;
+            [self.selectedArray removeObject:path];
+            i--;
 //            MMItem *currentItem = self.item.childrenNodes[path.firstPath].childrenNodes[0];
 //            currentItem.isSelected = YES;
 //            path.secondPath = 0;
         }
     }
+    
+  //  [self.selectedArray removeAllObjects];
     [self.mainTableView reloadData];
 }
 
@@ -284,7 +288,7 @@
     if ([self _iscontainsSelectedPath:[MMSelectedPath pathWithFirstPath:indexPath.row secondPath:index] sourceArray:self.selectedArray]) {//包含
         return;
     } else {
-      MMSelectedPath *removeIndexPath = [self _removePath:[MMSelectedPath pathWithFirstPath:indexPath.row] sourceArray:self.selectedArray];
+        MMSelectedPath *removeIndexPath = [self _removePath:[MMSelectedPath pathWithFirstPath:indexPath.row] sourceArray:self.selectedArray];
         self.item.childrenNodes[removeIndexPath.firstPath].childrenNodes[removeIndexPath.secondPath].isSelected = NO;
        [self.selectedArray addObject:[MMSelectedPath pathWithFirstPath:indexPath.row secondPath:index]];
         self.item.childrenNodes[indexPath.row].childrenNodes[index].isSelected = YES;
