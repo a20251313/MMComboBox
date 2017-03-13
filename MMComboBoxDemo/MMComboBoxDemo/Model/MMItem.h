@@ -11,7 +11,15 @@
 @class MMSelectedPath;
 @class MMLayout;
 #import "MMLayout.h"
-@interface MMItem : MMBaseItem
+
+@protocol MMComBoxOldValue <NSObject>
+
+@property(nonatomic,copy)NSString   *key;
+@property(nonatomic,copy)NSString   *code;//如果有多个，默认以逗号分隔
+
+@end
+
+@interface MMItem : MMBaseItem<MMComBoxOldValue>
 @property (nonatomic, copy) NSString *code;      //支持有的需要上传code而不是title,飞凡项目中定义为选中时需要上传的参数值
 @property (nonatomic, copy) NSString *key;       //定义一个单独的同一属性的唯一标识，飞凡项目中定义为参数名
 @property (nonatomic, copy) NSString *title;      //定义一个title 用于显示

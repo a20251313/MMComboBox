@@ -73,18 +73,6 @@
 {
     [super layoutSubviews];
     self.topBgView.layer.cornerRadius = self.topBgView.ff_height/2;
-//    if (self.topHalfView.superview) {
-//        
-//        [self.topHalfView mas_remakeConstraints:^(MASConstraintMaker *make) {
-//            make.left.right.top.mas_equalTo(0);
-//            make.height.mas_equalTo(self.ff_height/2);
-//        }];
-//        [self.bottomHalfView mas_remakeConstraints:^(MASConstraintMaker *make) {
-//            make.left.right.bottom.mas_equalTo(0);
-//            make.height.mas_equalTo(self.ff_height/2);
-//        }];
-//    }
- 
 }
 
 
@@ -104,28 +92,102 @@
 }
 
 
+-(NSString*)getSelectTitle:(MMItem*)item boxArray:(NSArray <MMComBoxOldValue>*)boxValues
+{
+    NSString  *subTitle = nil;
+    for (id<MMComBoxOldValue> box in boxValues) {
+        if ([item.key isEqualToString:[box key]]) {
+            NSArray *codeArray = [[box code] componentsSeparatedByString:@","];
+            for (NSString *code in codeArray) {
+                if ([code isEqualToString:item.code]) {
+                    item.isSelected = YES;
+                    if (!subTitle) {
+                        subTitle = item.title;
+                    }else{
+                        subTitle = [NSString stringWithFormat:@"%@ %@",subTitle,item.title];
+                    }
+                }
+            }
+        }
+    }
+    
+    
+    return subTitle;
+    
+}
 
-//- (UIView*)topHalfView
-//{
-//    if (_topHalfView == nil) {
-//        UIView *bgView = [[UIView alloc] initWithFrame:CGRectZero];
-//        bgView.backgroundColor = [UIColor colorWithRed:247/255.0 green:247/255.0 blue:247/255.0 alpha:1];
-//        _topHalfView = bgView;
-//    }
-//    
-//    return _topHalfView;
-//}
-//
-//- (UIView*)bottomHalfView
-//{
-//    if (_bottomHalfView == nil) {
-//        UIView *bgView = [[UIView alloc] initWithFrame:CGRectZero];
-//        bgView.backgroundColor = [UIColor colorWithRed:0xe6/255.0 green:0xe6/255.0 blue:0xe6/255.0 alpha:1];
-//        _bottomHalfView = bgView;
-//    }
-//    
-//    return _bottomHalfView;
-//}
+
+
+/**
+  根据boxValues 设置当前筛选项的title，以及当前选中的值
+
+ @param boxValues MMComBoxOldValue
+ */
+- (void)updateValueWithData:(NSArray <MMComBoxOldValue>*)boxValues
+{
+    for (int i = 0;i < self.itemArray.count; i++) {
+        MMItem  *rootItem  =  [self.dataSource comBoBoxView:self infomationForColumn:i];
+        NSString *rootTitle = nil;
+        for (MMItem *subItem in rootItem.childrenNodes) {
+            
+            if (subItem.childrenNodes.count) {
+                for (MMItem *subsubItem in subItem.childrenNodes) {
+                    NSString  *subTitle = [self getSelectTitle:subsubItem boxArray:boxValues];
+                    if (subTitle) {
+                        if (rootTitle == nil) {
+                            rootTitle = subTitle;
+                        }else{
+                            rootTitle = [NSString stringWithFormat:@"%@ %@",rootTitle,subTitle];
+                        }
+                        
+                    }
+                }
+            }else{
+                
+                NSString  *subTitle = [self getSelectTitle:subItem boxArray:boxValues];
+                if (subTitle) {
+                    if (rootTitle == nil) {
+                        rootTitle = subTitle;
+                    }else{
+                        rootTitle = [NSString stringWithFormat:@"%@ %@",rootTitle,subTitle];
+                    }
+                }
+            }
+            
+            rootItem.title = (rootTitle != nil?rootTitle:rootItem.title);
+        }
+    }
+    [self reload];
+}
+
+
+/**
+ 清除所有当前的选择
+ */
+- (void)cleanAllChoice
+{
+    NSUInteger count = 0;
+    if ([self.dataSource respondsToSelector:@selector(numberOfColumnsIncomBoBoxView:)]) {
+        count = [self.dataSource numberOfColumnsIncomBoBoxView:self];
+    }
+    if ([self.dataSource respondsToSelector:@selector(comBoBoxView:infomationForColumn:)]) {
+        for (NSUInteger i = 0; i < count; i ++) {
+            MMItem *rootItem = [self.dataSource comBoBoxView:self infomationForColumn:i];
+            for (MMItem *subItem in rootItem.childrenNodes) {
+                if (subItem.childrenNodes.count) {
+                    for (MMItem *subsubItem in subItem.childrenNodes) {
+                        subsubItem.isSelected = NO;
+                    }
+                }else{
+                    subItem.isSelected = NO;
+                }
+            }
+
+        }
+    }
+    [self reload];
+}
+
 
 
 - (void)reload {
@@ -160,10 +222,9 @@
             }
         }
     }
-    [self _addLine];
-    
-  
+   // [self _addLine];
 }
+
 
 
 
@@ -200,6 +261,9 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [popupView popupViewFromSourceFrame:self.frame completion:^ {
             self.isAnimation = NO;
+            if ([self.delegate respondsToSelector:@selector(comBoBoxView:actionType:atIndex:)]) {
+                [self.delegate comBoBoxView:self actionType:MMComBoBoxViewShowActionTypePop atIndex:index];
+            }
         } fromView:self];
     });
  
@@ -244,6 +308,9 @@
         MMBasePopupView * lastView = self.symbolArray[0];
         MMItem *rootItem = lastView.item;
         [lastView dismiss];
+        if ([self.delegate respondsToSelector:@selector(comBoBoxView:actionType:atIndex:)]) {
+            [self.delegate comBoBoxView:self actionType:MMComBoBoxViewShowActionTypePackUp atIndex:index];
+        }
         [self.symbolArray removeAllObjects];
         //如果是点击当前的，那么就不需要再显示
         if ([rootItem isEqual:self.itemArray[index]]) {

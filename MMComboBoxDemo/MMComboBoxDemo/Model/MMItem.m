@@ -58,8 +58,6 @@
     [self.childrenNodes addObject:node];
 }
 
-
-
 - (void)findTheTypeOfPopUpView {
     if (self.alternativeArray.count || self.displayType == MMPopupViewDisplayTypeFilters) {
         self.displayType = MMPopupViewDisplayTypeFilters;

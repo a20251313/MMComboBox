@@ -22,7 +22,7 @@
 
 
 #define kBusinessDisKey             @"businessDis"  //商圈参数名
-#define kDistanceKey             @"distance"     //距离参数名
+#define kDistanceKey                @"distance"     //距离参数名
 #define kSortKey                    @"sort"         //排序参数名
 #define kCategoryIdKey              @"categoryId"   //类目ID
 #define kBrandIdKey                 @"brandId"      //品牌参数名
