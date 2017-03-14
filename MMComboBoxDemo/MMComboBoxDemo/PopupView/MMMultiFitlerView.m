@@ -15,8 +15,9 @@
 @interface MMMultiFitlerView () <UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, assign) NSUInteger selectedIndex;
 @property (nonatomic, assign) NSUInteger minRowNumber;
-@property (nonatomic, strong) UIView  *bgView;
 @end
+
+
 @implementation MMMultiFitlerView
 - (id)initWithItem:(MMItem *)item{
     self = [super init];
@@ -29,7 +30,7 @@
         }
         [self.selectedArray addObject:selectedPath];
         self.minRowNumber = kMMMinShowRowNumer;
-        self.backgroundColor = [UIColor clearColor];
+        self.backgroundColor = [UIColor whiteColor];
     }
     return self;
 }
@@ -85,9 +86,12 @@
     tap.numberOfTapsRequired = 1; //tap次数
     [self.shadowView addGestureRecognizer:tap];
     
-    self.bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kMMScreenWidth, resultHeight)];
-    [self.bgView setBackgroundColor:[UIColor whiteColor]];
-    [self insertSubview:self.bgView atIndex:0];
+    
+    UIView  *panView = [[UIView alloc] initWithFrame:CGRectMake(0, top+resultHeight, kMMScreenWidth, kMMScreenHeigth-top-resultHeight)];
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(emptyAction:)];
+    [panView addGestureRecognizer:pan];
+    [panView setBackgroundColor:[UIColor clearColor]];
+    [self.shadowView addSubview:panView];
     
 
     //出现的动画
@@ -104,11 +108,17 @@
     
 }
 
--(void)layoutSubviews
+/**
+ 只是为了滑动事件不被父view接受
+ 
+ @param sender
+ */
+-(void)emptyAction:(id)sender
 {
-    [super layoutSubviews];
-    self.bgView.frame = self.bounds;
+    
+    
 }
+
 - (void)dismiss{
     [super dismiss];
     //设置最后选中的赋给left cell
@@ -126,7 +136,6 @@
     [UIView animateWithDuration:AnimationDuration animations:^{
         self.mainTableView.ff_height = 0;
         self.subTableView.ff_height = 0;
-        self.bgView.ff_height = 0;
         self.ff_height = 0;
     } completion:^(BOOL finished) {
         if (self.superview) {

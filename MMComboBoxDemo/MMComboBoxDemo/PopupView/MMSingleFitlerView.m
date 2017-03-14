@@ -14,7 +14,7 @@
 @interface MMSingleFitlerView () <UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, assign) BOOL isSuccessfulToCallBack;
 @property (nonatomic, strong) UIView *bottomView;
-@property (nonatomic, strong) UIView *bgView;
+
 @end
 @implementation MMSingleFitlerView
 - (id)initWithItem:(MMItem *)item {
@@ -65,10 +65,11 @@
     [self.shadowView addGestureRecognizer:tap];
     
     
-    self.bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kMMScreenWidth, resultHeight)];
-    [self.bgView setBackgroundColor:[UIColor whiteColor]];
-    [self insertSubview:self.bgView atIndex:0];
-    
+    UIView  *panView = [[UIView alloc] initWithFrame:CGRectMake(0, top+resultHeight, kMMScreenWidth, kMMScreenHeigth-top-resultHeight)];
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(emptyAction:)];
+    [panView addGestureRecognizer:pan];
+    [panView setBackgroundColor:[UIColor clearColor]];
+    [self.shadowView addSubview:panView];
     //出现的动画
     [UIView animateWithDuration:AnimationDuration animations:^{
         self.frame = CGRectMake(0, top, kMMScreenWidth, resultHeight);
@@ -101,10 +102,16 @@
     
 }
 
-- (void)layoutSubviews
+
+/**
+ 只是为了滑动事件不被父view接受
+ 
+ @param sender
+ */
+-(void)emptyAction:(id)sender
 {
-    [super layoutSubviews];
-    self.bgView.frame = self.bounds;
+    
+    
 }
 
 - (void)dismiss{
@@ -120,7 +127,6 @@
     [UIView animateWithDuration:AnimationDuration animations:^{
         self.ff_height = 0;
         self.mainTableView.ff_height = 0;
-        self.bgView.ff_height = 0;
     } completion:^(BOOL finished) {
         if (self.superview) {
          [self removeFromSuperview];

@@ -23,9 +23,8 @@
 @property (nonatomic, assign) NSInteger lastTapIndex;       //默认 -1
 @property (nonatomic, assign) BOOL isAnimation;
 @property (nonatomic, strong) UIView    *topBgView;
-//@property (nonatomic, strong) UIView    *topHalfView;
-//@property (nonatomic, strong) UIView    *bottomHalfView;
-@property (nonatomic, assign)CGFloat    spaceMargin;
+@property (nonatomic, assign) CGFloat    spaceMargin;
+
 
 
 
@@ -54,8 +53,8 @@
     [self addSubview:self.topBgView];
     self.topBgView.backgroundColor = [UIColor whiteColor];
     [self.topBgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(15);
-        make.right.mas_offset(-15);
+        make.left.mas_equalTo(10);
+        make.right.mas_offset(-10);
         make.top.mas_equalTo(self.spaceMargin);
         make.bottom.mas_offset(-self.spaceMargin);
     }];
@@ -119,12 +118,13 @@
 
 
 /**
-  根据boxValues 设置当前筛选项的title，以及当前选中的值
-
+ 根据boxValues 设置当前筛选项的title，以及当前选中的值
+ 
  @param boxValues MMComBoxOldValue
  */
 - (void)updateValueWithData:(NSArray <MMComBoxOldValue>*)boxValues
 {
+    [self resetAllChoiceToNone];
     for (int i = 0;i < self.itemArray.count; i++) {
         MMItem  *rootItem  =  [self.dataSource comBoBoxView:self infomationForColumn:i];
         NSString *rootTitle = nil;
@@ -166,6 +166,12 @@
  */
 - (void)cleanAllChoice
 {
+    [self resetAllChoiceToNone];
+    [self reload];
+}
+
+- (void)resetAllChoiceToNone
+{
     NSUInteger count = 0;
     if ([self.dataSource respondsToSelector:@selector(numberOfColumnsIncomBoBoxView:)]) {
         count = [self.dataSource numberOfColumnsIncomBoBoxView:self];
@@ -182,12 +188,10 @@
                     subItem.isSelected = NO;
                 }
             }
-
+            
         }
     }
-    [self reload];
 }
-
 
 
 - (void)reload {
@@ -222,13 +226,14 @@
             }
         }
     }
-   // [self _addLine];
+    // [self _addLine];
 }
 
 
 
 
 - (void)dimissPopView {
+    
     if (self.popupView.superview) {
         [self.popupView dismissWithOutAnimation];
     }
@@ -258,16 +263,18 @@
     popupView.tag = index;
     self.popupView = popupView;
     [self.symbolArray addObject:popupView];
+    
+    if ([self.delegate respondsToSelector:@selector(comBoBoxView:actionType:atIndex:)]) {
+        [self.delegate comBoBoxView:self actionType:MMComBoBoxViewShowActionTypePop atIndex:index];
+    }
     dispatch_async(dispatch_get_main_queue(), ^{
         [popupView popupViewFromSourceFrame:self.frame completion:^ {
             self.isAnimation = NO;
-            if ([self.delegate respondsToSelector:@selector(comBoBoxView:actionType:atIndex:)]) {
-                [self.delegate comBoBoxView:self actionType:MMComBoBoxViewShowActionTypePop atIndex:index];
-            }
+        
         } fromView:self];
     });
- 
- 
+    
+    
 }
 
 
@@ -283,15 +290,36 @@
         if (CGRectContainsPoint(self.popupView.frame, tp)) {
             view = self;
         }
+        CGRect frame = [self convertRect:self.popupView.shadowView.frame toView:self];
+        if (CGRectContainsPoint(frame, tp)) {
+            return self;
+        }
     }
     return view;
 }
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
     CGPoint tp = [self convertPoint:point fromView:self];
-    if (CGRectContainsPoint(self.popupView.frame, tp)) {
-        return YES;
-    }
+
+        if (CGRectContainsPoint(self.popupView.frame, tp)) {
+            return YES;
+        }
+        CGRect frame = [self convertRect:self.popupView.shadowView.frame toView:self];
+        if (CGRectContainsPoint(frame, tp)) {
+            return YES;
+        }
+    
     return [super pointInside:point withEvent:event];
+}
+
+
+- (NSArray*)getModelsBySelectePath:(NSArray*)selectPaths rootItem:(MMItem*)rootItem
+{
+    NSMutableArray  *array = [NSMutableArray array];
+    for (MMSelectedPath *path in selectPaths) {
+        MMItem *subItem = [rootItem findItemBySelectedPath:path];
+        [array safeAddObject:subItem];
+    }
+    return [NSArray arrayWithArray:array];
 }
 
 #pragma mark - MMDropDownBoxDelegate
@@ -305,12 +333,12 @@
     //点击后先判断symbolArray有没有标示
     if (self.symbolArray.count > 0) {
         //移除
-        MMBasePopupView * lastView = self.symbolArray[0];
-        MMItem *rootItem = lastView.item;
-        [lastView dismiss];
         if ([self.delegate respondsToSelector:@selector(comBoBoxView:actionType:atIndex:)]) {
             [self.delegate comBoBoxView:self actionType:MMComBoBoxViewShowActionTypePackUp atIndex:index];
         }
+        MMBasePopupView * lastView = self.symbolArray[0];
+        MMItem *rootItem = lastView.item;
+        [lastView dismiss];
         [self.symbolArray removeAllObjects];
         //如果是点击当前的，那么就不需要再显示
         if ([rootItem isEqual:self.itemArray[index]]) {
@@ -324,7 +352,7 @@
 #pragma mark - MMPopupViewDelegate
 - (void)popupView:(MMBasePopupView *)popupView didSelectedItemsPackagingInArray:(NSArray *)array atIndex:(NSUInteger)index {
     MMItem *item = self.itemArray[index];
-    if (item.displayType == MMPopupViewDisplayTypeMultilayer || item.displayType == MMPopupViewDisplayTypeNormal) {
+    if (1) {
         //拼接选择项
         NSMutableString *title = [NSMutableString string];
         for (int i = 0; i <array.count; i++) {
@@ -338,9 +366,14 @@
     if ([self.delegate respondsToSelector:@selector(comBoBoxView:didSelectedItemsPackagingInArray:atIndex:)]) {
         [self.delegate comBoBoxView:self didSelectedItemsPackagingInArray:array atIndex:index];
     }
+    
+    if ([self.delegate respondsToSelector:@selector(comBoBoxView:didSelectedModelsInArray:atIndex:)]) {
+        [self.delegate comBoBoxView:self didSelectedModelsInArray:[self getModelsBySelectePath:array rootItem:item] atIndex:index];
+    }
 }
 
 - (void)popupViewWillDismiss:(MMBasePopupView *)popupView {
+    
     [self.symbolArray removeAllObjects];
     for (MMDropDownBox *currentBox in self.dropDownBoxArray) {
         [currentBox updateTitleState:NO];

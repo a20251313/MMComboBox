@@ -9,8 +9,37 @@
 #import "MMItem.h"
 #import "MMLayout.h"
 #import "MMSelectedPath.h"
+
+
+static const void *kMMKeyKey = &kMMKeyKey;
+static const void *kMMCodeKey = &kMMCodeKey;
+
 @implementation MMItem
 #pragma mark - init method
+
+
+- (void)setKey:(NSString *)key
+{
+    objc_setAssociatedObject(self, kMMKeyKey, key, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    //[self setValue:key forKey:@"key"];
+}
+
+- (NSString*)key
+{
+    return objc_getAssociatedObject(self, kMMKeyKey);
+
+}
+
+- (void)setCode:(NSString *)code
+{
+     objc_setAssociatedObject(self, kMMCodeKey,code, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+ //   [self setValue:code forKey:@"code"];
+}
+
+- (NSString*)code
+{
+    return objc_getAssociatedObject(self, kMMCodeKey);
+}
 - (instancetype)init{
     self = [super init];
     if (self) {
@@ -57,6 +86,8 @@
     node.isSelected = NO;
     [self.childrenNodes addObject:node];
 }
+
+
 
 - (void)findTheTypeOfPopUpView {
     if (self.alternativeArray.count || self.displayType == MMPopupViewDisplayTypeFilters) {

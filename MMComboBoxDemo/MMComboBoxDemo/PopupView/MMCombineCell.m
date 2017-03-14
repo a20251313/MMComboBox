@@ -49,6 +49,7 @@
         CGFloat orginy = [item.layout.cellLayoutTotalInfo[i][1] floatValue];
         button.frame = CGRectMake(orginX, orginy, [MMLayout layoutItemWidth], ItemHeight);
         button.titleLabel.font = [UIFont systemFontOfSize:ButtonFontSize];
+        button.titleLabel.adjustsFontSizeToFitWidth = YES;
         button.layer.borderWidth = 1;
         button.layer.masksToBounds = YES;
         button.layer.cornerRadius = 15;
@@ -61,6 +62,8 @@
         [self addSubview:button];
     }
     
+  
+    
     //layout
     self.titleLabel.frame = CGRectMake(ItemHorizontalMargin, TitleVerticalMargin, self.ff_width - ItemHorizontalMargin-100, TitleHeight);
     
@@ -70,6 +73,13 @@
         [self addSubview:self.openLabel];
         self.openLabel.frame = CGRectMake(self.ff_width-70, 10, 60, 30);
         
+    }
+    
+    //未超过一列，收起，全部按钮隐藏
+    if (item.childrenNodes.count > 4) {
+        self.openLabel.hidden = NO;
+    }else{
+        self.openLabel.hidden = YES;
     }
 }
 #pragma mark - action

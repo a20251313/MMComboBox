@@ -54,15 +54,17 @@
 }
 
 - (void)dismiss {
-    if (self.superview) {
-        [self.shadowView removeFromSuperview];
-        
-    }
+
+    [self.shadowView removeFromSuperview];
+    self.shadowView = nil;
 }
 
 - (void)dismissWithOutAnimation {
+    
+    
+    [self.shadowView removeFromSuperview];
+    self.shadowView = nil;
     if (self.superview) {
-        [self.shadowView removeFromSuperview];
         [self removeFromSuperview];
     }
 }

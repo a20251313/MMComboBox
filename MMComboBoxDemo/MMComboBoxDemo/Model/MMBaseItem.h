@@ -34,7 +34,20 @@ typedef NS_ENUM(NSInteger, MMPopupViewIconType) {  //筛选层附加icon定义
     MMPopupViewFilterIcon = 4,               //筛选图标 //kFilterIcon
 };
 
-@interface MMBaseItem : NSObject
+
+
+@protocol MMComBoxOldValue <NSObject>       //当前实现此协议的类有FFBaseKeyCodeModel MMBaseItem以及其子类
+
+@property(nonatomic,copy)NSString   *key;
+@property(nonatomic,copy)NSString   *code;//如果有多个，默认以逗号分隔
+
+@end
+
+
+@interface MMBaseItem : NSObject<MMComBoxOldValue>
+
+@property (nonatomic, copy) NSString *code;      //支持有的需要上传code而不是title,飞凡项目中定义为选中时需要上传的参数值
+@property (nonatomic, copy) NSString *key;       //定义一个单独的同一属性的唯一标识，飞凡项目中定义为参数名
 @property (nonatomic, assign) MMPopupViewMarkType markType;
 @property (nonatomic, assign) MMPopupViewDisplayType displayType;
 @property (nonatomic, assign) MMPopupViewSelectedType selectedType;
@@ -42,4 +55,9 @@ typedef NS_ENUM(NSInteger, MMPopupViewIconType) {  //筛选层附加icon定义
 @property (nonatomic, assign) BOOL hasAllFuntion; //是否有全部按钮  默认为YES
 @property (nonatomic, assign) BOOL isOpen; //全部的item是否显示，只有hasAllFuntion为YES的时候才起作用，默认为NO
 
+@end
+
+
+@interface FFBaseKeyCodeModel : NSObject<MMComBoxOldValue>
++ (FFBaseKeyCodeModel*)modelWithKey:(NSString*)key code:(NSString*)code;
 @end

@@ -22,13 +22,16 @@
 
 
 #define kBusinessDisKey             @"businessDis"  //商圈参数名
-#define kDistanceKey                @"distance"     //距离参数名
+#define kDistanceKey             @"distance"     //距离参数名
 #define kSortKey                    @"sort"         //排序参数名
 #define kCategoryIdKey              @"categoryId"   //类目ID
 #define kBrandIdKey                 @"brandId"      //品牌参数名
 #define kStoreTypeKey               @"storeType"    //门店类型
 #define kFloorKey                   @"floor"      //楼层参数名
 #define kPriceKey                   @"price"      //价格参数名
+#define kIconKey                    @"icon"       //活动及服务
+#define kPlazaUtilityKey            @"plazaUtility"      //服务参数名
+
 
 
 
@@ -46,7 +49,8 @@ static const CGFloat ShadowAlpha = .5;
 //static const CGFloat
 static  NSString *MainCellID = @"MainCellID";
 static  NSString *SubCellID = @"SubCellID";
-static const NSTimeInterval AnimationDuration= .25;
+
+static const NSTimeInterval AnimationDuration= .35;
 static const CGFloat ButtonHorizontalMargin = 15;
 
 /* fontSize*/

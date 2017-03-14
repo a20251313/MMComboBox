@@ -26,5 +26,7 @@
 @end
 
 @protocol MMDropDownBoxDelegate <NSObject>
+
 - (void)didTapDropDownBox:(MMDropDownBox *)dropDownBox atIndex:(NSUInteger)index;
+
 @end

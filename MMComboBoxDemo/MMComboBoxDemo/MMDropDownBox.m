@@ -31,6 +31,7 @@
         [self addSubview:self.titleLabel];
         [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.center.mas_equalTo(0);
+            make.top.bottom.left.right.mas_offset(0);
         }];
         [self addSubview:self.dotView];
         [self.dotView mas_makeConstraints:^(MASConstraintMaker *make) {

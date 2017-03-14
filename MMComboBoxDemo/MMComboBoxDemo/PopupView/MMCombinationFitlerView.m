@@ -80,24 +80,37 @@
     tap.numberOfTapsRequired = 1; //tap次数
     [self.shadowView addGestureRecognizer:tap];
     
+    UIView  *panView = [[UIView alloc] initWithFrame:CGRectMake(0, top+resultHeight, kMMScreenWidth, kMMScreenHeigth-top-resultHeight)];    
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(emptyAction:)];
+    [panView addGestureRecognizer:pan];
+    [panView setBackgroundColor:[UIColor clearColor]];
+    [self.shadowView addSubview:panView];    
+    self.bottomView.frame = CGRectMake(0, resultHeight, self.ff_width, 0);
+  
+    
     [UIView animateWithDuration:AnimationDuration animations:^{
-        self.frame = CGRectMake(0, top, kMMScreenWidth, resultHeight);
+        self.frame = CGRectMake(0, top, kMMScreenWidth, resultHeight+PopupViewTabBarHeight);
         self.mainTableView.frame = self.bounds;
         self.shadowView.alpha = ShadowAlpha;
+        self.bottomView.frame = CGRectMake(0, resultHeight, self.ff_width, PopupViewTabBarHeight);
     } completion:^(BOOL finished) {
         completion();
-        self.ff_height += PopupViewTabBarHeight;
-        self.bottomView = [[UIView alloc] init];
-        self.bottomView.backgroundColor = [UIColor ff_colorWithHex:0xffffff];
-        self.bottomView.frame = CGRectMake(0, self.mainTableView.ff_bottom, self.ff_width, PopupViewTabBarHeight);
         [self addSubview:self.bottomView];
-        
+    }];
+
+}
+
+-(UIView*)bottomView
+{
+    if (_bottomView == nil) {
+        _bottomView = [[UIView alloc] init];
+        _bottomView.backgroundColor = [UIColor ff_colorWithHex:0xffffff];
         
         UIImage *image =  [UIImage imageNamed:@"screen_line"];
         image = [image resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0) resizingMode:UIImageResizingModeTile];
         UIImageView  *lineView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 0, self.mainTableView.ff_width-30, 1)];
         lineView.image = image;
-        [self.bottomView addSubview:lineView];
+        [_bottomView addSubview:lineView];
         
         NSArray *titleArray = @[@"重置",@"确定"];
         CGFloat  fbuttonWidth = (self.ff_width-ButtonHorizontalMargin*2-ButtonHorizontalMargin*3)/2;
@@ -105,7 +118,6 @@
             CGFloat left = ((i == 0)?ButtonHorizontalMargin:self.ff_width - ButtonHorizontalMargin - fbuttonWidth);
             UIColor *titleColor = ((i == 0)?[UIColor ff_colorWithHex:0x2bbfff]:[UIColor ff_colorWithHex:0x2bbfff]);
             UIColor *bgColor = ((i == 0)?[UIColor ff_colorWithHex:0xffffff]:[UIColor ff_colorWithHex:0xffffff]);
-            
             UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
             button.frame = CGRectMake(left, 10, fbuttonWidth, PopupViewTabBarHeight-20);
             button.tag = i;
@@ -118,10 +130,23 @@
             [button setTitleColor:titleColor forState:UIControlStateNormal];
             button.titleLabel.font = [UIFont systemFontOfSize:ButtonFontSize];
             [button addTarget:self action:@selector(respondsToButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-            [self.bottomView addSubview:button];
+            [_bottomView addSubview:button];
         }
-    }];
+    }
+    
+    return _bottomView;
+}
 
+
+/**
+ 只是为了滑动事件不被父view接受
+
+ @param sender
+ */
+-(void)emptyAction:(id)sender
+{
+    
+    
 }
 
 - (void)dismiss{
@@ -205,19 +230,15 @@
             lastItem.isSelected = NO;
             [self.selectedArray removeObject:path];
             i--;
-//            MMItem *currentItem = self.item.childrenNodes[path.firstPath].childrenNodes[0];
-//            currentItem.isSelected = YES;
-//            path.secondPath = 0;
         }
     }
-    
-  //  [self.selectedArray removeAllObjects];
     [self.mainTableView reloadData];
 }
 
 - (void)callBackDelegate {
     if ([self.delegate respondsToSelector:@selector(popupView:didSelectedItemsPackagingInArray:atIndex:)]) {
         self.isSuccessfulToCallBack = YES;
+        
         [self.delegate popupView:self didSelectedItemsPackagingInArray:self.selectedArray  atIndex:self.tag];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self dismiss];

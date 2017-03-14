@@ -12,18 +12,12 @@
 @class MMLayout;
 #import "MMLayout.h"
 
-@protocol MMComBoxOldValue <NSObject>
 
-@property(nonatomic,copy)NSString   *key;
-@property(nonatomic,copy)NSString   *code;//如果有多个，默认以逗号分隔
 
-@end
+@interface MMItem : MMBaseItem
 
-@interface MMItem : MMBaseItem<MMComBoxOldValue>
-@property (nonatomic, copy) NSString *code;      //支持有的需要上传code而不是title,飞凡项目中定义为选中时需要上传的参数值
-@property (nonatomic, copy) NSString *key;       //定义一个单独的同一属性的唯一标识，飞凡项目中定义为参数名
 @property (nonatomic, copy) NSString *title;      //定义一个title 用于显示
-@property (nonatomic, strong) NSMutableArray <MMItem *> *childrenNodes;     
+@property (nonatomic, strong) NSMutableArray <MMItem *> *childrenNodes;
 @property (nonatomic, strong) NSMutableArray *alternativeArray;         //当有这种的类型则一定为MMPopupViewDisplayTypeFilters类型
 @property (nonatomic, assign) BOOL isSelected;                          //默认0
 @property (nonatomic, strong) NSString *subTitle;                       //第一层默认没有
@@ -32,13 +26,13 @@
 
 
 /**
-添加子item，如果之前没有子item，子item设置为选中状态
+ 添加子item，如果之前没有子item，子item设置为选中状态
  @param node 子item
  */
 - (void)addNode:(MMItem *)node;
 
 /**
-
+ 
  添加子item，子item设置为非选中状态（isSelected == NO）
  @param node node
  */
@@ -53,7 +47,7 @@
 
 /**
  根据MMSelectedPath获取title
-
+ 
  @param selectedPath  selectedPath
  @return title值
  */

@@ -41,7 +41,7 @@
     if (!_infoLabel) {
         _infoLabel = [[UILabel alloc] init];
         _infoLabel.backgroundColor = [UIColor clearColor];
-        _infoLabel.font = [UIFont systemFontOfSize:12];
+        _infoLabel.font = Pixel24;
     }
     return _infoLabel;
 }
@@ -57,6 +57,6 @@
 
 + (CGFloat)leftCellHeight:(MMItem*)item
 {
-    return 38;
+    return 44;
 }
 @end

@@ -55,7 +55,7 @@ typedef NS_ENUM(NSUInteger, MMComBoBoxViewShowActionType) {  //分辨弹出框�
 
 /**
  初始化MMComBoBoxView
-
+ 
  @param frame frame
  @param spaceMargin 上下留白的距离`
  @return MMComBoBoxView
@@ -70,7 +70,7 @@ typedef NS_ENUM(NSUInteger, MMComBoBoxViewShowActionType) {  //分辨弹出框�
 
 /**
  有几列数据
-
+ 
  @param comBoBoxView MMComBoBoxView
  @return 列数
  */
@@ -79,7 +79,7 @@ typedef NS_ENUM(NSUInteger, MMComBoBoxViewShowActionType) {  //分辨弹出框�
 
 /**
  每一列的第一行rootItem
-
+ 
  @param comBoBoxView MMComBoBoxView
  @param column 列
  @return rootItem（MMItem）
@@ -94,23 +94,31 @@ typedef NS_ENUM(NSUInteger, MMComBoBoxViewShowActionType) {  //分辨弹出框�
 
 /**
  用户选择或者确定了某一数据
-
+ 
  @param comBoBoxViewd MMComBoBoxView
- @param array 保存选中的MMItem选项
+ @param array 保存选中的MMSelectPath选项
  @param index MMDropDownBox的index（当前选择的index）
  */
 - (void)comBoBoxView:(MMComBoBoxView *)comBoBoxViewd didSelectedItemsPackagingInArray:(NSArray *)array atIndex:(NSUInteger)index;
 
-
-
 /**
-  用户弹出下拉框或者收起下拉框的消息
-
+ 用户弹出下拉框或者收起下拉框的消息
+ 
  @param comBoBoxViewd MMComBoBoxView
  @param action 弹出框是弹出还是收起
  @param index MMDropDownBox的index（当前选择收起或者弹出的index）
  */
 - (void)comBoBoxView:(MMComBoBoxView *)comBoBoxViewd actionType:(MMComBoBoxViewShowActionType)action atIndex:(NSUInteger)index;
+
+
+/**
+ 用户选择或者确定了某一数据
+ 
+ @param comBoBoxViewd MMComBoBoxView
+ @param array 保存选中的MMItem选项
+ @param index MMDropDownBox的index（当前选择的index）
+ */
+- (void)comBoBoxView:(MMComBoBoxView *)comBoBoxViewd didSelectedModelsInArray:(NSArray *)array atIndex:(NSUInteger)index;
 
 
 @end

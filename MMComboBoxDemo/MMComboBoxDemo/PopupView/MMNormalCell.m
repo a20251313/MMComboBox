@@ -39,7 +39,7 @@ static const CGFloat horizontalMargin = 10.0f;
     if (_item.subTitle != nil) {
         self.subTitle.frame = CGRectMake(self.ff_width - horizontalMargin - 80 , 0, 80, self.ff_height);
     }
-    self.screenLineView.frame = CGRectMake(10, self.ff_height-2, self.ff_width, 1);
+    self.screenLineView.frame = CGRectMake(10, self.ff_height-1, self.ff_width, 1);
     
 }
 
@@ -70,7 +70,7 @@ static const CGFloat horizontalMargin = 10.0f;
     if (!_title) {
         _title = [[UILabel alloc] init];
         _title.textColor = [UIColor blackColor];
-        _title.font = [UIFont systemFontOfSize:12];
+        _title.font = Pixel24;
         [self addSubview:_title];
     }
     return _title;
@@ -114,6 +114,6 @@ static const CGFloat horizontalMargin = 10.0f;
 
 + (CGFloat)normalCellHeight:(MMItem*)item
 {
-    return 30;
+    return 38;
 }
 @end
