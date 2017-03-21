@@ -11,6 +11,8 @@
 #import "MMLeftCell.h"
 #import "MMNormalCell.h"
 #import "MMSelectedPath.h"
+#import "NSMutableArray+Safe.h"
+
 
 @interface MMMultiFitlerView () <UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, assign) NSUInteger selectedIndex;
@@ -23,18 +25,86 @@
     self = [super init];
     if (self) {
         self.item = item;
-        MMSelectedPath *selectedPath = [MMSelectedPath pathWithFirstPath:[self _findLeftSelectedIndex]];
-        self.selectedIndex = [self _findLeftSelectedIndex];
-        if ([self _findRightSelectedIndex:self.selectedIndex] != -1) {
-            selectedPath.secondPath = [self _findRightSelectedIndex:self.selectedIndex];
-        }
-        [self.selectedArray addObject:selectedPath];
+        [self updateSelectPath];
         self.minRowNumber = kMMMinShowRowNumer;
         self.backgroundColor = [UIColor whiteColor];
     }
     return self;
 }
 
+-(void)updateSelectPath
+{
+    [self.selectedArray removeAllObjects];
+    NSArray  *array = [self _findAllSelectItem];
+    for (MMItem  *item in array) {
+        NSUInteger index = [self.item.childrenNodes indexOfObject:item.parentItem];
+        NSUInteger secondIndex = [item.parentItem.childrenNodes indexOfObject:item];
+        MMSelectedPath *selectedPath = [MMSelectedPath pathWithFirstPath:index secondPath:secondIndex];
+        if (index < self.item.childrenNodes.count && secondIndex < item.parentItem.childrenNodes.count) {
+            if (self.selectedArray.count > 0) {
+                MMItem  *subItem = [self.item findItemBySelectedPath:selectedPath];
+                subItem.isSelected = NO;
+                item.isSelected = NO;
+            }else{
+                
+                MMItem  *subItem = [self.item findItemBySelectedPath:selectedPath];
+                subItem.isSelected = YES;
+                item.isSelected = YES;
+                [self.selectedArray safeAddObject:selectedPath];
+            }
+            
+        }
+       
+    }
+ 
+    if (self.selectedArray.count < 1) {
+        self.selectedIndex = 0;
+        if (self.item.childrenNodes.count > 0) {
+            
+             MMSelectedPath *firstPath = [MMSelectedPath pathWithFirstPath:0];
+             MMItem *firstItem = [self.item findItemBySelectedPath:firstPath];
+            if (firstItem.childrenNodes.count > 0) {
+                MMSelectedPath *selectedPath = [MMSelectedPath pathWithFirstPath:0 secondPath:0];
+                self.selectedIndex = 0;
+                MMItem *selectItem = [self.item findItemBySelectedPath:selectedPath];
+                selectItem.isSelected = YES;
+                firstItem.isSelected = YES;
+                [self.selectedArray safeAddObject:selectedPath];
+            }
+        }
+       
+    }
+    
+    self.selectedIndex = [self _findLeftSelectedIndex];
+    
+//    [self.item setAllSubItemSelected:NO];
+//    for (MMSelectedPath *path  in self.selectedArray) {
+//        
+//        MMItem *item = [self.item findItemBySelectedPath:path];
+//        item.isSelected = YES;
+//        item.parentItem.isSelected = YES;
+//    }
+    [self resetSelectIndex];
+}
+
+
+- (void)resetSelectIndex
+{
+    if (self.selectedArray.count > 0) {
+        MMSelectedPath *path = [self.selectedArray safeObjectAtIndex:0];
+        MMItem *tempItem = [self.item findItemBySelectedPath:path];
+        tempItem.parentItem.isSelected = YES;
+        tempItem.isSelected = YES;
+        NSUInteger index = [self.item.childrenNodes indexOfObject:tempItem.parentItem];
+        if (index < self.item.childrenNodes.count) {
+            self.selectedIndex = index;
+        }else{
+            self.selectedIndex = 0;
+        };
+    }else{
+        self.selectedIndex = 0;
+    }
+}
 
 
 #pragma mark - public method
@@ -81,17 +151,9 @@
     self.shadowView.alpha = 0;
     self.shadowView.userInteractionEnabled = YES;
     [superView insertSubview:self.shadowView belowSubview:self];
-    UITapGestureRecognizer  *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(respondsToTapGestureRecognizer:)];
-    tap.numberOfTouchesRequired = 1; //手指数
-    tap.numberOfTapsRequired = 1; //tap次数
-    [self.shadowView addGestureRecognizer:tap];
+    [self.shadowView addTarget:self action:@selector(emptyAction:) forControlEvents:UIControlEventAllEvents];
+    [self.shadowView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(emptyAction:)]];
     
-    
-    UIView  *panView = [[UIView alloc] initWithFrame:CGRectMake(0, top+resultHeight, kMMScreenWidth, kMMScreenHeigth-top-resultHeight)];
-    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(emptyAction:)];
-    [panView addGestureRecognizer:pan];
-    [panView setBackgroundColor:[UIColor clearColor]];
-    [self.shadowView addSubview:panView];
     
 
     //出现的动画
@@ -111,11 +173,11 @@
 /**
  只是为了滑动事件不被父view接受
  
- @param sender
+ @param sender sender
  */
 -(void)emptyAction:(id)sender
 {
-    
+      [self dismiss];
     
 }
 
@@ -145,11 +207,27 @@
 }
 
 #pragma mark - private method
+
+- (NSArray*)_findAllSelectItem {
+    
+    NSMutableArray  *items = [NSMutableArray array];
+    for (MMItem *item in self.item.childrenNodes) {
+        
+        for (MMItem *subItem in item.childrenNodes) {
+            if (subItem.isSelected)
+            {
+                [items safeAddObject:subItem];
+            }
+        }
+       
+    }
+    return [NSArray arrayWithArray:items];
+}
 - (NSUInteger)_findLeftSelectedIndex {
     for (MMItem *item in self.item.childrenNodes) {
         if (item.isSelected) return [self.item.childrenNodes indexOfObject:item];
     }
-    return MAXFLOAT;
+    return NSUIntegerMax;
 }
 
 - (NSInteger)_findRightSelectedIndex:(NSInteger)leftIndex {
@@ -214,21 +292,32 @@
     }else{ //subTableView
         
         MMSelectedPath *selectdPath = [self.selectedArray lastObject];
+        if (selectdPath.firstPath == self.selectedIndex && selectdPath.secondPath == indexPath.row)
+            return;
+        
         if (selectdPath.firstPath == self.selectedIndex && selectdPath.secondPath == indexPath.row) return;
         if (selectdPath.secondPath != -1) {
-            
             MMItem *lastItem = self.item.childrenNodes[selectdPath.firstPath].childrenNodes[selectdPath.secondPath];
             lastItem.isSelected = NO;
         }
- 
+        [self removeAndEmptySelected];
         [self.selectedArray removeAllObjects];
-        MMItem *currentIndex =self.item.childrenNodes[self.selectedIndex].childrenNodes[indexPath.row];
+        MMItem *currentIndex = self.item.childrenNodes[self.selectedIndex].childrenNodes[indexPath.row];
         currentIndex.isSelected = YES;
+        currentIndex.parentItem.isSelected = YES;
         [self.selectedArray addObject:[MMSelectedPath pathWithFirstPath:self.selectedIndex secondPath:indexPath.row]];
         [self.subTableView reloadData];
+        [self.mainTableView reloadData];
         [self _callBackDelegate];
 
     }
     
+}
+
+#pragma mark
+
+-(void)removeAndEmptySelected
+{
+    [self.item setAllSubItemSelected:NO];
 }
 @end

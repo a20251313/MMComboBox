@@ -9,6 +9,7 @@
 #import "MMItem.h"
 #import "MMLayout.h"
 #import "MMSelectedPath.h"
+#import <objc/runtime.h>
 
 
 static const void *kMMKeyKey = &kMMKeyKey;
@@ -62,6 +63,7 @@ static const void *kMMCodeKey = &kMMCodeKey;
     MMItem *item = [[[self class] alloc] init];
     item.markType = type;
     item.title = title;
+    item.rootTitle = title;
     
     return item;
 }
@@ -71,6 +73,7 @@ static const void *kMMCodeKey = &kMMCodeKey;
 {
     MMItem *item = [self itemWithItemType:type titleName:title];
     item.iconType = iconType;
+    item.rootTitle = title;
     return item;
 }
 
@@ -78,12 +81,14 @@ static const void *kMMCodeKey = &kMMCodeKey;
 - (void)addNode:(MMItem *)node {
     NSParameterAssert(node);
     node.isSelected = (self.childrenNodes.count == 0) ? YES : NO;
+    node.parentItem = self;;
     [self.childrenNodes addObject:node];
 }
 
 - (void)addNodeWithoutMark:(MMItem *)node {
     NSParameterAssert(node);
     node.isSelected = NO;
+    node.parentItem = self;
     [self.childrenNodes addObject:node];
 }
 
@@ -179,11 +184,31 @@ static const void *kMMCodeKey = &kMMCodeKey;
 {
     for (MMItem *item in self.childrenNodes) {
         item.isSelected = selected;
-        for (MMItem *subitem in subitem.childrenNodes) {
+        for (MMItem *subitem in item.childrenNodes) {
             subitem.isSelected = selected;
         }
     }
     
+}
+
+- (NSString*)description
+{
+    return [NSString stringWithFormat:@"class:[%s] address:%p key:%@ code:%@ title:%@,rootTitle:%@",object_getClassName([self class]),self,self.key,self.code,self.title,self.rootTitle];
+}
+
+
+- (BOOL)isEqual:(id)object
+{
+    if (object  && [object isKindOfClass:[MMItem class]]
+        ) {
+        MMItem *two = (MMItem *)object;
+        if (self.key && self.code && two.key && two.code
+            && [self.key isEqualToString:two.key]
+            && [self.code isEqualToString:two.code]) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 @end

@@ -12,6 +12,8 @@
 #import "UIColor+FFUIFactory.h"
 #import "Masonry.h"
 #import "FFIconFontDefine.h"
+#import "NSArray+Safe.h"
+#import "NSMutableArray+Safe.h"
 
 #define scale [UIScreen mainScreen].scale
 #define kMMScreenHeigth [UIScreen mainScreen].bounds.size.height
@@ -21,17 +23,42 @@
 
 
 
-#define kBusinessDisKey             @"businessDis"  //商圈参数名
-#define kDistanceKey             @"distance"     //距离参数名
-#define kSortKey                    @"sort"         //排序参数名
+#define kBusinessDisKey             @"busiDistrictId"  //商圈参数名
+#define kDistanceKey                @"distance"     //距离参数名
+#define kCountyIdKey               @"countyId"    //某个参数名
+#define kSortKey                    @"sortField"         //排序参数名
 #define kCategoryIdKey              @"categoryId"   //类目ID
 #define kBrandIdKey                 @"brandId"      //品牌参数名
+#define kSortTypeKey                @"sortType"     //排序类型
 #define kStoreTypeKey               @"storeType"    //门店类型
 #define kFloorKey                   @"floor"      //楼层参数名
 #define kPriceKey                   @"price"      //价格参数名
 #define kIconKey                    @"icon"       //活动及服务
-#define kPlazaUtilityKey            @"plazaUtility"      //服务参数名
+#define kPlazaUtilityKey            @"plazaUtility"    //服务参数名
+#define kPlazaTypeKey               @"plazaType"      //广场
+#define kCinemaAreaKey              @"CinemaArea"        //影院区域
+#define kCinemaBrandKey             @"CinemaBrand"       //影院品牌
+#define kCinemaSortKey              @"CinemaSort"        //影院排序
+#define kCinemaServiceKey           @"CinemaService"     //影院特色服务
+#define kCinemaHallKey              @"CinemaHall"        //影院特色影厅
 
+#undef Pixel24
+#define Pixel24 [UIFont systemFontOfSize:12]
+#undef Pixel30
+#define Pixel30 [UIFont systemFontOfSize:17]
+
+//颜色
+
+#undef RGBColor//(r, g, b)
+#undef RGBAColor//(r, g, b, a)
+#undef RGBCodeColor
+#undef RGBCodeAlphaColor
+
+#define RGBColor(r, g, b) RGBAColor(r, g, b, 255)
+#define RGBAColor(r, g, b, a) [UIColor colorWithRed:r/255.0f green:g/255.0f blue:b/255.0f alpha:a/255.0f]  //a -> 0 ~ 255
+
+#define RGBCodeColor(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1]
+#define RGBCodeAlphaColor(rgbValue,a) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:a] // a -> 0 ~ 1
 
 
 

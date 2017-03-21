@@ -12,10 +12,16 @@
 #import "MMHeaderView.h"
 #import "MMSelectedPath.h"
 #import "MMAlternativeItem.h"
+
+
+#define kMMFileterEmptyHeight  301
+
 @interface MMCombinationFitlerView () <MMHeaderViewDelegate,MMCombineCellDelegate,UITableViewDelegate, UITableViewDataSource>
 
 @property (nullable, nonatomic, strong) UIView *bottomView;
-@property (nullable ,nonatomic, strong) MMHeaderView *headView;
+@property (nullable, nonatomic, strong) MMHeaderView *headView;
+@property (nullable, nonatomic, strong) UIView   *emptyView;
+
 @property (nonatomic, assign) BOOL isSuccessfulToCallBack;
 
 @end
@@ -27,72 +33,85 @@
     if (self) {
         self.item = item;
         self.selectedArray = [NSMutableArray array];
-        //单选
-        for (int i = 0; i < self.item.alternativeArray.count; i++) {
-            MMAlternativeItem *alternativeItem = self.item.alternativeArray[i];
-            [self.selectedArray addObject:[MMSelectedPath pathWithFirstPath:i isKindOfAlternative:YES isOn:alternativeItem.isSelected]];
-        }
-        //多层
-        for (int i = 0; i < self.item.childrenNodes.count; i++) {
-            MMItem *subItem = item.childrenNodes[i];
-            for (int j = 0; j <subItem.childrenNodes.count; j++) {
-                MMItem *secondItem = subItem.childrenNodes[j];
-                if (secondItem.isSelected == YES){
-                    [self.selectedArray addObject: [MMSelectedPath pathWithFirstPath:i secondPath:j]];
-                    break;
-                }
-            }
-        }
-        self.temporaryArray= [[NSArray alloc] initWithArray:self.selectedArray copyItems:YES] ;
+        [self updateSelectPath];
         
     }
     return self;
 }
 
+
+- (void)updateSelectPath
+{
+    [self.selectedArray removeAllObjects];
+    //单选
+    for (int i = 0; i < self.item.alternativeArray.count; i++) {
+        MMAlternativeItem *alternativeItem = self.item.alternativeArray[i];
+        [self.selectedArray addObject:[MMSelectedPath pathWithFirstPath:i isKindOfAlternative:YES isOn:alternativeItem.isSelected]];
+    }
+    //多层
+    for (int i = 0; i < self.item.childrenNodes.count; i++) {
+        MMItem *subItem = self.item.childrenNodes[i];
+        for (int j = 0; j <subItem.childrenNodes.count; j++) {
+            MMItem *secondItem = subItem.childrenNodes[j];
+            if (secondItem.isSelected == YES){
+                [self.selectedArray addObject: [MMSelectedPath pathWithFirstPath:i secondPath:j]];
+            }
+        }
+    }
+    
+     self.temporaryArray= [[NSArray alloc] initWithArray:self.selectedArray copyItems:YES] ;
+    
+}
 #pragma mark - Private Method
 - (void)popupViewFromSourceFrame:(CGRect)frame completion:(void (^ __nullable)(void))completion  fromView:(nullable UIView*)superView{
     //UIView *rootView = [[UIApplication sharedApplication] keyWindow];
     self.sourceFrame = frame;
     CGFloat top =  CGRectGetHeight(self.sourceFrame);
-    CGFloat maxHeight = kMMScreenHeigth - DistanceBeteewnPopupViewAndBottom - top - PopupViewTabBarHeight-DistanceBeteewnTopMargin-150;
+    
+    CGFloat maxHeight = kMMScreenHeigth - DistanceBeteewnPopupViewAndBottom - top - PopupViewTabBarHeight-DistanceBeteewnTopMargin-100;
     CGFloat resultHeight = MIN(maxHeight, self.item.layout.totalHeight);
+    if (self.item.childrenNodes.count <= 0) {
+        CGFloat  emptyViewHeight =  kMMFileterEmptyHeight;
+        resultHeight = MAX(resultHeight, emptyViewHeight);
+    }
+       
     self.frame = CGRectMake(0, top, kMMScreenWidth, 0);
     [superView addSubview:self];
     
-    //addTableView
-    self.mainTableView = [[UITableView alloc] initWithFrame:self.bounds style:UITableViewStylePlain];
-    self.mainTableView.delegate = self;
-    self.mainTableView.dataSource = self;
-    self.mainTableView.tableHeaderView = [[UIView alloc] init];
-    [self.mainTableView registerClass:[MMCombineCell class] forCellReuseIdentifier:MainCellID];
-    [self.mainTableView setSeparatorColor:[UIColor clearColor]];
-    [self addSubview:self.mainTableView];
     
-    
+    //self.item.childrenNodes.count > 0
+    if (self.item.childrenNodes.count == 0 && self.item.needEmptyView) {
+        [self.mainTableView removeFromSuperview];
+        [self creatEmptyView];
+    }else{
+        [_emptyView removeFromSuperview];
+        //addTableView
+        self.mainTableView = [[UITableView alloc] initWithFrame:self.bounds style:UITableViewStylePlain];
+        self.mainTableView.delegate = self;
+        self.mainTableView.dataSource = self;
+        self.mainTableView.tableHeaderView = [[UIView alloc] init];
+        [self.mainTableView registerClass:[MMCombineCell class] forCellReuseIdentifier:MainCellID];
+        [self.mainTableView setSeparatorColor:[UIColor clearColor]];
+        [self addSubview:self.mainTableView];
+    }
+
     //add shadowView
     self.shadowView.frame = CGRectMake(0, top, kMMScreenWidth, kMMScreenHeigth - top);
     self.shadowView.alpha = 0;
     self.shadowView.userInteractionEnabled = YES;
     [superView insertSubview:self.shadowView belowSubview:self];
-    
-    UITapGestureRecognizer  *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(respondsToTapGestureRecognizer:)];
-    tap.numberOfTouchesRequired = 1; //手指数
-    tap.numberOfTapsRequired = 1; //tap次数
-    [self.shadowView addGestureRecognizer:tap];
-    
-    UIView  *panView = [[UIView alloc] initWithFrame:CGRectMake(0, top+resultHeight, kMMScreenWidth, kMMScreenHeigth-top-resultHeight)];    
-    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(emptyAction:)];
-    [panView addGestureRecognizer:pan];
-    [panView setBackgroundColor:[UIColor clearColor]];
-    [self.shadowView addSubview:panView];    
+    [self.shadowView addTarget:self action:@selector(emptyAction:) forControlEvents:UIControlEventAllEvents];
+    [self.shadowView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(emptyAction:)]];
     self.bottomView.frame = CGRectMake(0, resultHeight, self.ff_width, 0);
   
     
     [UIView animateWithDuration:AnimationDuration animations:^{
         self.frame = CGRectMake(0, top, kMMScreenWidth, resultHeight+PopupViewTabBarHeight);
-        self.mainTableView.frame = self.bounds;
+        self.emptyView.frame = CGRectMake(0, 0, kMMScreenWidth, kMMFileterEmptyHeight);
+        self.mainTableView.frame = CGRectMake(0, 0, kMMScreenWidth, resultHeight);
         self.shadowView.alpha = ShadowAlpha;
         self.bottomView.frame = CGRectMake(0, resultHeight, self.ff_width, PopupViewTabBarHeight);
+        [self bringSubviewToFront:self.bottomView];
     } completion:^(BOOL finished) {
         completion();
         [self addSubview:self.bottomView];
@@ -141,12 +160,11 @@
 /**
  只是为了滑动事件不被父view接受
 
- @param sender
+ @param sender sender
  */
 -(void)emptyAction:(id)sender
 {
-    
-    
+    [self dismiss];
 }
 
 - (void)dismiss{
@@ -154,7 +172,6 @@
     if ([self.delegate respondsToSelector:@selector(popupViewWillDismiss:)]) {
         [self.delegate popupViewWillDismiss:self];
     }
-    
     //根据isSuccessfulToCallBack字段判断是否要将数据回归到temporaryArray
     if (self.isSuccessfulToCallBack == NO) {
         [self.selectedArray enumerateObjectsUsingBlock:^(MMSelectedPath *path, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -178,16 +195,16 @@
     }
    
     self.bottomView.hidden = YES;
-    //CGFloat top =  CGRectGetMaxY(self.sourceFrame);
     //消失的动画
     [UIView animateWithDuration:AnimationDuration animations:^{
         self.ff_height = 0;
+        _emptyView.ff_height = 0;
         self.mainTableView.ff_height = 0;
-       // self.shadowView.alpha = 0.0;
     } completion:^(BOOL finished) {
         if (self.superview) {
             [self removeFromSuperview];
         }
+        [self.emptyView removeFromSuperview];
     }];
 }
 
@@ -232,6 +249,7 @@
             i--;
         }
     }
+    self.item.title = self.item.rootTitle;
     [self.mainTableView reloadData];
 }
 
@@ -307,11 +325,18 @@
 - (void)combineCell:(MMCombineCell *)combineCell didSelectedAtIndex:(NSInteger)index{
     NSIndexPath *indexPath = [self.mainTableView indexPathForCell:combineCell];
     if ([self _iscontainsSelectedPath:[MMSelectedPath pathWithFirstPath:indexPath.row secondPath:index] sourceArray:self.selectedArray]) {//包含
+        [self _removePath:[MMSelectedPath pathWithFirstPath:indexPath.row secondPath:index] sourceArray:self.selectedArray];
+        self.item.childrenNodes[indexPath.row].childrenNodes[index].isSelected = NO;
+        [self.mainTableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
         return;
     } else {
-        MMSelectedPath *removeIndexPath = [self _removePath:[MMSelectedPath pathWithFirstPath:indexPath.row] sourceArray:self.selectedArray];
-        self.item.childrenNodes[removeIndexPath.firstPath].childrenNodes[removeIndexPath.secondPath].isSelected = NO;
-       [self.selectedArray addObject:[MMSelectedPath pathWithFirstPath:indexPath.row secondPath:index]];
+        MMItem *item  = [self.item findItemBySelectedPath:[MMSelectedPath pathWithFirstPath:indexPath.row]];
+        if(item.selectedType != MMPopupViewMultilSeMultiSelection) {
+            MMSelectedPath *removeIndexPath = [self _removePath:[MMSelectedPath pathWithFirstPath:indexPath.row] sourceArray:self.selectedArray];
+            self.item.childrenNodes[removeIndexPath.firstPath].childrenNodes[removeIndexPath.secondPath].isSelected = NO;
+        }
+      
+        [self.selectedArray addObject:[MMSelectedPath pathWithFirstPath:indexPath.row secondPath:index]];
         self.item.childrenNodes[indexPath.row].childrenNodes[index].isSelected = YES;
     }
     [self.mainTableView reloadData];
@@ -323,5 +348,70 @@
     [self.mainTableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
 }
 
+
+#pragma mark - empty
+- (void)creatEmptyView
+{
+   
+    [self addSubview:self.emptyView];
+    self.emptyView.frame = CGRectMake(0, 0, self.ff_width, 0);
+    self.emptyView.clipsToBounds = YES;
+}
+
+- (UIView*)emptyView
+{
+    if (_emptyView == nil) {
+        _emptyView = [[UIView alloc] initWithFrame:CGRectMake(0,0,CGRectGetWidth(self.frame), kMMFileterEmptyHeight)];
+        _emptyView.backgroundColor = RGBCodeColor(0xF3F3F3);
+        
+        //111*165
+        UIImageView *iconImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 39, 111, 165)];
+        iconImage.image = [UIImage imageNamed:@"icon_notFound"];
+        [_emptyView addSubview:iconImage];
+        
+        UILabel  *labelTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(iconImage.frame)+25, CGRectGetWidth(self.frame), 21)];
+        [labelTitle setBackgroundColor:[UIColor clearColor]];
+        [labelTitle setText:@"没有更多筛选项"];
+        [labelTitle setTextAlignment:NSTextAlignmentCenter];
+        [labelTitle setTextColor:RGBCodeColor(0x333333)];
+        [labelTitle setFont:Pixel30];
+        [_emptyView addSubview:labelTitle];
+        
+        
+        UILabel  *labelSubTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(labelTitle.frame)+10, CGRectGetWidth(self.frame), 21)];
+        [labelSubTitle setBackgroundColor:[UIColor clearColor]];
+        [labelSubTitle setText:@"您可选择其他分类或者更换关键字试试"];
+        [labelSubTitle setTextAlignment:NSTextAlignmentCenter];
+        [labelSubTitle setTextColor:RGBCodeColor(0x999999)];
+        [labelSubTitle setFont:Pixel24];
+        [_emptyView addSubview:labelSubTitle];
+        
+        [iconImage mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(39);
+            make.width.mas_equalTo(111);
+            make.height.mas_equalTo(165);
+            make.centerX.mas_equalTo(0);
+        }];
+        [labelTitle mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(39+165+35);
+            make.centerX.mas_equalTo(0);
+            make.height.mas_equalTo(21);
+            make.left.mas_equalTo(0);
+            make.right.mas_equalTo(0);
+        }];
+        
+        [labelSubTitle mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(39+165+35+21+10);
+            make.centerX.mas_equalTo(0);
+            make.height.mas_equalTo(21);
+            make.left.mas_equalTo(0);
+            make.right.mas_equalTo(0);
+        }];
+        [_emptyView addSubview:labelSubTitle];
+    }
+    
+    return _emptyView;
+    
+}
 
 @end

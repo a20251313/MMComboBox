@@ -45,4 +45,9 @@
     path.isOn = self.isOn;
     return path;
 }
+
+- (NSString*)description
+{
+    return [NSString stringWithFormat:@"class:%@ address:<%p> firstPath:%zd secondPath:%zd",@"MMSelectedPath",self,self.firstPath,self.secondPath];
+}
 @end

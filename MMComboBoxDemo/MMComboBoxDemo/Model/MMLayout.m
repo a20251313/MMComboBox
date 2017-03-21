@@ -8,7 +8,7 @@
 
 #import "MMLayout.h"
 #import "MMItem.h"
-
+#import "NSArray+Safe.h"
 
 @interface MMLayout ()
 
@@ -41,7 +41,7 @@
     layout.headerViewHeight = item.alternativeArray.count * (2*AlternativeTitleVerticalMargin + AlternativeTitleHeight);
     layout.totalHeight += layout.headerViewHeight;
     for (int i = 0; i < item.childrenNodes.count; i++) {
-        MMItem *subItem = item.childrenNodes[i];
+        MMItem *subItem = [item.childrenNodes safeObjectAtIndex:i];
         NSMutableArray *array = [NSMutableArray arrayWithCapacity:subItem.childrenNodes.count];
         CGFloat totalCellHeight = 2*TitleVerticalMargin + ItemHeight;
         NSInteger columnNumber = MAX(1,subItem.childrenNodes.count /layout.rowNumber + ((subItem.childrenNodes.count %layout.rowNumber)?1:0));

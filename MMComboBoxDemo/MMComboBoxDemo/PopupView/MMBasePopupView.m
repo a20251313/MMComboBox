@@ -20,13 +20,19 @@
     self = [super init];
     if (self) {
         self.item = item;
+        
     }
     return self;
 }
+
+- (void)updateSelectPath
+{
+}
+
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.shadowView = [[UIView alloc] init];
+        self.shadowView = [[UIControl alloc] init];
         self.shadowView.backgroundColor = [UIColor ff_colorWithHex:0x484848];
         self.selectedArray = [NSMutableArray array];
         self.temporaryArray = [NSMutableArray array];

@@ -25,9 +25,6 @@
 @property (nonatomic, strong) UIView    *topBgView;
 @property (nonatomic, assign) CGFloat    spaceMargin;
 
-
-
-
 @end
 
 @implementation MMComBoBoxView
@@ -91,7 +88,7 @@
 }
 
 
--(NSString*)getSelectTitle:(MMItem*)item boxArray:(NSArray <MMComBoxOldValue>*)boxValues
+-(NSString*)getSelectTitle:(MMItem*)item boxArray:(NSArray *)boxValues
 {
     NSString  *subTitle = nil;
     for (id<MMComBoxOldValue> box in boxValues) {
@@ -100,6 +97,7 @@
             for (NSString *code in codeArray) {
                 if ([code isEqualToString:item.code]) {
                     item.isSelected = YES;
+                    item.parentItem.isSelected = YES;
                     if (!subTitle) {
                         subTitle = item.title;
                     }else{
@@ -122,38 +120,69 @@
  
  @param boxValues MMComBoxOldValue
  */
-- (void)updateValueWithData:(NSArray <MMComBoxOldValue>*)boxValues
+- (void)updateValueWithData:(NSArray *)boxValues
 {
     [self resetAllChoiceToNone];
+    
+    //这是一段傻逼逻辑，如果附近和商圈都没有设定，那么默认选中附近中的全部 ranjingfu
+    BOOL hasDistance = NO;
+    for (FFBaseKeyCodeModel *model in boxValues) {
+        if ([[model key] isEqualToString:kBusinessDisKey] ||
+            [[model key] isEqualToString:kDistanceKey] ||
+            [[model key] isEqualToString:kCountyIdKey]) {
+            hasDistance = YES;
+            break;
+        }
+    }
+    if (!hasDistance) {
+        NSMutableArray *mutArray = [NSMutableArray arrayWithArray:boxValues];
+        [mutArray insertObject:[FFBaseKeyCodeModel modelWithKey:kDistanceKey code:@""] atIndex:0];
+        boxValues = [NSArray arrayWithArray:mutArray];
+    }
+    //傻逼逻辑结束
+#if DEBUG
+    NSLog(@"updateValueWithData:%@",boxValues);
+#endif
     for (int i = 0;i < self.itemArray.count; i++) {
+        
         MMItem  *rootItem  =  [self.dataSource comBoBoxView:self infomationForColumn:i];
         NSString *rootTitle = nil;
         for (MMItem *subItem in rootItem.childrenNodes) {
             
             if (subItem.childrenNodes.count) {
+                
                 for (MMItem *subsubItem in subItem.childrenNodes) {
+                    if (rootItem.selectedType == MMPopupViewSingleSelection && rootTitle.length > 0) {
+                        break;
+                    }
                     NSString  *subTitle = [self getSelectTitle:subsubItem boxArray:boxValues];
+                    if (rootItem.displayType == MMPopupViewDisplayTypeFilters) {
+                        continue;
+                    }
                     if (subTitle) {
                         if (rootTitle == nil) {
                             rootTitle = subTitle;
                         }else{
-                            rootTitle = [NSString stringWithFormat:@"%@ %@",rootTitle,subTitle];
+                            rootTitle = [NSString stringWithFormat:@"%@;%@",rootTitle,subTitle];
                         }
-                        
+                      
                     }
+                   
                 }
             }else{
                 
+                if (rootItem.selectedType == MMPopupViewSingleSelection && rootTitle.length > 0) {
+                    break;
+                }
                 NSString  *subTitle = [self getSelectTitle:subItem boxArray:boxValues];
                 if (subTitle) {
                     if (rootTitle == nil) {
                         rootTitle = subTitle;
                     }else{
-                        rootTitle = [NSString stringWithFormat:@"%@ %@",rootTitle,subTitle];
+                        rootTitle = [NSString stringWithFormat:@"%@;%@",rootTitle,subTitle];
                     }
                 }
             }
-            
             rootItem.title = (rootTitle != nil?rootTitle:rootItem.title);
         }
     }
@@ -167,6 +196,7 @@
 - (void)cleanAllChoice
 {
     [self resetAllChoiceToNone];
+    [self.popupView updateSelectPath];
     [self reload];
 }
 
@@ -183,12 +213,13 @@
                 if (subItem.childrenNodes.count) {
                     for (MMItem *subsubItem in subItem.childrenNodes) {
                         subsubItem.isSelected = NO;
+                        subItem.isSelected = NO;
                     }
                 }else{
                     subItem.isSelected = NO;
                 }
             }
-            
+            rootItem.title = rootItem.rootTitle;
         }
     }
 }
@@ -262,18 +293,19 @@
     popupView.delegate = self;
     popupView.tag = index;
     self.popupView = popupView;
+    [popupView updateSelectPath];
     [self.symbolArray addObject:popupView];
     
     if ([self.delegate respondsToSelector:@selector(comBoBoxView:actionType:atIndex:)]) {
         [self.delegate comBoBoxView:self actionType:MMComBoBoxViewShowActionTypePop atIndex:index];
     }
+    [self.superview bringSubviewToFront:self];
     dispatch_async(dispatch_get_main_queue(), ^{
         [popupView popupViewFromSourceFrame:self.frame completion:^ {
             self.isAnimation = NO;
         
         } fromView:self];
     });
-    
     
 }
 
@@ -326,7 +358,7 @@
 - (void)didTapDropDownBox:(MMDropDownBox *)dropDownBox atIndex:(NSUInteger)index {
     if (self.isAnimation == YES) return;
     for (int i = 0; i <self.dropDownBoxArray.count; i++) {
-        MMDropDownBox *currentBox  = self.dropDownBoxArray[i];
+        MMDropDownBox *currentBox  = [self.dropDownBoxArray safeObjectAtIndex:i];
         [currentBox updateTitleState:(i == index)];
         [currentBox setLineHide:(i != index)];
     }
@@ -336,12 +368,12 @@
         if ([self.delegate respondsToSelector:@selector(comBoBoxView:actionType:atIndex:)]) {
             [self.delegate comBoBoxView:self actionType:MMComBoBoxViewShowActionTypePackUp atIndex:index];
         }
-        MMBasePopupView * lastView = self.symbolArray[0];
+        MMBasePopupView * lastView = [self.symbolArray firstObject];
         MMItem *rootItem = lastView.item;
         [lastView dismiss];
         [self.symbolArray removeAllObjects];
         //如果是点击当前的，那么就不需要再显示
-        if ([rootItem isEqual:self.itemArray[index]]) {
+        if (rootItem == [self.itemArray safeObjectAtIndex:index]) {
             return;
         }
         
@@ -352,15 +384,23 @@
 #pragma mark - MMPopupViewDelegate
 - (void)popupView:(MMBasePopupView *)popupView didSelectedItemsPackagingInArray:(NSArray *)array atIndex:(NSUInteger)index {
     MMItem *item = self.itemArray[index];
-    if (1) {
+    if (item.displayType != MMPopupViewDisplayTypeFilters) {
         //拼接选择项
         NSMutableString *title = [NSMutableString string];
         for (int i = 0; i <array.count; i++) {
+            if (title.length > 0) {
+                break;
+            }
             MMSelectedPath *path = array[i];
             [title appendString:i?[NSString stringWithFormat:@";%@",[item findTitleBySelectedPath:path]]:[item findTitleBySelectedPath:path]];
         }
-        MMDropDownBox *box = self.dropDownBoxArray[index];
-        [box updateTitleContent:title];
+        MMDropDownBox *box = [self.dropDownBoxArray safeObjectAtIndex:index];
+        if (title.length > 0) {
+            [box updateTitleContent:title];
+        }else{
+            [box updateTitleContent:item.rootTitle];
+        }
+       
     }; //筛选不做UI赋值操作 直接将item的路径回调回去就好了
     
     if ([self.delegate respondsToSelector:@selector(comBoBoxView:didSelectedItemsPackagingInArray:atIndex:)]) {

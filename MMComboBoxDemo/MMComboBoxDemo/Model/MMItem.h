@@ -22,6 +22,8 @@
 @property (nonatomic, assign) BOOL isSelected;                          //默认0
 @property (nonatomic, strong) NSString *subTitle;                       //第一层默认没有
 @property (nonatomic, strong) MMLayout *layout;
+@property (nonatomic, strong) NSString *rootTitle;  //当title 为nil的时候会将rootTitle作为默认值，类方法里面会对默认把rootTitle设为rootTitle
+@property (nonatomic, weak) MMItem *parentItem;
 
 
 
@@ -74,7 +76,6 @@
 + (instancetype)itemWithItemType:(MMPopupViewMarkType)type titleName:(NSString *)title;
 + (instancetype)itemWithItemType:(MMPopupViewMarkType)type titleName:(NSString *)title iconType:(MMPopupViewIconType)iconType;
 + (instancetype)itemWithItemType:(MMPopupViewMarkType)type titleName:(NSString *)title subTileName:(NSString *)subTile;
-
 
 
 /**

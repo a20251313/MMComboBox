@@ -7,6 +7,7 @@
 //
 
 #import "MMBaseItem.h"
+#import <objc/runtime.h>
 
 static const void *kMMKeyKey = &kMMKeyKey;
 static const void *kMMCodeKey = &kMMCodeKey;
@@ -61,6 +62,11 @@ static const void *kFFBaseKeyCodeModelCodeKey = &kFFBaseKeyCodeModelCodeKey;
 @implementation FFBaseKeyCodeModel
 
 
+
+- (NSString*)description
+{
+    return [NSString stringWithFormat:@"FFBaseKeyCodeModel<%p> key:%@ code:%@",self,self.key,self.code];
+}
 + (FFBaseKeyCodeModel*)modelWithKey:(NSString*)key code:(NSString*)code
 {
     FFBaseKeyCodeModel  *baseModel = [[FFBaseKeyCodeModel alloc] init];

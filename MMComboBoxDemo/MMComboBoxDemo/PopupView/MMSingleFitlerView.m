@@ -23,18 +23,25 @@
         self.item = item;
         self.isSuccessfulToCallBack = (self.item.selectedType == MMPopupViewSingleSelection)?YES:NO;
         self.selectedArray = [NSMutableArray array];
-        for (int i = 0; i < self.item.childrenNodes.count; i++) {
-            MMItem *subItem = item.childrenNodes[i];
-            if (subItem.isSelected == YES){
-                MMSelectedPath *path = [[MMSelectedPath alloc] init];
-                path.firstPath = i;
-                [self.selectedArray addObject:path];
-            }
-        }
-        self.temporaryArray= [[NSArray alloc] initWithArray:self.selectedArray copyItems:YES] ;
+      
         self.backgroundColor = [UIColor whiteColor];
     }
     return self;
+}
+
+
+-(void)updateSelectPath
+{
+    [self.selectedArray removeAllObjects];
+    for (int i = 0; i < self.item.childrenNodes.count; i++) {
+        MMItem *subItem = self.item.childrenNodes[i];
+        if (subItem.isSelected == YES){
+            MMSelectedPath *path = [[MMSelectedPath alloc] init];
+            path.firstPath = i;
+            [self.selectedArray addObject:path];
+        }
+    }
+    self.temporaryArray= [[NSArray alloc] initWithArray:self.selectedArray copyItems:YES] ;
 }
 
 #pragma mark - public method
@@ -46,7 +53,7 @@
     self.frame = CGRectMake(0, top, kMMScreenWidth, 0);
     [superView addSubview:self];
    
-    self.mainTableView = [[UITableView alloc] initWithFrame:self.bounds style:UITableViewStylePlain];
+    self.mainTableView = [[UITableView alloc] initWithFrame:CGRectMake(10, 0, kMMScreenWidth-20, 0) style:UITableViewStylePlain];
     self.mainTableView.rowHeight = [MMNormalCell normalCellHeight:nil];
     self.mainTableView.delegate = self;
     self.mainTableView.dataSource = self;
@@ -59,17 +66,9 @@
     self.shadowView.alpha = 0;
     self.shadowView.userInteractionEnabled = YES;
     [superView insertSubview:self.shadowView belowSubview:self];
-    UITapGestureRecognizer  *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(respondsToTapGestureRecognizer:)];
-    tap.numberOfTouchesRequired = 1; //手指数
-    tap.numberOfTapsRequired = 1; //tap次数
-    [self.shadowView addGestureRecognizer:tap];
+    [self.shadowView addTarget:self action:@selector(emptyAction:) forControlEvents:UIControlEventAllEvents];
+    [self.shadowView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(emptyAction:)]];
     
-    
-    UIView  *panView = [[UIView alloc] initWithFrame:CGRectMake(0, top+resultHeight, kMMScreenWidth, kMMScreenHeigth-top-resultHeight)];
-    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(emptyAction:)];
-    [panView addGestureRecognizer:pan];
-    [panView setBackgroundColor:[UIColor clearColor]];
-    [self.shadowView addSubview:panView];
     //出现的动画
     [UIView animateWithDuration:AnimationDuration animations:^{
         self.frame = CGRectMake(0, top, kMMScreenWidth, resultHeight);
@@ -106,12 +105,11 @@
 /**
  只是为了滑动事件不被父view接受
  
- @param sender
+ @param sender sender
  */
 -(void)emptyAction:(id)sender
 {
-    
-    
+      [self dismiss];
 }
 
 - (void)dismiss{
@@ -219,9 +217,11 @@
         //如果点击的已经选中的直接返回
         if ([self _iscontainsSelectedPath:[MMSelectedPath pathWithFirstPath:indexPath.row] sourceArray:self.selectedArray]) return;
            //remove
-            MMSelectedPath *lastSelectedPath = self.selectedArray[0] ;
-            self.item.childrenNodes[lastSelectedPath.firstPath].isSelected = NO;
-            [self.selectedArray removeLastObject];
+            MMSelectedPath *lastSelectedPath = [self.selectedArray firstObject];
+            if (lastSelectedPath) {
+                self.item.childrenNodes[lastSelectedPath.firstPath].isSelected = NO;
+                [self.selectedArray removeLastObject];
+            }
            //add
             self.item.childrenNodes[indexPath.row].isSelected = YES;
             [self.selectedArray addObject:[MMSelectedPath pathWithFirstPath:indexPath.row]];

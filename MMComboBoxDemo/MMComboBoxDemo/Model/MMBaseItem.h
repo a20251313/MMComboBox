@@ -54,6 +54,7 @@ typedef NS_ENUM(NSInteger, MMPopupViewIconType) {  //筛选层附加icon定义
 @property (nonatomic, assign) MMPopupViewIconType iconType;
 @property (nonatomic, assign) BOOL hasAllFuntion; //是否有全部按钮  默认为YES
 @property (nonatomic, assign) BOOL isOpen; //全部的item是否显示，只有hasAllFuntion为YES的时候才起作用，默认为NO
+@property (nonatomic, assign) BOOL needEmptyView;//如果没有子选项，是否要显示emptyView，当前只显示MMPopupViewDisplayTypeMultilayer
 
 @end
 

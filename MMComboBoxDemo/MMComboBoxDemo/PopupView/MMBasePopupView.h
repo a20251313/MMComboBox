@@ -10,10 +10,10 @@
 
 @class MMItem;
 @protocol MMPopupViewDelegate;
-@interface MMBasePopupView : UIView 
+@interface MMBasePopupView : UIView
 @property (nullable, nonatomic, strong) MMItem *item;
 @property (nonatomic, assign) CGRect sourceFrame;
-@property (nullable, nonatomic, strong) UIView *shadowView;
+@property (nullable, nonatomic, strong) UIControl *shadowView;
 @property (nullable, nonatomic, strong) UITableView *mainTableView;
 @property (nullable, nonatomic, strong) UITableView *subTableView;
 @property (nullable, nonatomic, strong) NSMutableArray *selectedArray;
@@ -28,6 +28,7 @@
 - (void)popupViewFromSourceFrame:(CGRect)frame completion:(void (^ __nullable)(void))completion  fromView:(nullable UIView*)superView;
 - (void)dismiss;
 - (void)dismissWithOutAnimation;
+- (void)updateSelectPath;
 
 @end
 
