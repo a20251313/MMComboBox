@@ -10,8 +10,8 @@
 #import "MMItem.h"
 
 @interface MMNormalCell : UITableViewCell
-@property (nonatomic, strong) MMItem *item;
 
+@property (nonatomic, strong) MMItem *item;
 
 + (CGFloat)normalCellHeight:(MMItem*)item;
 

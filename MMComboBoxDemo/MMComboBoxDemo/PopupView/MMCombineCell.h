@@ -10,15 +10,16 @@
 #import "MMItem.h"
 
 @protocol MMCombineCellDelegate;
+
 @interface MMCombineCell : UITableViewCell
 @property (nonatomic, strong) MMItem *item; 
 @property (nonatomic, weak) id<MMCombineCellDelegate> delegate;
+
 @end
 
 @protocol MMCombineCellDelegate <NSObject>
 
 - (void)combineCell:(MMCombineCell *)combineCell didSelectedAtIndex:(NSInteger)index;
-
 - (void)combineCellDidClickOpen:(MMCombineCell *)combineCell;
 
 

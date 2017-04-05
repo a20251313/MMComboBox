@@ -21,7 +21,6 @@
 @property (nonatomic, strong) NSMutableArray *cellCloseStateHeight;
 @property (nonatomic, strong) NSMutableArray *cellLayoutTotalInfo;
 
-//@property (nonatomic, strong) NSMutableArray *
 + (instancetype)layoutWithItem:(MMItem *)item;
 
 + (CGFloat)layoutItemWidth;

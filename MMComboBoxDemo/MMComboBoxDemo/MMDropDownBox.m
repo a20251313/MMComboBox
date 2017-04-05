@@ -10,6 +10,7 @@
 #import "MMHeader.h"
 
 @interface MMDropDownBox ()
+
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, assign) MMPopupViewIconType iconType;
 @property (nonatomic, strong) UIView *dotView;

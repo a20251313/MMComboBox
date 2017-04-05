@@ -11,9 +11,11 @@
 #import "MMHeader.h"
 
 @interface MMHeaderView ()
+
 @end
 
 @implementation MMHeaderView
+
 - (instancetype)init {
     self = [super init];
     if (self) {

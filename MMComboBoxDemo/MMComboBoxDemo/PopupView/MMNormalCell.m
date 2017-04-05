@@ -13,6 +13,7 @@
 static const CGFloat horizontalMargin = 10.0f;
 
 @interface MMNormalCell ()
+
 @property (nonatomic, strong) UILabel *title;
 @property (nonatomic, strong) UILabel *subTitle;
 @property (nonatomic, strong) UIImageView *selectedImageview;
@@ -46,7 +47,6 @@ static const CGFloat horizontalMargin = 10.0f;
 - (void)setItem:(MMItem *)item{
     _item = item;
     self.title.text = item.title;
-    
     
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     if (self.item.displayType == MMPopupViewDisplayTypeNormalCheck) {

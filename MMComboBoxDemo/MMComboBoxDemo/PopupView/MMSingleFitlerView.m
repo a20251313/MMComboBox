@@ -12,42 +12,44 @@
 #import "MMSelectedPath.h"
 
 @interface MMSingleFitlerView () <UITableViewDelegate, UITableViewDataSource>
+
 @property (nonatomic, assign) BOOL isSuccessfulToCallBack;
 @property (nonatomic, strong) UIView *bottomView;
 
 @end
+
 @implementation MMSingleFitlerView
+
 - (id)initWithItem:(MMItem *)item {
     self = [super init];
     if (self) {
         self.item = item;
         self.isSuccessfulToCallBack = (self.item.selectedType == MMPopupViewSingleSelection)?YES:NO;
         self.selectedArray = [NSMutableArray array];
-      
         self.backgroundColor = [UIColor whiteColor];
     }
     return self;
 }
 
-
 -(void)updateSelectPath
 {
     [self.selectedArray removeAllObjects];
     for (int i = 0; i < self.item.childrenNodes.count; i++) {
-        MMItem *subItem = self.item.childrenNodes[i];
+        MMItem *subItem = [self.item.childrenNodes safeObjectAtIndex:i];
         if (subItem.isSelected == YES){
             MMSelectedPath *path = [[MMSelectedPath alloc] init];
             path.firstPath = i;
-            [self.selectedArray addObject:path];
+            [self.selectedArray safeAddObject:path];
         }
     }
     self.temporaryArray= [[NSArray alloc] initWithArray:self.selectedArray copyItems:YES] ;
+    [self.mainTableView reloadData];
 }
 
 #pragma mark - public method
-- (void)popupViewFromSourceFrame:(CGRect)frame completion:(void (^ __nullable)(void))completion fromView:(UIView *)superView {
-    self.sourceFrame = frame;
-    CGFloat top =   CGRectGetHeight(frame);
+- (void)popupViewFromView:(nullable UIView*)superView completion:(void (^ __nullable)(void))completion {
+    
+    CGFloat top =   CGRectGetHeight(superView.frame);
     CGFloat maxHeight = kMMScreenHeigth - DistanceBeteewnPopupViewAndBottom - top - PopupViewTabBarHeight-DistanceBeteewnTopMargin;
     CGFloat resultHeight = MIN(maxHeight, self.item.childrenNodes.count * [MMNormalCell normalCellHeight:nil]);
     self.frame = CGRectMake(0, top, kMMScreenWidth, 0);
@@ -101,7 +103,6 @@
     
 }
 
-
 /**
  只是为了滑动事件不被父view接受
  
@@ -109,11 +110,11 @@
  */
 -(void)emptyAction:(id)sender
 {
-      [self dismiss];
+      [self dismissWithCompletion:nil];
 }
 
-- (void)dismiss{
-    [super dismiss];
+- (void)dismissWithCompletion:(void (^)(void))completion{
+    [super dismissWithCompletion:completion];
     [self _resetValue];
     if ([self.delegate respondsToSelector:@selector(popupViewWillDismiss:)]) {
         [self.delegate popupViewWillDismiss:self];
@@ -128,6 +129,12 @@
     } completion:^(BOOL finished) {
         if (self.superview) {
          [self removeFromSuperview];
+        }
+        if (completion) {
+            completion();
+        }
+        if (self.delegate && [self.delegate respondsToSelector:@selector(popupViewDidDismiss:)]) {
+            [self.delegate popupViewDidDismiss:self];
         }
     }];
 }
@@ -166,14 +173,14 @@
         [self.delegate popupView:self didSelectedItemsPackagingInArray:self.selectedArray  atIndex:self.tag];
         [self.mainTableView reloadData];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self dismiss];
+            [self dismissWithCompletion:nil];
         });
     }
 }
 #pragma mark - Action
 - (void)respondsToButtonAction:(UIButton *)sender {
     if (sender.tag == 0) {//取消
-      [self dismiss];
+      [self dismissWithCompletion:nil];
     } else if (sender.tag == 1) {//确定
     self.isSuccessfulToCallBack = YES;
     [self _callBackDelegate];
@@ -181,7 +188,7 @@
 }
 
 - (void)respondsToTapGestureRecognizer:(UITapGestureRecognizer *)tapGestureRecognizer {
-  [self dismiss];
+  [self dismissWithCompletion:nil];
 }
 #pragma mark - UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -190,7 +197,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     MMNormalCell *cell = [tableView dequeueReusableCellWithIdentifier:MainCellID forIndexPath:indexPath];
-    MMItem *item = self.item.childrenNodes[indexPath.row];
+    MMItem *item = [self.item.childrenNodes safeObjectAtIndex:indexPath.row];
     cell.item = item;
     return cell;
 }
@@ -215,7 +222,11 @@
       [self.mainTableView reloadData];
     }else if (self.item.selectedType == MMPopupViewSingleSelection) { //单选
         //如果点击的已经选中的直接返回
-        if ([self _iscontainsSelectedPath:[MMSelectedPath pathWithFirstPath:indexPath.row] sourceArray:self.selectedArray]) return;
+        if ([self _iscontainsSelectedPath:[MMSelectedPath pathWithFirstPath:indexPath.row] sourceArray:self.selectedArray])
+        {
+            [self _callBackDelegate];
+            return;
+        }
            //remove
             MMSelectedPath *lastSelectedPath = [self.selectedArray firstObject];
             if (lastSelectedPath) {

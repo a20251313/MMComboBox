@@ -9,25 +9,18 @@
 #import <UIKit/UIKit.h>
 #import "MMItem.h"
 
-
 typedef NS_ENUM(NSUInteger, MMComBoBoxViewShowActionType) {  //分辨弹出框的动作
     MMComBoBoxViewShowActionTypePop = 0,                //弹出弹出框
     MMComBoBoxViewShowActionTypePackUp = 1,            //收起弹出框
 };
 
-
-
-
-
-
 @protocol MMComBoBoxViewDataSource;
 @protocol MMComBoBoxViewDelegate;
+
 @interface MMComBoBoxView : UIView
 @property (nonatomic, weak) id<MMComBoBoxViewDataSource> dataSource;
 @property (nonatomic, weak) id<MMComBoBoxViewDelegate> delegate;
-
-
-
+@property (nonatomic, assign, readonly) BOOL isPopviewShow;//(popView 是否在显示)
 
 /**
  根据boxValues 设置当前筛选项的title，以及当前选中的值
@@ -46,12 +39,10 @@ typedef NS_ENUM(NSUInteger, MMComBoBoxViewShowActionType) {  //分辨弹出框�
  */
 - (void)reload;
 
-
 /**
  收起下拉框
  */
 - (void)dimissPopView;
-
 
 /**
  初始化MMComBoBoxView
@@ -76,7 +67,6 @@ typedef NS_ENUM(NSUInteger, MMComBoBoxViewShowActionType) {  //分辨弹出框�
  */
 - (NSUInteger)numberOfColumnsIncomBoBoxView :(MMComBoBoxView *)comBoBoxView;
 
-
 /**
  每一列的第一行rootItem
  
@@ -90,7 +80,6 @@ typedef NS_ENUM(NSUInteger, MMComBoBoxViewShowActionType) {  //分辨弹出框�
 @protocol MMComBoBoxViewDelegate <NSObject>
 
 @optional
-
 
 /**
  用户选择或者确定了某一数据

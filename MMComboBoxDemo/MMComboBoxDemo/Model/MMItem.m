@@ -16,8 +16,8 @@ static const void *kMMKeyKey = &kMMKeyKey;
 static const void *kMMCodeKey = &kMMCodeKey;
 
 @implementation MMItem
-#pragma mark - init method
 
+#pragma mark - init method
 
 - (void)setKey:(NSString *)key
 {
@@ -34,13 +34,13 @@ static const void *kMMCodeKey = &kMMCodeKey;
 - (void)setCode:(NSString *)code
 {
      objc_setAssociatedObject(self, kMMCodeKey,code, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
- //   [self setValue:code forKey:@"code"];
 }
 
 - (NSString*)code
 {
     return objc_getAssociatedObject(self, kMMCodeKey);
 }
+
 - (instancetype)init{
     self = [super init];
     if (self) {

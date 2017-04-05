@@ -34,15 +34,15 @@ typedef NS_ENUM(NSInteger, MMPopupViewIconType) {  //筛选层附加icon定义
     MMPopupViewFilterIcon = 4,               //筛选图标 //kFilterIcon
 };
 
-
-
 @protocol MMComBoxOldValue <NSObject>       //当前实现此协议的类有FFBaseKeyCodeModel MMBaseItem以及其子类
 
 @property(nonatomic,copy)NSString   *key;
 @property(nonatomic,copy)NSString   *code;//如果有多个，默认以逗号分隔
+@property(nonatomic,copy)NSString   *key2; //部分比如排序需要两个key值判断
+@property(nonatomic,copy)NSString   *code2;//部分比如排序需要两个value值判断
+@property(nonatomic,assign)BOOL     choiceDefault;//是否是默认选中选项
 
 @end
-
 
 @interface MMBaseItem : NSObject<MMComBoxOldValue>
 
@@ -55,6 +55,7 @@ typedef NS_ENUM(NSInteger, MMPopupViewIconType) {  //筛选层附加icon定义
 @property (nonatomic, assign) BOOL hasAllFuntion; //是否有全部按钮  默认为YES
 @property (nonatomic, assign) BOOL isOpen; //全部的item是否显示，只有hasAllFuntion为YES的时候才起作用，默认为NO
 @property (nonatomic, assign) BOOL needEmptyView;//如果没有子选项，是否要显示emptyView，当前只显示MMPopupViewDisplayTypeMultilayer
+@property (nonatomic, assign) BOOL filterNeedCall;  //当是多个筛选项时，如果为YES点击重置会回调并关闭popView，默认值为NO
 
 @end
 

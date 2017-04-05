@@ -13,17 +13,14 @@
 #import "MMSelectedPath.h"
 
 @interface MMComBoBoxView () <MMDropDownBoxDelegate,MMPopupViewDelegate>
-//@property (nonatomic, strong) NSArray *data;
+
 @property (nonatomic, strong) NSMutableArray *dropDownBoxArray;
 @property (nonatomic, strong) NSMutableArray *itemArray;
 @property (nonatomic, strong) NSMutableArray *symbolArray;  //当成一个队列来标记那个弹出视图
-@property (nonatomic, strong) CALayer *topLine;
-@property (nonatomic, strong) CALayer *bottomLine;
 @property (nonatomic, strong) MMBasePopupView *popupView;
-@property (nonatomic, assign) NSInteger lastTapIndex;       //默认 -1
-@property (nonatomic, assign) BOOL isAnimation;
-@property (nonatomic, strong) UIView    *topBgView;
-@property (nonatomic, assign) CGFloat    spaceMargin;
+@property (nonatomic, strong) UIView          *topBgView;
+@property (nonatomic, assign) CGFloat         spaceMargin;
+@property (nonatomic, assign) BOOL            isAnimation;
 
 @end
 
@@ -38,11 +35,8 @@
     return self;
 }
 
-
-
 - (void)initize
 {
-    self.lastTapIndex = -1;
     self.dropDownBoxArray = [NSMutableArray array];
     self.itemArray = [NSMutableArray array];
     self.symbolArray = [NSMutableArray arrayWithCapacity:1];
@@ -56,6 +50,7 @@
         make.bottom.mas_offset(-self.spaceMargin);
     }];
 }
+
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
@@ -64,13 +59,11 @@
     return self;
 }
 
-
 -(void)layoutSubviews
 {
     [super layoutSubviews];
     self.topBgView.layer.cornerRadius = self.topBgView.ff_height/2;
 }
-
 
 - (UIView*)topBgView
 {
@@ -87,33 +80,55 @@
     return _topBgView;
 }
 
-
 -(NSString*)getSelectTitle:(MMItem*)item boxArray:(NSArray *)boxValues
 {
     NSString  *subTitle = nil;
     for (id<MMComBoxOldValue> box in boxValues) {
-        if ([item.key isEqualToString:[box key]]) {
+        if (([item.key isEqualToString:[box key]] && item.key2 == nil)
+            || ([item.key2 isEqualToString:[box key2]] && [item.key isEqualToString:[box key]])) {
             NSArray *codeArray = [[box code] componentsSeparatedByString:@","];
+            NSArray *code2Array = [[box code2] componentsSeparatedByString:@","];
             for (NSString *code in codeArray) {
                 if ([code isEqualToString:item.code]) {
-                    item.isSelected = YES;
-                    item.parentItem.isSelected = YES;
-                    if (!subTitle) {
-                        subTitle = item.title;
+                    if (code2Array.count > 0) {
+                        
+                         for (NSString *code2 in code2Array)
+                         {
+                             if ([code2 isEqualToString:item.code2])
+                             {
+                                 item.isSelected = YES;
+                                 item.parentItem.isSelected = YES;
+                                 if (![box choiceDefault]) {
+                                     if (!subTitle) {
+                                         subTitle = item.title;
+                                     }else{
+                                         subTitle = [NSString stringWithFormat:@"%@ %@",subTitle,item.title];
+                                     }
+                                 }
+                                 
+                             }
+                             
+                         }
                     }else{
-                        subTitle = [NSString stringWithFormat:@"%@ %@",subTitle,item.title];
+                        item.isSelected = YES;
+                        item.parentItem.isSelected = YES;
+                        if (![box choiceDefault]) {
+                            if (!subTitle) {
+                                subTitle = item.title;
+                            }else{
+                                subTitle = [NSString stringWithFormat:@"%@ %@",subTitle,item.title];
+                            }
+                        }
+                    
                     }
                 }
             }
         }
     }
     
-    
     return subTitle;
     
 }
-
-
 
 /**
  根据boxValues 设置当前筛选项的title，以及当前选中的值
@@ -124,24 +139,26 @@
 {
     [self resetAllChoiceToNone];
     
-    //这是一段傻逼逻辑，如果附近和商圈都没有设定，那么默认选中附近中的全部 ranjingfu
-    BOOL hasDistance = NO;
-    for (FFBaseKeyCodeModel *model in boxValues) {
-        if ([[model key] isEqualToString:kBusinessDisKey] ||
-            [[model key] isEqualToString:kDistanceKey] ||
-            [[model key] isEqualToString:kCountyIdKey]) {
-            hasDistance = YES;
-            break;
+    NSMutableArray *mutArray = [NSMutableArray arrayWithArray:boxValues];
+    NSMutableDictionary *dicSort = [NSMutableDictionary dictionaryWithCapacity:2];
+    for (int i = 0;i < mutArray.count;i++) {
+        FFBaseKeyCodeModel  *model  = [mutArray safeObjectAtIndex:i];
+        if ([model.key isEqualToString:kSortTypeKey] || [model.key isEqualToString:kSortKey]) {
+            [dicSort safeSetObject:model.code forKey:model.key];
+            [mutArray removeObject:model];
+            i--;
         }
     }
-    if (!hasDistance) {
-        NSMutableArray *mutArray = [NSMutableArray arrayWithArray:boxValues];
-        [mutArray insertObject:[FFBaseKeyCodeModel modelWithKey:kDistanceKey code:@""] atIndex:0];
-        boxValues = [NSArray arrayWithArray:mutArray];
+    if (dicSort.count > 0) {
+        FFBaseKeyCodeModel *model = [FFBaseKeyCodeModel modelWithKey:kSortKey code:dicSort[kSortKey]];
+        model.key2 = kSortTypeKey;
+        model.code2 = dicSort[kSortTypeKey];
+        [mutArray safeAddObject:model];
     }
-    //傻逼逻辑结束
+
+
 #if DEBUG
-    NSLog(@"updateValueWithData:%@",boxValues);
+    //NSLog(@"updateValueWithData:%@",boxValues);
 #endif
     for (int i = 0;i < self.itemArray.count; i++) {
         
@@ -155,7 +172,7 @@
                     if (rootItem.selectedType == MMPopupViewSingleSelection && rootTitle.length > 0) {
                         break;
                     }
-                    NSString  *subTitle = [self getSelectTitle:subsubItem boxArray:boxValues];
+                    NSString  *subTitle = [self getSelectTitle:subsubItem boxArray:mutArray];
                     if (rootItem.displayType == MMPopupViewDisplayTypeFilters) {
                         continue;
                     }
@@ -174,7 +191,7 @@
                 if (rootItem.selectedType == MMPopupViewSingleSelection && rootTitle.length > 0) {
                     break;
                 }
-                NSString  *subTitle = [self getSelectTitle:subItem boxArray:boxValues];
+                NSString  *subTitle = [self getSelectTitle:subItem boxArray:mutArray];
                 if (subTitle) {
                     if (rootTitle == nil) {
                         rootTitle = subTitle;
@@ -183,7 +200,14 @@
                     }
                 }
             }
-            rootItem.title = (rootTitle != nil?rootTitle:rootItem.title);
+            
+            //如果title是全部，需要更改为默认的值
+            if ([rootTitle isEqualToString:@"全部"]) {
+                rootItem.title = rootItem.rootTitle;
+            }else{
+                rootItem.title = (rootTitle != nil?rootTitle:rootItem.title);
+            }
+     
         }
     }
     [self reload];
@@ -235,7 +259,6 @@
     [self.dropDownBoxArray removeAllObjects];
     [self.itemArray removeAllObjects];
     
-    
     NSUInteger count = 0;
     if ([self.dataSource respondsToSelector:@selector(numberOfColumnsIncomBoBoxView:)]) {
         count = [self.dataSource numberOfColumnsIncomBoBoxView:self];
@@ -257,37 +280,33 @@
             }
         }
     }
-    // [self _addLine];
 }
-
-
-
 
 - (void)dimissPopView {
     
-    if (self.popupView.superview) {
-        [self.popupView dismissWithOutAnimation];
+    for (MMDropDownBox *box in self.dropDownBoxArray) {
+        [box setLineHide:YES];
     }
-}
-
-#pragma mark - Private Method
-- (void)_addLine {
-    self.topLine = [CALayer layer];
-    self.topLine.frame = CGRectMake(0, 0 , self.ff_width, 1.0/scale);
-    self.topLine.backgroundColor = [UIColor colorWithWhite:0.000 alpha:0.3].CGColor;
-    [self.layer addSublayer:self.topLine];
     
-    self.bottomLine = [CALayer layer];
-    self.bottomLine.frame = CGRectMake(0, self.ff_height - 1.0/scale , self.ff_width, 1.0/scale);
-    self.bottomLine.backgroundColor = [UIColor ff_colorWithHex:0xe8e8e8].CGColor;
-    [self.layer addSublayer:self.bottomLine];
+    if (self.popupView.superview) {
+        
+        [self.popupView dismissWithCompletion:nil];
+    }
+   
 }
 
-
+- (BOOL)isPopviewShow
+{
+    if (self.popupView.superview) {
+        return YES;
+    }
+    return NO;
+}
+#pragma mark - Private Method
 - (void)showNewPopupView:(NSUInteger)index
 {
     self.isAnimation = YES;
-    MMItem *item = self.itemArray[index];
+    MMItem *item = [self.itemArray safeObjectAtIndex:index];
     MMBasePopupView *popupView = [MMBasePopupView getSubPopupView:item];
     [popupView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(emptyAction:)]];
     popupView.delegate = self;
@@ -296,28 +315,41 @@
     [popupView updateSelectPath];
     [self.symbolArray addObject:popupView];
     
+    for (int i = 0; i <self.dropDownBoxArray.count; i++) {
+        MMDropDownBox *currentBox  = [self.dropDownBoxArray safeObjectAtIndex:i];
+        [currentBox updateTitleState:(i == index)];
+        [currentBox setLineHide:(i != index)];
+    }
+
     if ([self.delegate respondsToSelector:@selector(comBoBoxView:actionType:atIndex:)]) {
         [self.delegate comBoBoxView:self actionType:MMComBoBoxViewShowActionTypePop atIndex:index];
     }
+    
     [self.superview bringSubviewToFront:self];
     dispatch_async(dispatch_get_main_queue(), ^{
-        [popupView popupViewFromSourceFrame:self.frame completion:^ {
+        [popupView popupViewFromView:self completion:^ {
             self.isAnimation = NO;
+            
+            if ([self.delegate respondsToSelector:@selector(comBoBoxView:actionType:atIndex:)]) {
+                [self.delegate comBoBoxView:self actionType:MMComBoBoxViewShowActionTypePop atIndex:index];
+            }
         
-        } fromView:self];
+        }];
     });
     
-}
-
-
-- (void)emptyAction:(id)sender
-{
+  
     
 }
+- (void)emptyAction:(id)sender
+{
 
+}
+
+#pragma mark
+#pragma mark 截取事件的方法
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
     UIView *view = [super hitTest:point withEvent:event];
-    if (view == nil) {
+    if (view == nil && self.popupView.superview) {
         CGPoint tp = [self convertPoint:point fromView:self];
         if (CGRectContainsPoint(self.popupView.frame, tp)) {
             view = self;
@@ -332,6 +364,8 @@
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
     CGPoint tp = [self convertPoint:point fromView:self];
 
+    if (self.popupView.superview) {
+     
         if (CGRectContainsPoint(self.popupView.frame, tp)) {
             return YES;
         }
@@ -339,11 +373,19 @@
         if (CGRectContainsPoint(frame, tp)) {
             return YES;
         }
-    
+    }
     return [super pointInside:point withEvent:event];
 }
 
 
+
+/**
+ 根据选中的selectPaths 返回MMItem数组
+
+ @param selectPaths 选中的selectPaths
+ @param rootItem rootItem
+ @return 返回的MMItem
+ */
 - (NSArray*)getModelsBySelectePath:(NSArray*)selectPaths rootItem:(MMItem*)rootItem
 {
     NSMutableArray  *array = [NSMutableArray array];
@@ -356,22 +398,20 @@
 
 #pragma mark - MMDropDownBoxDelegate
 - (void)didTapDropDownBox:(MMDropDownBox *)dropDownBox atIndex:(NSUInteger)index {
+    
     if (self.isAnimation == YES) return;
-    for (int i = 0; i <self.dropDownBoxArray.count; i++) {
-        MMDropDownBox *currentBox  = [self.dropDownBoxArray safeObjectAtIndex:i];
-        [currentBox updateTitleState:(i == index)];
-        [currentBox setLineHide:(i != index)];
-    }
+    
     //点击后先判断symbolArray有没有标示
     if (self.symbolArray.count > 0) {
-        //移除
-        if ([self.delegate respondsToSelector:@selector(comBoBoxView:actionType:atIndex:)]) {
-            [self.delegate comBoBoxView:self actionType:MMComBoBoxViewShowActionTypePackUp atIndex:index];
-        }
+       
         MMBasePopupView * lastView = [self.symbolArray firstObject];
         MMItem *rootItem = lastView.item;
-        [lastView dismiss];
+        [lastView dismissWithCompletion:nil];
         [self.symbolArray removeAllObjects];
+        for (MMDropDownBox *box in self.dropDownBoxArray) {
+            [box setLineHide:YES];
+        }
+      
         //如果是点击当前的，那么就不需要再显示
         if (rootItem == [self.itemArray safeObjectAtIndex:index]) {
             return;
@@ -395,10 +435,14 @@
             [title appendString:i?[NSString stringWithFormat:@";%@",[item findTitleBySelectedPath:path]]:[item findTitleBySelectedPath:path]];
         }
         MMDropDownBox *box = [self.dropDownBoxArray safeObjectAtIndex:index];
-        if (title.length > 0) {
-            [box updateTitleContent:title];
+        
+        //如果title是全部，需要更改为默认的值
+        if ([title isEqualToString:@"全部"]) {
+                [box updateTitleContent:item.rootTitle];
+        }else if (title.length > 0){
+               [box updateTitleContent:title];
         }else{
-            [box updateTitleContent:item.rootTitle];
+               [box updateTitleContent:item.rootTitle];
         }
        
     }; //筛选不做UI赋值操作 直接将item的路径回调回去就好了
@@ -418,5 +462,16 @@
     for (MMDropDownBox *currentBox in self.dropDownBoxArray) {
         [currentBox updateTitleState:NO];
     }
+    for (MMDropDownBox *box in self.dropDownBoxArray) {
+        [box setLineHide:YES];
+    }
 }
+
+- (void)popupViewDidDismiss:(nullable MMBasePopupView *)popupView {
+    
+    if ([self.delegate respondsToSelector:@selector(comBoBoxView:actionType:atIndex:)]) {
+        [self.delegate comBoBoxView:self actionType:MMComBoBoxViewShowActionTypePackUp atIndex:0];
+    }
+}
+
 @end

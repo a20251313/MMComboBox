@@ -6,6 +6,7 @@ pod 'Masonry', '~> 1.0.2'
 pod 'FFIconFont'
 pod 'WDWorkFlow'
 pod 'FFIconFont'
+#pod 'Tangram'
 #pod "NerdyUI"
 end
 

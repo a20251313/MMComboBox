@@ -21,6 +21,7 @@
 @property (nullable, nonatomic, strong) UIView *bottomView;
 @property (nullable, nonatomic, strong) MMHeaderView *headView;
 @property (nullable, nonatomic, strong) UIView   *emptyView;
+@property (nullable, nonatomic, strong) UIImageView   *lineView;
 
 @property (nonatomic, assign) BOOL isSuccessfulToCallBack;
 
@@ -63,11 +64,11 @@
     
 }
 #pragma mark - Private Method
-- (void)popupViewFromSourceFrame:(CGRect)frame completion:(void (^ __nullable)(void))completion  fromView:(nullable UIView*)superView{
+
+- (void)popupViewFromView:(nullable UIView*)superView completion:(void (^ __nullable)(void))completion{
     //UIView *rootView = [[UIApplication sharedApplication] keyWindow];
-    self.sourceFrame = frame;
-    CGFloat top =  CGRectGetHeight(self.sourceFrame);
     
+    CGFloat top =  CGRectGetHeight(superView.frame);
     CGFloat maxHeight = kMMScreenHeigth - DistanceBeteewnPopupViewAndBottom - top - PopupViewTabBarHeight-DistanceBeteewnTopMargin-100;
     CGFloat resultHeight = MIN(maxHeight, self.item.layout.totalHeight);
     if (self.item.childrenNodes.count <= 0) {
@@ -85,6 +86,7 @@
         [self creatEmptyView];
     }else{
         [_emptyView removeFromSuperview];
+        _emptyView = nil;
         //addTableView
         self.mainTableView = [[UITableView alloc] initWithFrame:self.bounds style:UITableViewStylePlain];
         self.mainTableView.delegate = self;
@@ -130,6 +132,9 @@
         UIImageView  *lineView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 0, self.mainTableView.ff_width-30, 1)];
         lineView.image = image;
         [_bottomView addSubview:lineView];
+        self.lineView = lineView;
+        
+       
         
         NSArray *titleArray = @[@"重置",@"确定"];
         CGFloat  fbuttonWidth = (self.ff_width-ButtonHorizontalMargin*2-ButtonHorizontalMargin*3)/2;
@@ -152,6 +157,11 @@
             [_bottomView addSubview:button];
         }
     }
+    if (self.item.childrenNodes.count == 0) {
+        self.lineView.hidden = YES;
+    }else{
+        self.lineView.hidden = NO;
+    }
     
     return _bottomView;
 }
@@ -164,11 +174,12 @@
  */
 -(void)emptyAction:(id)sender
 {
-    [self dismiss];
+    [self dismissWithCompletion:nil];
 }
 
-- (void)dismiss{
-    [super dismiss];
+
+- (void)dismissWithCompletion:(void (^ __nullable)(void))completion{
+    [super dismissWithCompletion:completion];
     if ([self.delegate respondsToSelector:@selector(popupViewWillDismiss:)]) {
         [self.delegate popupViewWillDismiss:self];
     }
@@ -205,24 +216,38 @@
             [self removeFromSuperview];
         }
         [self.emptyView removeFromSuperview];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(popupViewDidDismiss:)]) {
+            [self.delegate popupViewDidDismiss:self];
+        }
     }];
 }
 
 #pragma mark - Private Method
-- (BOOL)_iscontainsSelectedPath:(nullable MMSelectedPath *)path sourceArray:(nullable NSMutableArray *)array {
+- (MMSelectedPath*)_iscontainsSelectedPath:(nullable MMSelectedPath *)path sourceArray:(nullable NSMutableArray *)array {
     for (MMSelectedPath *selectedpath in array) {
-        if (selectedpath.firstPath == path.firstPath && selectedpath.secondPath == path.secondPath) return YES;
+        if (selectedpath.firstPath == path.firstPath && selectedpath.secondPath == path.secondPath) return selectedpath;
     }
-    return NO;
+    return nil;
 }
 
 - (nullable MMSelectedPath *)_removePath:(nullable MMSelectedPath *)path sourceArray:(nullable NSMutableArray *)array {
     for (MMSelectedPath *selectedpath in array) {
-        if (selectedpath.firstPath == path.firstPath && selectedpath.isKindOfAlternative == NO) {
-            MMSelectedPath *returnPath = selectedpath;
-            [array removeObject:selectedpath];
-            return returnPath;
+        if (selectedpath.secondPath != -1) {
+            if (selectedpath.firstPath == path.firstPath &&
+                selectedpath.isKindOfAlternative == NO &&
+                selectedpath.secondPath == path.secondPath) {
+                MMSelectedPath *returnPath = selectedpath;
+                [array removeObject:selectedpath];
+                return returnPath;
+            }
+        }else{
+            if (selectedpath.firstPath == path.firstPath && selectedpath.isKindOfAlternative == NO) {
+                MMSelectedPath *returnPath = selectedpath;
+                [array removeObject:selectedpath];
+                return returnPath;
+            }
         }
+      
     }
     return nil;
 }
@@ -259,7 +284,7 @@
         
         [self.delegate popupView:self didSelectedItemsPackagingInArray:self.selectedArray  atIndex:self.tag];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self dismiss];
+            [self dismissWithCompletion:nil];
             self.isSuccessfulToCallBack = NO;
         });
     }
@@ -268,13 +293,17 @@
 - (void)respondsToButtonAction:(UIButton *)sender {
     if (sender.tag == 0) {//重置
         [self resetValue];
+        if (self.item.filterNeedCall) {
+             [self callBackDelegate]; 
+        }
+      
     } else if (sender.tag == 1) {//确定
         [self callBackDelegate];
     }
 }
 
 - (void)respondsToTapGestureRecognizer:(UITapGestureRecognizer *)tapGestureRecognizer {
-    [self dismiss];
+    [self dismissWithCompletion:nil];
 }
 #pragma mark - UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -332,8 +361,13 @@
     } else {
         MMItem *item  = [self.item findItemBySelectedPath:[MMSelectedPath pathWithFirstPath:indexPath.row]];
         if(item.selectedType != MMPopupViewMultilSeMultiSelection) {
-            MMSelectedPath *removeIndexPath = [self _removePath:[MMSelectedPath pathWithFirstPath:indexPath.row] sourceArray:self.selectedArray];
-            self.item.childrenNodes[removeIndexPath.firstPath].childrenNodes[removeIndexPath.secondPath].isSelected = NO;
+            for (MMSelectedPath *selectPath in self.selectedArray) {
+                if (selectPath.firstPath == indexPath.row) {
+                    MMSelectedPath *removeIndexPath = [self _removePath:selectPath sourceArray:self.selectedArray];
+                    self.item.childrenNodes[removeIndexPath.firstPath].childrenNodes[removeIndexPath.secondPath].isSelected = NO;
+                    break;
+                }
+            }
         }
       
         [self.selectedArray addObject:[MMSelectedPath pathWithFirstPath:indexPath.row secondPath:index]];
@@ -348,12 +382,11 @@
     [self.mainTableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
 }
 
-
 #pragma mark - empty
 - (void)creatEmptyView
 {
-   
     [self addSubview:self.emptyView];
+    self.lineView.hidden = YES;
     self.emptyView.frame = CGRectMake(0, 0, self.ff_width, 0);
     self.emptyView.clipsToBounds = YES;
 }

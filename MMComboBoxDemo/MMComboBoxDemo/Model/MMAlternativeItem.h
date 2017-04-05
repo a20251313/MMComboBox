@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface MMAlternativeItem : NSObject
+
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, assign) BOOL isSelected;
 

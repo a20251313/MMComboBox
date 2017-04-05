@@ -10,9 +10,9 @@
 
 @class MMItem;
 @protocol MMPopupViewDelegate;
+
 @interface MMBasePopupView : UIView
 @property (nullable, nonatomic, strong) MMItem *item;
-@property (nonatomic, assign) CGRect sourceFrame;
 @property (nullable, nonatomic, strong) UIControl *shadowView;
 @property (nullable, nonatomic, strong) UITableView *mainTableView;
 @property (nullable, nonatomic, strong) UITableView *subTableView;
@@ -24,10 +24,10 @@
 
 + (nullable MMBasePopupView *)getSubPopupView:(nullable MMItem *)item;
 - (nullable id)initWithItem:(nullable MMItem *)item;
-- (void)popupViewFromSourceFrame:(CGRect)frame completion:(void (^ __nullable)(void))completion;
-- (void)popupViewFromSourceFrame:(CGRect)frame completion:(void (^ __nullable)(void))completion  fromView:(nullable UIView*)superView;
-- (void)dismiss;
-- (void)dismissWithOutAnimation;
+- (void)popupViewFromView:(nullable UIView*)superView completion:(void (^ __nullable)(void))completion;
+
+- (void)dismissWithCompletion:(void (^ __nullable)(void))completion;
+- (void)dismissWithOutAnimation:(void (^ __nullable)(void))completion;
 - (void)updateSelectPath;
 
 @end
@@ -41,5 +41,6 @@
 @required
 
 - (void)popupViewWillDismiss:(nullable MMBasePopupView *)popupView;
+- (void)popupViewDidDismiss:(nullable MMBasePopupView *)popupView;
 
 @end

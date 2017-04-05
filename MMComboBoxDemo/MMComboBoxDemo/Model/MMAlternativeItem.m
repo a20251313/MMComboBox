@@ -9,6 +9,7 @@
 #import "MMAlternativeItem.h"
 
 @implementation MMAlternativeItem
+
 - (instancetype)init {
     self = [super init];
     if (self) {

@@ -12,10 +12,13 @@
 #import "MMCombinationFitlerView.h"
 #import "MMHeader.h"
 #import "MMItem.h"
+
 @interface MMBasePopupView ()
 
 @end
+
 @implementation MMBasePopupView
+
 - (nullable id)initWithItem:(nullable MMItem *)item {
     self = [super init];
     if (self) {
@@ -59,28 +62,29 @@
     return view;
 }
 
-- (void)dismiss {
+- (void)dismissWithCompletion:(void (^ __nullable)(void))completion
+ {
 
     [self.shadowView removeFromSuperview];
     self.shadowView = nil;
 }
 
-- (void)dismissWithOutAnimation {
-    
+
+
+
+- (void)dismissWithOutAnimation:(void (^ __nullable)(void))completion {
     
     [self.shadowView removeFromSuperview];
     self.shadowView = nil;
     if (self.superview) {
         [self removeFromSuperview];
     }
+    
 }
 
-- (void)popupViewFromSourceFrame:(CGRect)frame completion:(void (^ __nullable)(void))completion {
-  //写这些方法是为了消除警告；
-}
-
-- (void)popupViewFromSourceFrame:(CGRect)frame completion:(void (^ __nullable)(void))completion  fromView:(nullable UIView*)superView
+- (void)popupViewFromView:(nullable UIView*)superView completion:(void (^ __nullable)(void))completion
 {
+    
 }
 
 

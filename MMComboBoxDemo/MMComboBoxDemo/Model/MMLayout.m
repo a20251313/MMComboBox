@@ -17,6 +17,7 @@
 @end
 
 @implementation MMLayout
+
 - (instancetype)init {
     self = [super init];
     if (self) {

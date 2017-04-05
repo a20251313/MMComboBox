@@ -13,14 +13,15 @@
 #import "MMSelectedPath.h"
 #import "NSMutableArray+Safe.h"
 
-
 @interface MMMultiFitlerView () <UITableViewDelegate, UITableViewDataSource>
+
 @property (nonatomic, assign) NSUInteger selectedIndex;
 @property (nonatomic, assign) NSUInteger minRowNumber;
+
 @end
 
-
 @implementation MMMultiFitlerView
+
 - (id)initWithItem:(MMItem *)item{
     self = [super init];
     if (self) {
@@ -76,17 +77,8 @@
     }
     
     self.selectedIndex = [self _findLeftSelectedIndex];
-    
-//    [self.item setAllSubItemSelected:NO];
-//    for (MMSelectedPath *path  in self.selectedArray) {
-//        
-//        MMItem *item = [self.item findItemBySelectedPath:path];
-//        item.isSelected = YES;
-//        item.parentItem.isSelected = YES;
-//    }
     [self resetSelectIndex];
 }
-
 
 - (void)resetSelectIndex
 {
@@ -108,10 +100,10 @@
 
 
 #pragma mark - public method
-- (void)popupViewFromSourceFrame:(CGRect)frame completion:(void (^ __nullable)(void))completion fromView:(UIView *)superView {
 
-    self.sourceFrame = frame;
-    CGFloat top =  CGRectGetHeight(self.sourceFrame);
+- (void)popupViewFromView:(nullable UIView*)superView completion:(void (^ __nullable)(void))completion{
+
+    CGFloat top =  CGRectGetHeight(superView.frame);
     CGFloat maxHeight = kMMScreenHeigth - DistanceBeteewnPopupViewAndBottom - top - PopupViewTabBarHeight-DistanceBeteewnTopMargin;
     CGFloat resultHeight = MIN(maxHeight, MAX(self.item.childrenNodes.count, self.minRowNumber)  * [MMLeftCell leftCellHeight:nil]);
       self.frame = CGRectMake(0, top, kMMScreenWidth, 0);
@@ -177,23 +169,26 @@
  */
 -(void)emptyAction:(id)sender
 {
-      [self dismiss];
+      [self dismissWithCompletion:nil];
     
 }
 
-- (void)dismiss{
-    [super dismiss];
+- (void)dismissWithCompletion:(void (^)(void))completion{
+    [super dismissWithCompletion:completion];
     //设置最后选中的赋给left cell
     MMSelectedPath *path = [self.selectedArray lastObject];
-    if ([self _findLeftSelectedIndex] != path.firstPath) {
-        self.item.childrenNodes[[self _findLeftSelectedIndex]].isSelected = NO;
-        self.item.childrenNodes[path.firstPath].isSelected = YES;
+    if (path) {
+        NSUInteger index = [self _findLeftSelectedIndex];
+        if (index != path.firstPath) {
+            [[self.item.childrenNodes safeObjectAtIndex:index] setIsSelected:NO];
+            [[self.item.childrenNodes safeObjectAtIndex:path.firstPath] setIsSelected:YES];
+        }
     }
+   
     
     if ([self.delegate respondsToSelector:@selector(popupViewWillDismiss:)]) {
         [self.delegate popupViewWillDismiss:self];
     }
-
     //消失的动画
     [UIView animateWithDuration:AnimationDuration animations:^{
         self.mainTableView.ff_height = 0;
@@ -202,6 +197,12 @@
     } completion:^(BOOL finished) {
         if (self.superview) {
             [self removeFromSuperview];
+        }
+        if (completion) {
+            completion();
+        }
+        if (self.delegate && [self.delegate respondsToSelector:@selector(popupViewDidDismiss:)]) {
+            [self.delegate popupViewDidDismiss:self];
         }
     }];
 }
@@ -242,14 +243,14 @@
     if ([self.delegate respondsToSelector:@selector(popupView:didSelectedItemsPackagingInArray:atIndex:)]) {
         [self.delegate popupView:self didSelectedItemsPackagingInArray:self.selectedArray  atIndex:self.tag];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self dismiss];
+            [self dismissWithCompletion:nil];
         });
     }
 }
 
 #pragma mark - Action
 - (void)respondsToTapGestureRecognizer:(UITapGestureRecognizer *)tapGestureRecognizer {
-    [self dismiss];
+    [self dismissWithCompletion:nil];
 }
 #pragma mark - UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -293,9 +294,10 @@
         
         MMSelectedPath *selectdPath = [self.selectedArray lastObject];
         if (selectdPath.firstPath == self.selectedIndex && selectdPath.secondPath == indexPath.row)
+        {
+            [self _callBackDelegate];
             return;
-        
-        if (selectdPath.firstPath == self.selectedIndex && selectdPath.secondPath == indexPath.row) return;
+        }
         if (selectdPath.secondPath != -1) {
             MMItem *lastItem = self.item.childrenNodes[selectdPath.firstPath].childrenNodes[selectdPath.secondPath];
             lastItem.isSelected = NO;
@@ -309,13 +311,10 @@
         [self.subTableView reloadData];
         [self.mainTableView reloadData];
         [self _callBackDelegate];
-
     }
-    
 }
 
 #pragma mark
-
 -(void)removeAndEmptySelected
 {
     [self.item setAllSubItemSelected:NO];

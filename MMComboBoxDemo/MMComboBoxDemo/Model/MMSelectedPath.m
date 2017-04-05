@@ -10,7 +10,8 @@
 @interface MMSelectedPath () <NSCopying>
 @end
 
-@implementation MMSelectedPath 
+@implementation MMSelectedPath
+
 - (instancetype)init {
     self = [super init];
     if (self) {

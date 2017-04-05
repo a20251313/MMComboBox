@@ -26,6 +26,7 @@
 @property (nonatomic, weak) MMItem *parentItem;
 
 
+@property (nonatomic, assign) BOOL showTail;//筛选的文字过长的时候是否以...结尾，默认全部显示，如需要以...结尾，item的showTail必须置为YES
 
 /**
  添加子item，如果之前没有子item，子item设置为选中状态
@@ -40,12 +41,10 @@
  */
 - (void)addNodeWithoutMark:(MMItem *)node;
 
-
 /**
  重新定义各个PopUpView的展现方式
  */
 - (void)findTheTypeOfPopUpView;
-
 
 /**
  根据MMSelectedPath获取title
@@ -54,8 +53,6 @@
  @return title值
  */
 - (NSString *)findTitleBySelectedPath:(MMSelectedPath *)selectedPath;
-
-
 
 /**
  根据selectedPath获取code值，请确保code值唯一
@@ -76,7 +73,6 @@
 + (instancetype)itemWithItemType:(MMPopupViewMarkType)type titleName:(NSString *)title;
 + (instancetype)itemWithItemType:(MMPopupViewMarkType)type titleName:(NSString *)title iconType:(MMPopupViewIconType)iconType;
 + (instancetype)itemWithItemType:(MMPopupViewMarkType)type titleName:(NSString *)title subTileName:(NSString *)subTile;
-
 
 /**
  根据code值设置某一选项为选中,请保证所有itemcode选项唯一性，否则所有code相同选项都要被选中

@@ -9,6 +9,7 @@
 #import "MMCombineCell.h"
 
 @interface MMCombineCell ()
+
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) NSMutableArray *btnArray;
 @property (nonatomic, strong) UILabel *openLabel;
@@ -26,8 +27,6 @@
     return self;
 }
 
-
-
 - (void)setItem:(MMItem *)item {
     _item = item;
     for (UIView *view in self.subviews) {
@@ -37,7 +36,6 @@
     if (self.titleLabel.superview == nil) {
         [self addSubview:self.titleLabel];
     }
-    
     
     for (int i = 0; i < item.childrenNodes.count; i ++) {
         if (i >= 4 && !item.isOpen) {
@@ -49,20 +47,23 @@
         CGFloat orginy = [item.layout.cellLayoutTotalInfo[i][1] floatValue];
         button.frame = CGRectMake(orginX, orginy, [MMLayout layoutItemWidth], ItemHeight);
         button.titleLabel.font = [UIFont systemFontOfSize:ButtonFontSize];
-        button.titleLabel.adjustsFontSizeToFitWidth = YES;
+        if (item.showTail) {
+            button.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+        }else{
+            button.titleLabel.adjustsFontSizeToFitWidth = YES;
+        }
+     
         button.layer.borderWidth = 1;
         button.layer.masksToBounds = YES;
         button.layer.cornerRadius = 15;
         button.tag = i;
-        button.layer.borderColor = [UIColor ff_colorWithHex:0x2bbfff].CGColor;
+        button.layer.borderColor = subItem.isSelected?[UIColor ff_colorWithHex:0x2bbfff].CGColor:[UIColor ff_colorWithHex:0x333333].CGColor;
         [button setTitle:subItem.title forState:UIControlStateNormal];
-        [button setTitleColor:subItem.isSelected?[UIColor whiteColor]:[UIColor ff_colorWithHex:0x2bbfff] forState:UIControlStateNormal];
+        [button setTitleColor:subItem.isSelected?[UIColor ff_colorWithHex:0xffffff]:[UIColor ff_colorWithHex:0x333333] forState:UIControlStateNormal];
         button.backgroundColor = subItem.isSelected?[UIColor ff_colorWithHex:0x2bbfff]:[UIColor whiteColor];
         [button addTarget:self action:@selector(respondsToButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:button];
     }
-    
-  
     
     //layout
     self.titleLabel.frame = CGRectMake(ItemHorizontalMargin, TitleVerticalMargin, self.ff_width - ItemHorizontalMargin-100, TitleHeight);
@@ -70,11 +71,11 @@
     self.openLabel.hidden = !self.item.hasAllFuntion;
     if (item.hasAllFuntion) {
         self.openLabel.text = [self textValue:item.isOpen];
+        self.openLabel.textColor = item.isOpen ? [UIColor ff_colorWithHex:0x2bbfff]:[UIColor ff_colorWithHex:0x333333];
         [self addSubview:self.openLabel];
         self.openLabel.frame = CGRectMake(self.ff_width-70, 10, 60, 30);
         
     }
-    
     //未超过一列，收起，全部按钮隐藏
     if (item.childrenNodes.count > 4) {
         self.openLabel.hidden = NO;
@@ -88,7 +89,6 @@
         [self.delegate combineCell:self didSelectedAtIndex:sender.tag];
     }
 }
-
 
 - (void)clickOpen:(UITapGestureRecognizer*)sender
 {
@@ -131,9 +131,9 @@
 {
     NSString  *strText = nil;
     if (isOpen) {//kUpArrowIcon
-        strText = [NSString stringWithFormat:@"%@ %@",@"收起",kDownArrowIcon];
+        strText = [NSString stringWithFormat:@"%@ %@",@"收起",kUpArrowIcon];
     }else{
-        strText = [NSString stringWithFormat:@"%@ %@",@"全部",kUpArrowIcon];
+        strText = [NSString stringWithFormat:@"%@ %@",@"全部",kDownArrowIcon];
     }
     return strText;
 }

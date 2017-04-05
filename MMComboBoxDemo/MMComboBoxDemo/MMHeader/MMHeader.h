@@ -14,15 +14,19 @@
 #import "FFIconFontDefine.h"
 #import "NSArray+Safe.h"
 #import "NSMutableArray+Safe.h"
+#import "NSMutableDictionary+Safe.h"
 
+#undef scale
 #define scale [UIScreen mainScreen].scale
+
 #define kMMScreenHeigth [UIScreen mainScreen].bounds.size.height
 #define kMMScreenWidth  [UIScreen mainScreen].bounds.size.width
 #define kMMLeftCellWidth  (kMMScreenWidth/2-40)
 #define kMMMinShowRowNumer 1
 
 
-
+#pragma mark
+#pragma 定义给飞凡搜索用的参数key值，如果有增加参数或更改，请参照更改
 #define kBusinessDisKey             @"busiDistrictId"  //商圈参数名
 #define kDistanceKey                @"distance"     //距离参数名
 #define kCountyIdKey               @"countyId"    //某个参数名
@@ -60,9 +64,6 @@
 #define RGBCodeColor(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1]
 #define RGBCodeAlphaColor(rgbValue,a) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:a] // a -> 0 ~ 1
 
-
-
-
 static  NSString *titleSelectedColor = @"4EBC72";
 static const CGFloat  ButtonFontSize = 14.0f;
 //MMPopupView
@@ -82,7 +83,6 @@ static const CGFloat ButtonHorizontalMargin = 15;
 
 /* fontSize*/
 static const CGFloat SubTitleFontSize = 15.0f;
-
 
 //MMCombinationFitlerView
 static const CGFloat AlternativeTitleVerticalMargin = 10.0f;

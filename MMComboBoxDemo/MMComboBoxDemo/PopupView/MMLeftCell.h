@@ -11,9 +11,7 @@
 
 @interface MMLeftCell : UITableViewCell
 
-//- (void)updateSelectedState:(BOOL)isSelected;
 @property (nonatomic, strong) MMItem *item;
-
 
 + (CGFloat)leftCellHeight:(MMItem*)item;
 
