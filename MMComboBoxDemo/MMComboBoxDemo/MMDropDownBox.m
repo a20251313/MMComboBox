@@ -112,7 +112,9 @@
         case MMPopupViewTypeIcon:
             iconString = kTypeIcon;
             break;
-            
+        case MMPopupViewFloorIcon:
+            iconString = kFloorIcon;
+            break;
         default:
             break;
     }

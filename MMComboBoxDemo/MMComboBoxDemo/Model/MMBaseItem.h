@@ -32,6 +32,7 @@ typedef NS_ENUM(NSInteger, MMPopupViewIconType) {  //筛选层附加icon定义
     MMPopupViewSortIcon = 2,            //排序图标  //kSortedIcon
     MMPopupViewTypeIcon = 3,               //类型图标 //kTypeIcon
     MMPopupViewFilterIcon = 4,               //筛选图标 //kFilterIcon
+    MMPopupViewFloorIcon = 5,               //楼层图标 //kFloorIcon
 };
 
 @protocol MMComBoxOldValue <NSObject>       //当前实现此协议的类有FFBaseKeyCodeModel MMBaseItem以及其子类

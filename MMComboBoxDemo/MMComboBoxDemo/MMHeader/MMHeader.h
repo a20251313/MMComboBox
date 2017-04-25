@@ -14,7 +14,6 @@
 #import "FFIconFontDefine.h"
 #import "NSArray+Safe.h"
 #import "NSMutableArray+Safe.h"
-#import "NSMutableDictionary+Safe.h"
 
 #undef scale
 #define scale [UIScreen mainScreen].scale
@@ -22,7 +21,7 @@
 #define kMMScreenHeigth [UIScreen mainScreen].bounds.size.height
 #define kMMScreenWidth  [UIScreen mainScreen].bounds.size.width
 #define kMMLeftCellWidth  (kMMScreenWidth/2-40)
-#define kMMMinShowRowNumer 1
+#define kMMMinShowRowNumer 5
 
 
 #pragma mark

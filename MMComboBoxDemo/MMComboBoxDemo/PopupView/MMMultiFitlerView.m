@@ -105,8 +105,13 @@
 
     CGFloat top =  CGRectGetHeight(superView.frame);
     CGFloat maxHeight = kMMScreenHeigth - DistanceBeteewnPopupViewAndBottom - top - PopupViewTabBarHeight-DistanceBeteewnTopMargin;
+    
+    
     CGFloat resultHeight = MIN(maxHeight, MAX(self.item.childrenNodes.count, self.minRowNumber)  * [MMLeftCell leftCellHeight:nil]);
-      self.frame = CGRectMake(0, top, kMMScreenWidth, 0);
+    if (self.item.childrenNodes.count == 1) {
+        resultHeight = self.minRowNumber * [MMNormalCell normalCellHeight:nil];
+    }
+    self.frame = CGRectMake(0, top, kMMScreenWidth, 0);
     [superView addSubview:self];
     
   
@@ -126,7 +131,7 @@
     self.mainTableView.separatorColor = [UIColor clearColor];
     [self.mainTableView registerClass:[MMLeftCell class] forCellReuseIdentifier:MainCellID];
     [self addSubview:self.mainTableView];
-    self.mainTableView.backgroundColor = [UIColor whiteColor];
+    self.mainTableView.backgroundColor = [UIColor ff_colorWithHex:0xe6e6e6];
     
     self.subTableView = [[UITableView alloc] initWithFrame:CGRectMake(kMMLeftCellWidth+10, 0,  self.ff_width - kMMLeftCellWidth-20, 0) style:UITableViewStylePlain];
     self.subTableView.rowHeight = [MMNormalCell normalCellHeight:nil];

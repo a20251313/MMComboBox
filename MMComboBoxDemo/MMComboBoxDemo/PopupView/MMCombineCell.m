@@ -61,6 +61,7 @@
         [button setTitle:subItem.title forState:UIControlStateNormal];
         [button setTitleColor:subItem.isSelected?[UIColor ff_colorWithHex:0xffffff]:[UIColor ff_colorWithHex:0x333333] forState:UIControlStateNormal];
         button.backgroundColor = subItem.isSelected?[UIColor ff_colorWithHex:0x2bbfff]:[UIColor whiteColor];
+        [button setTitleEdgeInsets:UIEdgeInsetsMake(0, 3, 0, 3)];
         [button addTarget:self action:@selector(respondsToButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:button];
     }
